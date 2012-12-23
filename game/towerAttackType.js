@@ -86,6 +86,7 @@ function AttackTemplate(attackType, attacker, target, damage, baseAttacker, curr
     this.currentAttPos = currentAttPos;    
 }
 
+
 //Each glyph should illustrate
 //1) charge (user.attackCycle.chargePercent)
 //2) damage (user.attr.damage
