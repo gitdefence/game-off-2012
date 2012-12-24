@@ -305,11 +305,6 @@ function Tower(baseTile, tPos) {
             }
         }
         function rotateBar() {
-            function swapWidthHeight() {
-                var temp = width;
-                width = -height;
-                height = temp;
-            }
             switch(rotationPosition) {
                 case 0:
                     width = barHeight; //Rotate bar

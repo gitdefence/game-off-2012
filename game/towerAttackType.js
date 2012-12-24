@@ -80,10 +80,14 @@ function AttackTemplate(attackType, attacker, target, damage, baseAttacker, curr
 
     this.attacker = attacker; 
     this.target = target; 
-    this.damage = damage; 
+    this.damage = damage;
 
     this.baseAttacker = baseAttacker;
-    this.currentAttPos = currentAttPos;    
+    this.currentAttPos = currentAttPos;
+
+    this.getTarget = function() {
+        this.baseAttacker.attr.target_Strategy.run(this.attacker, )
+    }
 }
 
 
@@ -223,6 +227,8 @@ var allAttackTypes = {
     Bullet: function bullet() {
         this.bullet_speed = 50;
         this.damage_percent = 300;
+        this.bulletRadius = 1;
+
         this.drawGlyph = function (pen, tPos, user) {
             tPos = cloneProperties(user.tPos);
 
@@ -250,6 +256,7 @@ var allAttackTypes = {
 
 
             var projectileRadius = Math.sqrt(projectileArea / 4);
+            this.bulletRadius = projectileRadius;
             var mass = projectileArea;
 
             //Elastic energy formula is:
@@ -299,19 +306,9 @@ var allAttackTypes = {
 
             var color = baseColor;
 
-
-            pen.beginPath();
-
-            pen.strokeStyle = "rgba(255, 255, 255, 0.5)";
-            pen.fillStyle = "yellow";
-
-            pen.lineWidth = 1;
-            ink.rect(tPos.x, tPos.y, tPos.w, tPos.h, pen);
-            pen.closePath();
-
-            DRAW.arcRect(pen, new Rect(tPos.x, tPos.y, tPos.w, tPos.h), "grey");
-
             DRAW.arcRect(pen, new Rect(posX, posY, width, height), color);
+
+
 
             /*
 	        pen.lineWidth = 0;
@@ -354,7 +351,7 @@ var allAttackTypes = {
                 us.base.destroySelf();
             }
 
-            var r = 5;
+            var r = ourStats.bulletRadius;
             if(realAttacker.base.type == "Bug")
                 r = 2;
 
@@ -762,7 +759,12 @@ var bugAttackTypes = {
 
 
 function drawAttributes(user, pen) {
+    var originaltPos = false;
     if(user.lineWidth) {
+        originaltPos = user.tPos;
+        user.tPos = user.tPos.clone();
+
+        //Gets rid of the space that shield takes up
         user.tPos.x += user.lineWidth;
         user.tPos.y += user.lineWidth;
         user.tPos.w -= Math.ceil(user.lineWidth * 2);
@@ -780,11 +782,7 @@ function drawAttributes(user, pen) {
             return true;
         },
         user.attr,
-        new TemporalPos(
-            user.tPos.x,
-            user.tPos.y,
-            user.tPos.w,
-            user.tPos.h),
+        user.tPos.clone(),
         2, 2,
         0.01);
 
@@ -806,23 +804,16 @@ function drawAttributes(user, pen) {
             return true;
         },
         user.attr,
-        new TemporalPos(
-            user.tPos.x,
-            user.tPos.y,
-            user.tPos.w,
-            user.tPos.h ),
+        user.tPos.clone(),
         2, 2,
         0.01);
 
-    if(user.lineWidth) {
-        user.tPos.x -= user.lineWidth;
-        user.tPos.y -= user.lineWidth;
-        user.tPos.w += Math.ceil(user.lineWidth * 2);
-        user.tPos.h += Math.ceil(user.lineWidth * 2);
+    if(originaltPos) {
+        user.tPos = originaltPos;
     }
 }
-
 //Draws a hexagon
+
 /*
  var damagePerModule = 0.1;
 
