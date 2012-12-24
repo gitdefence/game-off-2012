@@ -1,0 +1,69 @@
+<!-- README content goes here -->
+</div>
+<a id="play" href="game/index.html">Let's Try It!</a>
+<script>
+var DFlag = {};
+</script>
+<div id="scripts">
+<s src="game/lib/jquery.min.js"></s>
+<s src="game/debug.js"></s>
+<s src="game/fail.js"></s>
+<s src="game/type.js"></s>
+<s src="game/sound.js"></s>
+<s src="game/color.js"></s>
+
+<s src="game/baseGeometry.js"></s>
+
+<s src="game/commonFncs.js"></s>
+<s src="game/commonText.js"></s>
+<s src="game/commonGeometry.js"></s>
+<s src="game/commonActions.js"></s>
+<s src="game/commonControls.js"></s>
+
+<s src="game/pointer.js"></s>
+
+<s src="game/allele.js"></s>
+<s src="game/allelePointSystem.js"></s>
+<s src="game/geneticSystem.js"></s>
+
+<s src="game/targetStrategy.js"></s>
+<s src="game/towerAttackType.js"></s>
+
+<s src="game/animations.js"></s>
+
+<s src="game/baseEntities.js"></s>
+
+<s src="game/infobar.js"></s>
+<s src="game/towerBar.js"></s>
+<s src="game/level.js"></s>
+
+<s src="game/tower.js"></s>
+<s src="game/path.js"></s>
+<s src="game/bug.js"></s>
+<s src="game/entities.js"></s>
+
+<s src="game/quadtree.js"></s>
+<s src="game/quadtreeQueries.js"></s>
+
+<s src="game/graphics.js"></s>
+
+<s src="game/pathGeneration.js"></s>
+
+<s src="game/logic.js"></s>
+</div>
+<script>
+window.onload = function() {
+    setTimeout(function() {
+        var scripts = document.getElementById("scripts");
+        var c = scripts.children;
+        for (var i = 0; i < c.length; i++) {
+            var src = c[i].getAttribute('src');
+            var script = new Image();
+            script.src = src;
+            console.log("Preloading ", src);
+        }
+    }, 100);
+};
+</script>
+</body>
+</html>

@@ -1,7 +1,7 @@
-//object means: object.(baseObj)base
+//object means: object.(BaseObj)base
 
 
-//findClosest
+//findClosestToPoint
     //What it do:
         //Finds the closest object (within maxDistance) to target.
         //(Returns null if nothing is found) 
@@ -12,7 +12,7 @@
         //target.x and target.y (position of the place you are finding the closest to)
         //maxDistance means the object returned must be <= maxDistance away (so 0 is fine)
 
-    //function findClosest(engine, type, target, maxDistance)
+    //function findClosestToPoint(engine, type, target, maxDistance)
 
 
 //findAllWithin
@@ -34,105 +34,162 @@
 
 /********************************* CODE START *********************************/
 
-function findClosest(engine, type, target, maxDistance) {
-    if (!assertDefined("findClosest", engine, type, target))
+function findAllWithinDistanceToRect(engine, type, targetRect, maxDistance) {
+    if (!engine.curQuadTree) //I want to crash... but this is legitimate.
+        return null;
+
+    if (!assertDefined("findAllWithinDistanceToRect", engine, type, targetRect))
         return null;
 
     if (!engine.curQuadTree.objTrees[type])
         return null;
 
     var relevantQuadTree = engine.curQuadTree.objTrees[type].tree;
-    var relevantArray = engine.curQuadTree.objTrees[type].array;
+    var relevantArray = engine.base.allChildren[type];
 
-    if (DFlag.logn && DFlag.logn.findClosest)
-        DFlag.logn.findClosest.max += relevantArray.length;
-    
-    return findClosestPrivate(relevantQuadTree, target, relevantArray, maxDistance * maxDistance, true);
+    var within = [];
 
-    function findClosestPrivate(quadtree, target, array, minDisSquared) {
-        if (!quadtree)
-            return;
+    if (DFlag.logn && DFlag.logn.findAllWithinDistanceToRect)
+        DFlag.logn.findAllWithinDistanceToRect.max += relevantArray.length;
 
-        //We should do this before we are called... and then we can do it much more efficiently
-        //(not just because it reduces a function call), but then the code would be way bigger
-        //and much more complex
-
-        var minDisSqrBounds = vecToRect(target, quadtree.bounds).magSq();        
-
-        //Then it is impossible and we will never find a better collision
-        if (minDisSqrBounds > minDisSquared)
-            return null;
-
-        //Find closest and return it
-        var closestObj = null;
-
-        if (DFlag.logn && DFlag.logn.findClosest) {
-            if(quadtree.startIndex)
-                DFlag.logn.findClosest.total += quadtree.indexCount;
-        }
-
-        if (quadtree.indexCount) {
-            //This is the brute force part of the algorithm
-            for (var x = quadtree.startIndex; x < quadtree.startIndex + quadtree.indexCount; x++) {
-                var curObj = array[x];
-
-                var disSquared = vecToRect(target, curObj.tPos).magSq();
-
-                if (disSquared <= minDisSquared) {
-                    minDisSquared = disSquared;
-                    closestObj = curObj;
-                }
+    findClosestGeneric(relevantQuadTree, relevantArray,
+        function (splitX, axisPos) {
+            if (splitX) {
+                if ((targetRect.x + targetRect.w) < axisPos)
+                    return -1;
+                else if (targetRect.x > axisPos)
+                    return 1;
+                else
+                    return 0;
             }
-        }
+            else {
+                if ((targetRect.y + targetRect.h) < axisPos)
+                    return -1;
+                else if (targetRect.y > axisPos)
+                    return 1;
+                else
+                    return 0;
+            }
+        },
+        function (rect) {
+            return minVecBetweenRects(targetRect, rect).magSq();
+        },
+        maxDistance * maxDistance, false, within);
 
-        //We still might have objects on us if this is false, but if it is true
-        //it means be have no branches
-        if (quadtree.leaf)
-            return closestObj;
-
-        var curD = quadtree.splitX ? "x" : "y";
-
-        //The rectangle in which we are in is the best bet... so we recurse down with that,
-        var curClosest = closestObj;
-
-        if (target[curD] <= quadtree.splitPos)
-            curClosest = findClosestPrivate(quadtree.lessTree, target, array, minDisSquared) || curClosest;
-        else
-            curClosest = findClosestPrivate(quadtree.greaterTree, target, array, minDisSquared) || curClosest;
-
-        if (curClosest) {
-            //Not possible, it would have been screened in the function call
-            var newDisSquared = vecToRect(target, curClosest.tPos).magSq();
-            if (newDisSquared > minDisSquared)
-                fail("no, impossible. findClosest ignored minDisSquared and returning something too far away.");
-            minDisSquared = newDisSquared;
-        }
-
-        //Splits always must be compared :(
-        curClosest = findClosestPrivate(quadtree.splitTree, target, array, minDisSquared) || curClosest;
-
-        if (curClosest) {
-            //Not possible, it would have been screened in the function call
-            var newDisSquared = vecToRect(target, curClosest.tPos).magSq();
-            if (newDisSquared > minDisSquared)
-                fail("no, impossible. findClosest ignored minDisSquared and returning something too far away.");
-            minDisSquared = newDisSquared;
-        }
-
-        //If it is possible something in the other side of the split could be better.            
-        //Just opposite of previous exclusion logic
-        if (target[curD] > quadtree.splitPos)
-            curClosest = findClosestPrivate(quadtree.lessTree, target, array, minDisSquared) || curClosest;
-        else
-            curClosest = findClosestPrivate(quadtree.greaterTree, target, array, minDisSquared) || curClosest;
-
-
-        return curClosest;
-    }
+    return within;
 }
 
+function findClosestToRect(engine, type, targetRect, maxDistance) {
+    if (!engine.curQuadTree) //I want to crash... but this is legitimate.
+        return null;
+
+    if (!assertDefined("findClosestToPoint", engine, type, targetRect))
+        return null;
+
+    if (!engine.curQuadTree.objTrees[type])
+        return null;
+
+    var relevantQuadTree = engine.curQuadTree.objTrees[type].tree;
+    var relevantArray = engine.base.allChildren[type];
+
+    var within = [];
+
+    if (DFlag.logn && DFlag.logn.findClosestToRect)
+        DFlag.logn.findClosestToRect.max += relevantArray.length;
+
+    var closest = findClosestGeneric(relevantQuadTree, relevantArray,
+        function (splitX, axisPos) {
+            if (splitX) {
+                if ((targetRect.x + targetRect.w) < axisPos)
+                    return -1;
+                else if (targetRect.x > axisPos)
+                    return 1;
+                else
+                    return 0;
+            }
+            else {
+                if ((targetRect.y + targetRect.h) < axisPos)
+                    return -1;
+                else if (targetRect.y > axisPos)
+                    return 1;
+                else
+                    return 0;
+            }
+        },
+        function (rect) {
+            return minVecBetweenRects(targetRect, rect).magSq();
+        },
+        maxDistance * maxDistance, true);
+
+    return closest;
+}
+
+//This code is mildly inconsistent and probably shouldn't be used with
+//a rect as the target, try to only use a point as the target just to be sure.
+function findClosestToPoint(engine, type, target, maxDistance) {
+    if (!engine.curQuadTree) //I want to crash... but this is legitimate.
+        return null;
+
+    if (!assertDefined("findClosestToPoint", engine, type, target))
+        return null;
+
+    if (!engine.curQuadTree.objTrees[type])
+        return null;
+
+    var relevantQuadTree = engine.curQuadTree.objTrees[type].tree;
+    var relevantArray = engine.base.allChildren[type];
+
+    var within = [];
+
+    if (DFlag.logn && DFlag.logn.findClosestToPoint)
+        DFlag.logn.findClosestToPoint.max += relevantArray.length;
+
+    if(DFlag.logn && DFlag.logn.findClosestToPoint) {
+        var realClosest = null;
+        var realClosDisSq = maxDistance * maxDistance;
+        for (var x = 0; x < relevantArray.length; x++) {
+            returnedObj = relevantArray[x];
+
+            var disSquared = vecToRect(target, returnedObj.tPos).magSq();
+
+            if (disSquared <= realClosDisSq) {
+                realClosest = returnedObj;
+                realClosDisSq = disSquared;
+            }
+        }
+    }
+
+    var closest = findClosestGeneric(relevantQuadTree, relevantArray,
+        function (splitX, axisPos) {
+            if (splitX) {
+                if ((target.x + (target.w ? target.w : 0)) < axisPos)
+                    return -1;
+                else if (target.x > axisPos)
+                    return 1;
+                else
+                    return 0;
+            }
+            else {
+                if ((target.y + (target.h ? target.h : 0)) < axisPos)
+                    return -1;
+                else if (target.y > axisPos)
+                    return 1;
+                else
+                    return 0;
+            }
+        },
+        function (rect) {
+            return vecToRect(target, rect).magSq();
+        },
+        maxDistance * maxDistance, true);
+
+    return closest;
+}
 
 function findAllWithin(engine, type, target, maxDistance) {
+    if (!engine.curQuadTree) //I want to crash... but this is legitimate.
+        return null;
+
     if (!assertDefined("findAllWithin", engine, type, target))
         return null;
 
@@ -140,72 +197,148 @@ function findAllWithin(engine, type, target, maxDistance) {
         return null;
 
     var relevantQuadTree = engine.curQuadTree.objTrees[type].tree;
-    var relevantArray = engine.curQuadTree.objTrees[type].array;
+    var relevantArray = engine.base.allChildren[type];
     
     var within = [];
 
     if (DFlag.logn && DFlag.logn.findAllWithin)
         DFlag.logn.findAllWithin.max += relevantArray.length;
 
-    findWithinPrivate(relevantQuadTree, target, relevantArray, maxDistance * maxDistance, true);    
+    findClosestGeneric(relevantQuadTree, relevantArray, 
+        function (splitX, axisPos) 
+        {
+            if(splitX)
+            {
+                if((target.x + (target.w ? target.w : 0)) < axisPos)
+                    return -1;
+                else if (target.x > axisPos)
+                    return 1;
+                else
+                    return 0;
+            }
+            else
+            {
+                if( (target.y + (target.h ? target.h : 0)) < axisPos)
+                    return -1;
+                else if (target.y > axisPos)
+                    return 1;
+                else
+                    return 0;
+            }
+        },
+        function(rect)
+        {
+            return vecToRect(target, rect).magSq();
+        },
+        maxDistance * maxDistance, false, within);
 
     return within;
+}
 
+//Don't use findClosestGeneric if you don't know how it works!
 
-    function findWithinPrivate(quadtree, target, array, minDisSquared) {
-        if (!quadtree)
-            return;
+//MaxDistance can greatly reduce our time, especially if you just
+//want to use this to find intersections instead of closest.
 
-        //We should do this before we are called... and then we can do it much more efficiently
-        //(not just because it reduces a function call), but then the code would be way bigger
-        //and much more complex
+//targetFunction returns a number when given a bool specifing the axis
+//(true for x, false for y) and the position on that axis.
+//targetFunction returns -ve numbers if the target is below that axis
+//+ve numbers if it is above and 0 if it intersecting the axis.
 
-        var minDisSqrBounds = vecToRect(target, quadtree.bounds).magSq();
-        
-        //Then it is impossible and we will never find a better collision
-        if (minDisSqrBounds > minDisSquared)
-            return null;
+//Target distance returns the distance (squared) from the target to a given rect.
+function findClosestGeneric(quadtree, array, targetFunction, targetDistance, minDisSquared,
+                            onlyFindOne, returned) {
+    if (!quadtree) //Not error checking, just being lazy about the recursive calls in this function
+        return;
 
-        //Find closest and return it
-        var closestObj = null;
+    //We should do this before we are called... and then we can do it much more efficiently
+    //(not just because it reduces a function call), but then the code would be way bigger
+    //and much more complex
 
-        if (DFlag.logn && DFlag.logn.findAllWithin) {
-            DFlag.logn.findAllWithin.total += quadtree.indexCount;
+    var minDisSqrBounds = targetDistance(quadtree.bounds);
+
+    //Then it is impossible and we will never find a better collision
+    if (minDisSqrBounds > minDisSquared)
+        return null;
+
+    var closestObj = null;
+
+    if (DFlag.logn && DFlag.logn.findClosestGeneric) {
+        DFlag.logn.findClosestGeneric.total += quadtree.indexCount;
+    }
+
+    function recalcClosest() {
+        if (onlyFindOne && returnedObj) {
+            closestObj = returnedObj;
+            minDisSquared = targetDistance(returnedObj.tPos);
+        }
+    }
+
+    //This is the brute force part of the algorithm
+    for (var id in quadtree.ids) {
+        returnedObj = array[id];
+
+        if (!returnedObj || returnedObj.hidden) {
+            continue; //THIS SHOULDN'T HAPPEN! IT IS EVIDENCE OF A BUG!
         }
 
-        //This is the brute force part of the algorithm
-        for (var x = quadtree.startIndex; x < quadtree.startIndex + quadtree.indexCount; x++) {
-            var curObj = array[x];
+        var disSquared = targetDistance(returnedObj.tPos);
 
-            var disSquared = vecToRect(target, curObj.tPos).magSq();
-
-            if (disSquared <= minDisSquared) {
-                within.push(curObj);
+        if (disSquared <= minDisSquared) {
+            if (onlyFindOne) {
+                closestObj = returnedObj;
+                minDisSquared = disSquared;
+            }
+            else {
+                returned.push(returnedObj);
             }
         }
-
-        //We still might have objects on us if this is false, but if it is true
-        //it means be have no branches
-        if (quadtree.leaf)
-            return;
-
-        var curD = quadtree.splitX ? "x" : "y";
-
-        if (target[curD] <= quadtree.splitPos)
-            findWithinPrivate(quadtree.lessTree, target, array, minDisSquared);
-        else
-            findWithinPrivate(quadtree.greaterTree, target, array, minDisSquared);
-
-        //Splits always must be compared :(
-        findWithinPrivate(quadtree.splitTree, target, array, minDisSquared);
-
-        //If it is possible something in the other side of the split could be better.            
-        //Just opposite of previous exclusion logic
-        if (target[curD] > quadtree.splitPos)
-            findWithinPrivate(quadtree.lessTree, target, array, minDisSquared);
-        else
-            findWithinPrivate(quadtree.greaterTree, target, array, minDisSquared);
     }
+
+    //We still might have objects on us if this is false, but if it is true
+    //it means be have no branches
+    if (quadtree.leaf)
+        return onlyFindOne ? closestObj : null;
+
+    var curD = quadtree.splitX ? "x" : "y";
+
+    var splitNumber = targetFunction(quadtree.splitX, quadtree.splitPos);
+
+
+    //splitNumber determines query order
+    if (splitNumber < 0) {
+        returnedObj = findClosestGeneric(quadtree.lessTree, array, targetFunction, targetDistance, minDisSquared, onlyFindOne, returned);
+        recalcClosest();
+
+        returnedObj = findClosestGeneric(quadtree.splitTree, array, targetFunction, targetDistance, minDisSquared, onlyFindOne, returned);
+        recalcClosest();
+
+        returnedObj = findClosestGeneric(quadtree.greaterTree, array, targetFunction, targetDistance, minDisSquared, onlyFindOne, returned);
+        recalcClosest();
+    }
+    else if (splitNumber > 0) {
+        returnedObj = findClosestGeneric(quadtree.greaterTree, array, targetFunction, targetDistance, minDisSquared, onlyFindOne, returned);
+        recalcClosest();
+
+        returnedObj = findClosestGeneric(quadtree.splitTree, array, targetFunction, targetDistance, minDisSquared, onlyFindOne, returned);
+        recalcClosest();
+
+        returnedObj = findClosestGeneric(quadtree.lessTree, array, targetFunction, targetDistance, minDisSquared, onlyFindOne, returned);
+        recalcClosest();
+    }
+    else {
+        returnedObj = findClosestGeneric(quadtree.splitTree, array, targetFunction, targetDistance, minDisSquared, onlyFindOne, returned);
+        recalcClosest();
+
+        returnedObj = findClosestGeneric(quadtree.lessTree, array, targetFunction, targetDistance, minDisSquared, onlyFindOne, returned);
+        recalcClosest();
+
+        returnedObj = findClosestGeneric(quadtree.greaterTree, array, targetFunction, targetDistance, minDisSquared, onlyFindOne, returned);
+        recalcClosest();
+    }
+
+
+    return onlyFindOne ? closestObj : null;
 }
 
 function drawTree(engine, type, pen) {

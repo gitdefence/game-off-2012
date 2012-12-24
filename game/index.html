@@ -6,42 +6,77 @@ Tower Defence by Justin, Kevin, Quentin and Wesley
 </title>
 <style type="text/css">
 body {
-    background-color : #FFFFFF;
+    -webkit-user-select: none;
+    background: black;
+    margin: 0px;
+    padding: 0px;
 }
 canvas {
-    border : 2px solid #FF0000;
-    margin-left : auto;
-    margin-right : auto;
-    display : block
+    display: block;
+    margin: auto auto;
+}
+#scripts {
+    display: none;
 }
 </style>
 </head>
 <body>
 <canvas id="myCanvas"></canvas>
-<div id="towerinfo">
-	Selected tower things
-</div>
-
-<script src="jquery.min.js"></script><!-- //ajax.googleapis.com/ajax/libs/jquery/1.8.2/ -->
+<div id="scripts">
+<script src="lib/jquery.min.js"></script><!-- //ajax.googleapis.com/ajax/libs/jquery/1.8.2/ -->
 
 <!-- MUST BE FIRST OR ELSE THINGS WILL CRASH! -->
 <script>
     //Set DFlag.flagName to set debug flags.
     //Try to only do this in debug.js
     var DFlag = {};
+    DFlag.disableSounds = true;
+
+    DFlag.width = 800; // Max allowed by kongregate.
+    DFlag.height = 635;
 </script>
 
 <script src="debug.js"></script>
+
 <script src="fail.js"></script>
 <script src="type.js"></script>
+<script src="sound.js"></script>
+<script src="color.js"></script>
+
+<script src="gameOver.js"></script>
 
 <script src="baseGeometry.js"></script>
 
 <script src="commonFncs.js"></script>
+<script src="commonText.js"></script>
 <script src="commonGeometry.js"></script>
+<script src="commonActions.js"></script>
+<script src="commonControls.js"></script>
+
+<script src="pointer.js"></script>
+
+<script src="alleles.js"></script>
+<script src="alleleConstruction.js"></script>
+<script src="allelePointSystem.js"></script>
+<script src="geneticSystem.js"></script>
+
+<script src="targetStrategy.js"></script>
+<script src="towerAttackType.js"></script>
+
+<script src="animations.js"></script>
 
 <script src="baseEntities.js"></script>
-<script src="entities.js"></script>
+
+<script src="gameInfoBar.js"></script>
+<script src="infobar.js"></script>
+<script src="towerBar.js"></script>
+<script src="levelSystem.js"></script>
+<script src="levels.js"></script>
+
+<script src="tower.js"></script>
+<script src="path.js"></script>
+<script src="bug.js"></script>
+<script src="tile.js"></script>
 
 <script src="quadtree.js"></script>
 <script src="quadtreeQueries.js"></script>
@@ -50,59 +85,33 @@ canvas {
 
 <script src="pathGeneration.js"></script>
 
-<script src="logic.js"></script>
+<script src="inputHandler.js"></script>
+
+<script src="engine.js"></script>
+<script src="screenSystem.js"></script>
+<script src="mainGame.js"></script>
+
+<script src="tutorial.js"></script>
+
+<script src="ui/include.js"></script>
+
 <script>
-    var wTiles = 20;
-    var hTiles = 16;
-    var tileSize = 32;
-    var width = wTiles * tileSize;
-    var height = hTiles * tileSize + 200;
-    var bW = width;
-    var bH = height - 200;
-    var mX = -1;
-    var mY = -1;
+    document.body.onload = function () {
+        var canvas = document.getElementById("myCanvas");
+        var screenSystem = new ScreenSystem(canvas);
 
-    var gameTimeAccumulated = 0;
+        screenSystem.addScreen("MainGame",
+            new GitDefence(new TemporalPos(0, 0, DFlag.width, DFlag.height, 0, 0)));
 
-    $(document).ready(function () {
-        $("#myCanvas").attr("width", width);
-        $("#myCanvas").attr("height", height);
-        window.reqAnim = (function () {
-            return window.requestAnimationFrame ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame ||
-            window.oRequestAnimationFrame ||
-            window.msRequestAnimationFrame ||
-            function (callback) {
-                window.setTimeout(callback, 1000 / 60);
-            };
-        })();
+        screenSystem.addScreen("Tutorial",
+            new Tutorial(new TemporalPos(0, 0, DFlag.width, DFlag.height, 0, 0)));
 
-        canvas = document.getElementById("myCanvas");
-        var pen = canvas.getContext("2d");
-        eng = new Engine(pen); //this.base.rootNode.holder will also get eng... but... yeah...
-        window.reqAnim(eng.run.bind(eng));
-
-        $("#myCanvas").mousemove(function (e) {
-            var mX = defined(e.offsetX) ? e.offsetX : e.pageX - document.getElementById("myCanvas").offsetLeft;
-            var mY = defined(e.offsetY) ? e.offsetY : e.pageY - document.getElementById("myCanvas").offsetTop;
-
-            eng.mX = mX;
-            eng.mY = mY;
-        });
-        $("#myCanvas").mouseout(function () {
-            eng.mX = -1;
-            eng.mY = -1;
-        });
-        $("#myCanvas").click(function (e) {
-            var cX = defined(e.offsetX) ? e.offsetX : e.pageX - document.getElementById("myCanvas").offsetLeft;
-            var cY = defined(e.offsetY) ? e.offsetY : e.pageY - document.getElementById("myCanvas").offsetTop;
-
-            eng.cX = cX;
-            eng.cY = cY;
-        });
-    });
+        if(DFlag.disableTutorial)
+            screenSystem.setActiveScreen("MainGame");
+        else
+            screenSystem.setActiveScreen("Tutorial");
+    };
 </script>
-
+</div>
 </body>
 </html>
