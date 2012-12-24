@@ -123,6 +123,12 @@ function cloneObject(object) {
     return jQuery.extend(true, {}, object);
 }
 
+//Great debate here over this topic:
+//http://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-clone-a-javascript-object
+function cloneProperties(object) {
+    return jQuery.extend(true, {}, object);
+}
+
 function mergeObject(objectOne, objectTwo) {
     return jQuery.extend(true, objectOne, objectTwo);
 }

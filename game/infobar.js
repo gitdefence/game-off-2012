@@ -252,11 +252,7 @@ function Infobar(pos) {
 
         displayAttributes(undisplayedExtra);
 
-        this.sellButton.tPos.w = this.tPos.w * 0.9;
-        this.sellButton.tPos.h = 24;
-
-        this.sellButton.tPos.x = xPos;
-        this.sellButton.tPos.y = yPos;
+        this.sellButton.resize(new Rect(xPos, yPos, this.tPos.w * 0.9, 24));
         yPos += this.sellButton.tPos.h;
 
 

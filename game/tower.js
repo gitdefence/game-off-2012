@@ -467,7 +467,7 @@ function Tower(baseTile, tPos) {
     this.dragOffset = null;
     this.mousedown = function(e) {
         this.startDrag = e;
-        this.dragOffset = new Vector(this.tPos);
+        this.dragOffset = new Vector(0, 0).set(this.tPos);
         this.dragOffset.sub(e);
 
         getGame(this).input.globalMouseMove[this.base.id] = this;
@@ -479,7 +479,7 @@ function Tower(baseTile, tPos) {
         var eng = getEng(this);
 
         if(this.startDrag) {
-            var vector = new Vector(e);
+            var vector = new Vector(0, 0).set(e);
             vector.add(this.dragOffset);
 
             this.tryToMove(vector, eng);

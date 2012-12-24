@@ -224,86 +224,94 @@ var allAttackTypes = {
         this.bullet_speed = 50;
         this.damage_percent = 300;
         this.drawGlyph = function (pen, tPos, user) {
+            tPos = cloneProperties(user.tPos);
+
+            //tPos.x += tPos.w * 0.07;
+            //tPos.y += tPos.h * 0.01;
+
+
             var baseColor = globalColorPalette.laser;
 
             var percentCharge = user.attackCycle.chargePercent;
 
+
             var damage = user.attr.damage;
+            var totalTime = user.attackCycle.maxCounter;
+            var curTime = user.attackCycle.attackCounter;
 
-            var damagePerModule = 0.1;
+            //Slingshot
+            var damageIncrements = damage / 0.1;
 
-            var damageModules = Math.ceil(damage / damagePerModule);
-            var modulesFilled = damage * percentCharge / damagePerModule;
+            //var pullback = 0.3;
+            var projectileArea = damageIncrements * 10; //Input area
 
-            //Hexagon fill is:
-            //Layer size = layer * 6, layer 0 is 1... but we exclude layer 0 for now
-            //So layer number = (width - 1) / 2
-            //number = ((layer number) * 6 + 6) / 2 * (layer number)
-            //number = ((layer number) + 1) * 3 * (layer number)
-            //number/3 = lr^2 + lr
-            //x = (-b +- sqrt(b^2 - 4ac))/(2a)
-            //x = (sqrt(1 + 4n/3) - 1) / 2... rounded up
-            //1, 6, 12, 18
-            //So total width is:
+            var projectileTargetSpeed = 50; //Input speed
+            var elasticCoefficient = 30000; //Input coefficient (elastic strength)
 
-            var circleWidths = Math.ceil(Math.sqrt(1 + 4 * damageModules / 3)) + 1;
 
-            //damageModules = 18;
+            var projectileRadius = Math.sqrt(projectileArea / 4);
+            var mass = projectileArea;
 
-            tPos.x += tPos.w * 0.07;
-            tPos.y += tPos.h * 0.01;
+            //Elastic energy formula is:
+            //0.5(x^2*coefficient)
+            //Speed energy formula is:
+            //0.5(v^2)* m
 
-            tPos.w *= 0.85;
-            tPos.h *= 0.85;
+            //So pull back distance
+            //x = v * sqrt(mass / coefficient)
 
-            var width = 1 / circleWidths / 2;
-            var height = 1 / circleWidths / 2;
-            var posX = 0.5 - width * 1.5;
-            var posY = 0.5 - height * 1.5;
+            var pullbackDist = projectileTargetSpeed * Math.sqrt(mass / elasticCoefficient);
 
-            var moveDelta = width * 2;
+            //Also equals 0.5 * speed * speed * mass
+            var energyNeeded = 0.5 * pullbackDist * pullbackDist * elasticCoefficient;
 
-            var angle = 0;
-            var curDist = 0;
-            var curMove = 1;
+            //When released:
+            //Acceleration = coefficient / m
+            //x = 1/2 acceleration * t^2
+            //So time is sqrt(2*pullbackDist/acceleration) = t
+            var acceleration = elasticCoefficient / mass;
+            var timeAfterRelease = Math.sqrt(2 * pullbackDist / acceleration);
 
-            var angleIncrement = Math.PI / 3;
-            var angleChanges = 5.5;
 
-            while(damageModules > 0) {
+            var timeToCharge = totalTime - timeAfterRelease;
 
-                function drawPart(color) {
-                    DRAW.arcRect(pen, new Rect(posX, posY, width, height).scale(tPos), color);
-                }
+            var posX = tPos.x - projectileRadius + tPos.w * 0.5;
+            var posY = tPos.y - projectileRadius + tPos.h * 0.5;
 
-                drawPart("grey");
+            var width = projectileRadius * 2;
+            var height = projectileRadius * 2;
 
-                if(modulesFilled >= 1) {
-                    drawPart("yellow");
-                }
 
-                posX += Math.cos(angle) * moveDelta;
-                posY += Math.sin(angle) * moveDelta;
+            if(curTime < timeToCharge) {
+                //Charging
+                var energyRate = energyNeeded / timeToCharge;
+                var curEnergy = energyRate * curTime;
 
-                curDist++;
-
-                if(curDist >= curMove) {
-                    curDist = 0;
-                    angle += angleIncrement;
-
-                    if(angle > angleIncrement * angleChanges) {
-                        angle = 0;
-                        curDist = 0;
-                        curMove++;
-
-                        posX += Math.cos(angleIncrement * 4) * moveDelta;
-                        posY += Math.sin(angleIncrement * 4) * moveDelta;
-                    }
-                }
-
-                modulesFilled--;
-                damageModules--;
+                //Energy = 0.5*x*x*coefficient, so x = Math.sqrt(2*energy/coefficient)
+                var curX = Math.sqrt(2*curEnergy/elasticCoefficient);
+                posY += curX;
+            } else {
+                //Releasing
+                var timeReleased = curTime - timeToCharge;
+                var curX = 0.5 * acceleration * timeReleased * timeReleased;
+                posY += pullbackDist - curX;
             }
+
+            var color = baseColor;
+
+
+            pen.beginPath();
+
+            pen.strokeStyle = "rgba(255, 255, 255, 0.5)";
+            pen.fillStyle = "yellow";
+
+            pen.lineWidth = 1;
+            ink.rect(tPos.x, tPos.y, tPos.w, tPos.h, pen);
+            pen.closePath();
+
+            DRAW.arcRect(pen, new Rect(tPos.x, tPos.y, tPos.w, tPos.h), "grey");
+
+            DRAW.arcRect(pen, new Rect(posX, posY, width, height), color);
 
             /*
 	        pen.lineWidth = 0;
@@ -813,3 +821,86 @@ function drawAttributes(user, pen) {
         user.tPos.h += Math.ceil(user.lineWidth * 2);
     }
 }
+
+//Draws a hexagon
+/*
+ var damagePerModule = 0.1;
+
+ var damageModules = Math.ceil(damage / damagePerModule);
+ var modulesFilled = damage * percentCharge / damagePerModule;
+
+ //Hexagon fill is:
+ //Layer size = layer * 6, layer 0 is 1... but we exclude layer 0 for now
+ //So layer number = (width - 1) / 2
+ //number = ((layer number) * 6 + 6) / 2 * (layer number)
+ //number = ((layer number) + 1) * 3 * (layer number)
+ //number/3 = lr^2 + lr
+ //x = (-b +- sqrt(b^2 - 4ac))/(2a)
+ //x = (sqrt(1 + 4n/3) - 1) / 2... rounded up
+ //1, 6, 12, 18
+ //So total width is:
+
+
+ var circleWidths = Math.ceil(Math.sqrt(1 + 4 * damageModules / 3)) + 1;
+
+ //damageModules = 18;
+
+ tPos = cloneProperties(tPos);
+ //tPos.x -= tPos.w * percentCharge;
+
+ //tPos.x = percentCharge / 2;
+
+ tPos.x += tPos.w * 0.07;
+ tPos.y += tPos.h * 0.01;
+
+ tPos.w *= 0.85;
+ tPos.h *= 0.85;
+
+ var width = 1 / circleWidths / 2;
+ var height = 1 / circleWidths / 2;
+ var posX = (1 - percentCharge / 2) - width * 1.5;
+ var posY = percentCharge / 2 - height * 1.5;
+
+ var moveDelta = width * 2;
+
+ var angle = 0;
+ var curDist = 0;
+ var curMove = 1;
+
+ var angleIncrement = Math.PI / 3;
+ var angleChanges = 5.5;
+
+ while(damageModules > 0) {
+ function drawPart(color) {
+ DRAW.arcRect(pen, new Rect(posX, posY, width, height).scale(tPos), color);
+ }
+
+ drawPart("grey");
+
+ if(modulesFilled >= 1) {
+ drawPart("yellow");
+ }
+
+ posX += Math.cos(angle) * moveDelta;
+ posY += Math.sin(angle) * moveDelta;
+
+ curDist++;
+
+ if(curDist >= curMove) {
+ curDist = 0;
+ angle += angleIncrement;
+
+ if(angle > angleIncrement * angleChanges) {
+ angle = 0;
+ curDist = 0;
+ curMove++;
+
+ posX += Math.cos(angleIncrement * 4) * moveDelta;
+ posY += Math.sin(angleIncrement * 4) * moveDelta;
+ }
+ }
+
+ modulesFilled--;
+ damageModules--;
+ }
+ */
