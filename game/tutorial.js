@@ -1,4 +1,4 @@
-﻿//Functions by running through a set of predefined commands object states.
+﻿ //Functions by running through a set of predefined commands object states.
 //For each state it adds the objects to the local engine, then runs the
 //game until advanceState is called, at which point it removes the prev objects
 //and goes to the next state.
@@ -18,10 +18,10 @@ function ContinueButton() {
     var button = new Button("Continue", bind(this, "continue")).resize(pos);
     this.base.addObject(button);
 
-    this.continue = function() {
+    this.continue = function () {
         getGame(this).advanceState();
     }
-    this.draw = function(pen) {
+    this.draw = function (pen) {
         //pen.strokeStyle = "white";
         //pen.fillStyle = "blue";
         //ink.rect(this.tPos.x, this.tPos.y, this.tPos.w, this.tPos.h, pen);
@@ -63,8 +63,7 @@ tutorialstates.startPlace = function startPlace() {
     }
 
     this.update = function () {
-        if(this.targetDragger.placingTower)
-            getGame(this).advanceState();
+        if (this.targetDragger.placingTower) getGame(this).advanceState();
     }
 };
 tutorialstates.endPlace = function endPlace() {
@@ -86,7 +85,10 @@ tutorialstates.endPlace = function endPlace() {
 
         var pathStart = getAnElement(realGame.engine.base.allChildren.Path_Start);
         var TILE_SIZE = pathStart.tPos.w;
-        var tile = findClosestToPointToPoint(realGame.engine, "Tile", {x: TILE_SIZE * 3, y: TILE_SIZE * 5}, 0);
+        var tile = findClosestToPointToPoint(realGame.engine, "Tile", {
+            x: TILE_SIZE * 3,
+            y: TILE_SIZE * 5
+        }, 0);
         this.tile = tile;
 
 
@@ -101,17 +103,26 @@ tutorialstates.endPlace = function endPlace() {
 
         var pathStart = getAnElement(realGame.engine.base.allChildren.Path_Start);
         var TILE_SIZE = pathStart.tPos.w;
-        var tower = findClosestToPointToPoint(realGame.engine, "Tower", {x: TILE_SIZE * 3, y: TILE_SIZE * 5}, 0);
+        var tower = findClosestToPointToPoint(realGame.engine, "Tower", {
+            x: TILE_SIZE * 3,
+            y: TILE_SIZE * 5
+        }, 0);
 
-        if(tower) {
-            tower.genes.replaceAlleles(
-                [
-                    new Allele("attack1", {attack: allAttackTypes.Laser}),
-                    new Allele("targetBase", {target: targetStrategies.Closest}),
-                    new Allele("starterTower",
-                        {range: 100, damage: 10, hp: 100, attSpeed: 1}
-                    ),
-                ]);
+        if (tower) {
+            tower.genes.replaceAlleles([
+                new Allele("attack1", {
+                    attack: allAttackTypes.Laser
+                }),
+                new Allele("targetBase", {
+                    target: targetStrategies.Closest
+                }),
+                new Allele("starterTower", {
+                    range: 100,
+                    damage: 10,
+                    hp: 100,
+                    attSpeed: 1
+                }),
+            ]);
             getGame(this).advanceState();
         }
     }
@@ -163,8 +174,7 @@ tutorialstates.buyAlleles = function buyAlleles() {
     this.update = function () {
         var realGame = getGame(this).underlyingGame;
 
-        if(realGame.selectedObj && realGame.selectedObj.allelesGenerated.length > 0)
-            getGame(this).advanceState();
+        if (realGame.selectedObj && realGame.selectedObj.allelesGenerated.length > 0) getGame(this).advanceState();
     }
 };
 tutorialstates.spendAlleles = function spendAlleles() {
@@ -195,8 +205,7 @@ tutorialstates.spendAlleles = function spendAlleles() {
     this.update = function () {
         var realGame = getGame(this).underlyingGame;
 
-        if(realGame.selectedObj && realGame.selectedObj.allelesGenerated.length == 0)
-            getGame(this).advanceState();
+        if (realGame.selectedObj && realGame.selectedObj.allelesGenerated.length == 0) getGame(this).advanceState();
     }
 };
 
@@ -223,7 +232,10 @@ tutorialstates.placeAnotherTower = function placeAnotherTower() {
 
         var pathStart = getAnElement(realGame.engine.base.allChildren.Path_Start);
         var TILE_SIZE = pathStart.tPos.w;
-        var tile = findClosestToPointToPoint(realGame.engine, "Tile", {x: TILE_SIZE * 5, y: TILE_SIZE * 6}, 0);
+        var tile = findClosestToPointToPoint(realGame.engine, "Tile", {
+            x: TILE_SIZE * 5,
+            y: TILE_SIZE * 6
+        }, 0);
         this.tile = tile;
 
         var allMouseThrough = new AllMouseThrough(tile.tPos);
@@ -235,17 +247,26 @@ tutorialstates.placeAnotherTower = function placeAnotherTower() {
 
         var pathStart = getAnElement(realGame.engine.base.allChildren.Path_Start);
         var TILE_SIZE = pathStart.tPos.w;
-        var tower = findClosestToPoint(realGame.engine, "Tower", {x: TILE_SIZE * 5, y: TILE_SIZE * 6}, 0);
+        var tower = findClosestToPoint(realGame.engine, "Tower", {
+            x: TILE_SIZE * 5,
+            y: TILE_SIZE * 6
+        }, 0);
 
-        if(tower) {
-            tower.genes.replaceAlleles(
-                [
-                    new Allele("attack1", {attack: allAttackTypes.Laser}),
-                    new Allele("targetBase", {target: targetStrategies.Closest}),
-                    new Allele("starterTower",
-                        {range: 10, damage: 10, hp: 100, attSpeed: 1}
-                    ),
-                ]);
+        if (tower) {
+            tower.genes.replaceAlleles([
+                new Allele("attack1", {
+                    attack: allAttackTypes.Laser
+                }),
+                new Allele("targetBase", {
+                    target: targetStrategies.Closest
+                }),
+                new Allele("starterTower", {
+                    range: 10,
+                    damage: 10,
+                    hp: 100,
+                    attSpeed: 1
+                }),
+            ]);
             getGame(this).advanceState();
         }
     }
@@ -265,7 +286,10 @@ tutorialstates.networkTowerStart = function networkTowerStart() {
 
         var pathStart = getAnElement(realGame.engine.base.allChildren.Path_Start);
         var TILE_SIZE = pathStart.tPos.w;
-        var tile = findClosestToPoint(realGame.engine, "Tile", {x: TILE_SIZE * 3, y: TILE_SIZE * 5}, 0);
+        var tile = findClosestToPoint(realGame.engine, "Tile", {
+            x: TILE_SIZE * 3,
+            y: TILE_SIZE * 5
+        }, 0);
         this.tile = tile;
 
         var allMouseThrough = new AllMouseThrough(tile.tPos);
@@ -277,9 +301,12 @@ tutorialstates.networkTowerStart = function networkTowerStart() {
 
         var pathStart = getAnElement(realGame.engine.base.allChildren.Path_Start);
         var TILE_SIZE = pathStart.tPos.w;
-        var tower = findClosestToPoint(realGame.engine, "Tower", {x: TILE_SIZE * 3, y: TILE_SIZE * 5}, 0);
+        var tower = findClosestToPoint(realGame.engine, "Tower", {
+            x: TILE_SIZE * 3,
+            y: TILE_SIZE * 5
+        }, 0);
 
-        if(tower && tower.startDrag) {
+        if (tower && tower.startDrag) {
             getGame(this).advanceState();
         }
     }
@@ -300,7 +327,10 @@ tutorialstates.networkTowerEnd = function networkTowerEnd() {
 
         var pathStart = getAnElement(realGame.engine.base.allChildren.Path_Start);
         var TILE_SIZE = pathStart.tPos.w;
-        var tile = findClosestToPoint(realGame.engine, "Tile", {x: TILE_SIZE * 5, y: TILE_SIZE * 6}, 0);
+        var tile = findClosestToPoint(realGame.engine, "Tile", {
+            x: TILE_SIZE * 5,
+            y: TILE_SIZE * 6
+        }, 0);
         this.tile = tile;
 
         var allMouseThrough = new AllMouseThrough(tile.tPos);
@@ -315,14 +345,15 @@ tutorialstates.networkTowerEnd = function networkTowerEnd() {
 
         var pathStart = getAnElement(realGame.engine.base.allChildren.Path_Start);
         var TILE_SIZE = pathStart.tPos.w;
-        var tower = findClosestToPoint(realGame.engine, "Tower", {x: TILE_SIZE * 3, y: TILE_SIZE * 5}, 0);
+        var tower = findClosestToPoint(realGame.engine, "Tower", {
+            x: TILE_SIZE * 3,
+            y: TILE_SIZE * 5
+        }, 0);
 
-        if(!tower.startDrag) {
-            if(tower) {
-                if(tower.connections.length > 0)
-                    getGame(this).advanceState();
-                else
-                    getGame(this).setState(tutorialstates.networkTowerStart);
+        if (!tower.startDrag) {
+            if (tower) {
+                if (tower.connections.length > 0) getGame(this).advanceState();
+                else getGame(this).setState(tutorialstates.networkTowerStart);
             } else {
                 getGame(this).setState(tutorialstates.networkTowerStart);
             }
@@ -491,7 +522,7 @@ function hardcodePath(underlyingGame) {
         curY++;
         placePath();
     }
-    
+
 
     curPath.nextPath = pathEnd;
 }
@@ -510,15 +541,16 @@ function Tutorial(pos) {
 
     localEngine.base.addObject(new MouseMoveThrough(underlyingGame.engine.tPos));
 
-    
+
     this.states = [];
 
-    for (var key in tutorialstates)
+    for (var key in tutorialstates) {
         this.states.push(tutorialstates[key]);
+    }
 
     this.curState = null;
     this.curStatePos = -1;
-            
+
 
     this.advanceState = function () {
         var prevState = this.curState;
@@ -527,7 +559,7 @@ function Tutorial(pos) {
         }
 
         this.curStatePos++;
-        
+
         if (this.states[this.curStatePos]) {
             this.curState = new this.states[this.curStatePos]();
             localEngine.base.addObject(this.curState);
@@ -535,18 +567,19 @@ function Tutorial(pos) {
     }
     this.advanceState();
 
-    this.setState = function(newState) {
-        for(var num in this.states)
-            if(this.states[num] == newState) {
+    this.setState = function (newState) {
+        for (var num in this.states) {
+            if (this.states[num] == newState) {
                 this.curStatePos = num - 1; //Really really hackish... but it should work
                 this.advanceState();
                 break;
             }
+        }
     }
 
     var first = false;
     this.run = function (timestamp) {
-        if(first) {
+        if (first) {
             this.setState(tutorialstates.done);
             first = false;
         }

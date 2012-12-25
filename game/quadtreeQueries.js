@@ -17,8 +17,9 @@ function findAllWithinDistanceToRect(engine, type, targetRect, maxDistance) {
 
     var within = [];
 
-    if (DFlag.logn && DFlag.logn.findAllWithinDistanceToRect)
+    if (DFlag.logn && DFlag.logn.findAllWithinDistanceToRect) {
         DFlag.logn.findAllWithinDistanceToRect.max += relevantArray.length;
+    }
 
     findClosestGeneric(relevantQuadTree, relevantArray,
         function (splitX, axisPos) {
@@ -166,16 +167,16 @@ function findAllWithin(engine, type, target, maxDistance) {
 
     var relevantQuadTree = engine.curQuadTree.objTrees[type].tree;
     var relevantArray = engine.base.allChildren[type];
-    
+
     var within = [];
 
     if (DFlag.logn && DFlag.logn.findAllWithin) {
         DFlag.logn.findAllWithin.max += relevantArray.length;
     }
 
-    findClosestGeneric(relevantQuadTree, relevantArray, 
-        function (splitX, axisPos)  {
-            if(splitX) {
+    findClosestGeneric(relevantQuadTree, relevantArray,
+        function (splitX, axisPos) {
+            if (splitX) {
                 if ((target.x + (target.w ? target.w : 0)) < axisPos) return -1;
                 else if (target.x > axisPos) return 1;
                 else return 0;
@@ -185,7 +186,8 @@ function findAllWithin(engine, type, target, maxDistance) {
                 else return 0;
             }
         },
-        function(rect) {
+
+        function (rect) {
             return vecToRect(target, rect).magSq();
         },
         maxDistance * maxDistance, false, within);

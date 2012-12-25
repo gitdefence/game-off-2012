@@ -1,4 +1,4 @@
-﻿//All the input should likely be combined and put in a few components,
+﻿ //All the input should likely be combined and put in a few components,
 //as it will likely be the same for most games.
 
 function GitDefence(pos) {
@@ -15,30 +15,19 @@ function GitDefence(pos) {
     if (DFlag.lotsamoney) {
         this.money = 10000;
     }
-    this.health = 100;    
+    this.health = 100;
 
     this.lastTowerHover = null;
 
 
-    this.infobar = new Infobar(
-            new TemporalPos(pos.w - 250, 0, 250, pos.h)
-        );
+    this.infobar = new Infobar(new TemporalPos(pos.w - 250, 0, 250, pos.h));
 
     engine.base.addObject(this.infobar);
 
-    this.towerbar = new Towerbar(
-            new TemporalPos(0, pos.h - 150, pos.w - 260, 150)
-        );
+    this.towerbar = new Towerbar(new TemporalPos(0, pos.h - 150, pos.w - 260, 150));
     engine.base.addObject(this.towerbar);
 
-//    this.towerbreeder = new TowerBreeder(
-//            new TemporalPos(pos.w - 250, pos.h - 150, 200, 150)
-//        );
-    //    engine.base.addObject(this.towerbreeder);
-
-    this.gameInfoBar = new GameInfoBar(
-            new TemporalPos(0, pos.h - 240, pos.w - 260, 90)
-        );
+    this.gameInfoBar = new GameInfoBar(new TemporalPos(0, pos.h - 240, pos.w - 260, 90));
     engine.base.addObject(this.gameInfoBar);
 
 
@@ -49,14 +38,14 @@ function GitDefence(pos) {
     var bugStart = getAnElement(this.engine.base.children["Path_Start"]);
 
     //Level/Wave generator
-    var lmpos = new TemporalPos(pos.w-400, 0, 100, pos.h*0.05);
+    var lmpos = new TemporalPos(pos.w - 400, 0, 100, pos.h * 0.05);
     this.lvMan = new LevelManager(bugStart, lmpos);
     engine.base.addObject(this.lvMan);
 
     this.input = new InputHandler();
     var input = this.input;
     this.input.resizeEvent = pos; //We need to resize right away (shouldn't really have to... but we do)
-    
+
     this.run = function (timestamp) {
         var eng = this.engine;
 
@@ -64,21 +53,19 @@ function GitDefence(pos) {
 
         this.input.handleEvents(eng);
 
-        if(this.selectionChanged) {
+        if (this.selectionChanged) {
             this.selectionChanged = false;
             for (var key in this.globalSelectionChanged) {
-                if (this.globalSelectionChanged[key].base.rootNode != eng)
-                    delete this.globalSelectionChanged[key];
-                else
-                    this.globalSelectionChanged[key].base.callRaise("selectionChanged", this.selectedObj);
+                if (this.globalSelectionChanged[key].base.rootNode != eng) delete this.globalSelectionChanged[key];
+                else this.globalSelectionChanged[key].base.callRaise("selectionChanged", this.selectedObj);
             }
         }
 
-        if (currentRangeDisplayed && this.selectedObj)
+        if (currentRangeDisplayed && this.selectedObj) {
             currentRangeDisplayed.tPos = this.selectedObj.tPos.getCenter();
+        }
 
-        if (this.selectedObj)
-            this.selectedObj.hover = true;
+        if (this.selectedObj) this.selectedObj.hover = true;
     };
 
     this.draw = function (pen) {
@@ -104,8 +91,7 @@ function GitDefence(pos) {
 
     this.selectionChanged = false;
     this.changeSel = function (obj) {
-        if (obj == this.selectedObj)
-            return;
+        if (obj == this.selectedObj) return;
 
         this.selectionChanged = true;
 
@@ -117,16 +103,11 @@ function GitDefence(pos) {
         if (obj && obj.attr) {
             //Hooks up our tower range to our actual attributes (but not our center)
             //so we don't need to maintain it.
-            currentRangeDisplayed = new Circle(
-                obj.tPos.getCenter(),
-                obj.attr.range,
-                obj.color,
-                "transparent", 11);
+            currentRangeDisplayed = new Circle(obj.tPos.getCenter(), obj.attr.range, obj.color, "transparent", 11);
 
             this.engine.base.addObject(currentRangeDisplayed);
 
-            if (this.selectedObj)
-                this.selectedObj.hover = false;
+            if (this.selectedObj) this.selectedObj.hover = false;
 
             this.selectedObj = obj;
             this.infobar.updateAttr(obj);
@@ -154,8 +135,7 @@ function GitDefence(pos) {
             }
             this.selectedBucket = [];
 
-            if (this.selectedObj)
-                this.selectedObj.hover = false;
+            if (this.selectedObj) this.selectedObj.hover = false;
 
             this.selectedObj = null;
             this.infobar.clearDisplay();
@@ -165,11 +145,10 @@ function GitDefence(pos) {
     }
 
     this.upgradeSel = function () {
-        if(this.selectedObj)
-            this.selectedObj.tryUpgrade();
+        if (this.selectedObj) this.selectedObj.tryUpgrade();
         return;
     }
-    
+
     this.getSelType = function () {
         if (!this.selectedObj) {
             return null;

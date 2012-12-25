@@ -5,6 +5,7 @@ function AllelePointSystem(pos) {
     var vbox;
     this.added = function () {
         var that = this;
+
         function pointButton(num, cost) {
             var text;
             if (num == 1) {
@@ -12,12 +13,15 @@ function AllelePointSystem(pos) {
             } else {
                 text = "Buy " + num + " points ($" + cost + ")";
             }
-            var b = new Button(text, bind(that, "buyPoint", {count: num, cost: cost}));
+            var b = new Button(text, bind(that, "buyPoint", {
+                count: num,
+                cost: cost
+            }));
             return b;
         }
         vbox = new VBox();
         this.base.addObject(vbox);
-        
+
         this.pointIndicator = new Label(pos.clone(), "");
         vbox.add(this.pointIndicator);
 
@@ -32,8 +36,7 @@ function AllelePointSystem(pos) {
     this.pointCost = 50;
 
     this.selectionChanged = function (newSelected) {
-        if(newSelected)
-            this.autoTrashButton.toggled = newSelected.autoTrash;
+        if (newSelected) this.autoTrashButton.toggled = newSelected.autoTrash;
     }
 
     this.buyPoint = function (costData) {
@@ -47,8 +50,9 @@ function AllelePointSystem(pos) {
         if (selected && selected.base.type == "Tower") {
             if (game.money > cost) {
                 game.money -= cost;
-                for (var i = 0; i < count; i++)
+                for (var i = 0; i < count; i++) {
                     selected.generateAllele();
+                }
             }
         }
     }
@@ -69,8 +73,9 @@ function AllelePointSystem(pos) {
         var selected = getSel(this);
 
         if (selected && selected.base.type == "Tower") {
-            if (selected.allelesGenerated.length > 0)
+            if (selected.allelesGenerated.length > 0) {
                 selected.allelesGenerated.splice(0, 1);
+            }
         }
     }
 
@@ -95,11 +100,14 @@ function AllelePointSystem(pos) {
 
                 anyPositive = false;
                 for (var key in extraInfo) {
-                    if (extraInfo[key] > 0 || extraInfo[key].added == "+")
+                    if (extraInfo[key] > 0 || extraInfo[key].added == "+") {
                         anyPositive = true;
-                    for (var dKey in extraInfo[key].delta)
-                        if (extraInfo[key].delta[dKey] > 0)
+                    }
+                    for (var dKey in extraInfo[key].delta) {
+                        if (extraInfo[key].delta[dKey] > 0) {
                             anyPositive = true;
+                        }
+                    }
                 }
                 if (!anyPositive) {
                     selected.allelesGenerated.splice(0, 1);
@@ -108,8 +116,12 @@ function AllelePointSystem(pos) {
         }
     }
 
-    this.mouseover = function () { this.addDeltaDisplay(); };
-    this.mouseout = function () { this.removeDeltaDisplay(); };
+    this.mouseover = function () {
+        this.addDeltaDisplay();
+    };
+    this.mouseout = function () {
+        this.removeDeltaDisplay();
+    };
 
     this.addDeltaDisplay = function () {
         var selected = getSel(this);
@@ -126,8 +138,7 @@ function AllelePointSystem(pos) {
                         var change = allele.delta[key];
 
                         if (typeof change == "number") {
-                            if (!extraInfo[key])
-                                extraInfo[key] = 0;
+                            if (!extraInfo[key]) extraInfo[key] = 0;
 
                             extraInfo[key] += change * factor;
 
@@ -144,8 +155,7 @@ function AllelePointSystem(pos) {
                     }
                 }
 
-                if (selected.genes.alleles[allele.group])
-                    addToExtraInfo(selected.genes.alleles[allele.group], -1);
+                if (selected.genes.alleles[allele.group]) addToExtraInfo(selected.genes.alleles[allele.group], -1);
 
                 addToExtraInfo(allele, 1);
             }
@@ -153,7 +163,7 @@ function AllelePointSystem(pos) {
     }
 
     this.removeDeltaDisplay = function () {
-        this.base.parent.extraInfo = {};        
+        this.base.parent.extraInfo = {};
     }
 
     var added = false;

@@ -67,8 +67,7 @@ function LevelManager(bugStart) {
 
             this.levelIteration = Math.floor(this.curWave / waves.length);
             var attributeModifier = curWaveData.attributeModifier;
-            if(!attributeModifier)
-                attributeModifier = Math.atan(this.levelIteration) + this.levelIteration * 0.3 + 0.1;
+            if (!attributeModifier) attributeModifier = Math.atan(this.levelIteration) + this.levelIteration * 0.3 + 0.1;
 
             var waveArray = [];
 
@@ -89,8 +88,9 @@ function LevelManager(bugStart) {
 
             if (curWaveData.deadTrigger) {
                 var grimReaper = new AliveCounter(bind(curWaveData, "deadTrigger"));
-                for(var key in waveArray)
+                for (var key in waveArray) {
                     grimReaper.addAliveTracker(waveArray[key]);
+                }
 
                 //I am not entirely sure we even need to do this... but we will just to insure
                 //garbage collection doesn't clean it up.
@@ -110,8 +110,7 @@ function LevelManager(bugStart) {
 
             if (this.bugsToSpawn.length == this.startSpawnTriggers.length) {
                 var curStartTrigger = this.startSpawnTriggers[0];
-                if(curStartTrigger)
-                    curStartTrigger();
+                if (curStartTrigger) curStartTrigger();
                 this.startSpawnTriggers.shift();
             }
 
@@ -122,11 +121,10 @@ function LevelManager(bugStart) {
             if (currentWave.length == 0) {
                 this.bugsToSpawn.shift();
                 var curFinishTrigger = this.finishSpawnTriggers[0];
-                if(curFinishTrigger)
-                    curFinishTrigger();
+                if (curFinishTrigger) curFinishTrigger();
                 this.finishSpawnTriggers.shift();
             }
         }
 
-    }     //End of update
+    } //End of update
 } //End of levelManager

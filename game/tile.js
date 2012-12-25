@@ -1,4 +1,6 @@
-﻿function Tile(x, y, w, h) {
+﻿
+
+function Tile(x, y, w, h) {
     this.hover = false;
 
     this.tPos = new TemporalPos(x, y, w, h, 0, 0);

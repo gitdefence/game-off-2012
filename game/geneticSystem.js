@@ -4,43 +4,38 @@ function Genes() {
     this.alleles = {};
 
     var addingAlleles = false;
-    this.startAlleleAdd = function() {
+    this.startAlleleAdd = function () {
         addingAlleles = true;
     }
-    this.endAlleleAdd = function() {
+    this.endAlleleAdd = function () {
         addingAlleles = false;
         this.recalculateAttributes();
     }
 
     this.addAllele = function (allele) {
-        if (!assertDefined(allele))
-            return;
+        if (!assertDefined(allele)) return;
 
         var holder = this.base.parent;
 
-        if (!assertDefined(holder))
-            return;
+        if (!assertDefined(holder)) return;
 
-        if (!assertDefined(allele.delta, allele.group))
-            return;
+        if (!assertDefined(allele.delta, allele.group)) return;
 
         var group = allele.group;
 
         this.alleles[group] = allele;
-        if(!addingAlleles)
-            this.recalculateAttributes();
+        if (!addingAlleles) this.recalculateAttributes();
     };
 
     this.removeAlleleGroup = function (group) {
-        if(this.alleles[group.group])
-            delete this.alleles[group.group];
+        if (this.alleles[group.group]) delete this.alleles[group.group];
     }
 
-    this.recalculateAttributes = function() {
+    this.recalculateAttributes = function () {
         var holder = this.base.parent;
         holder.setBaseAttrs();
 
-        for(var key in this.alleles) {
+        for (var key in this.alleles) {
             this.alleles[key].apply(holder);
         }
         holder.attr.currentHp = holder.attr.hp;

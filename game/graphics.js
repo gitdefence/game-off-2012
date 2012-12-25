@@ -1,7 +1,6 @@
 ﻿ink = {
     circ: function (x, y, r, pen) {
-        if (!assertDefined(x, y, r, pen))
-            return;
+        if (!assertDefined(x, y, r, pen)) return;
 
         pen.beginPath();
         pen.arc(x, y, r, 0, 2 * Math.PI, false);
@@ -10,8 +9,7 @@
         pen.stroke();
     },
     outlineCirc: function (x, y, r, pen) {
-        if (!assertDefined(x, y, r, pen))
-            return;
+        if (!assertDefined(x, y, r, pen)) return;
 
         pen.beginPath();
         pen.arc(x, y, r, 0, 2 * Math.PI, false);
@@ -19,8 +17,7 @@
         pen.stroke();
     },
     tri: function (x, y, width, height, pen) {
-        if (!assertDefined(x, y, width, height, pen))
-            return;
+        if (!assertDefined(x, y, width, height, pen)) return;
 
         pen.beginPath();
         pen.moveTo(x, y);
@@ -32,8 +29,7 @@
         pen.stroke();
     },
     rect: function (x, y, width, height, pen) {
-        if (!assertDefined(x, y, width, height, pen))
-            return;
+        if (!assertDefined(x, y, width, height, pen)) return;
 
         pen.beginPath();
         pen.lineWidth = 2;
@@ -43,8 +39,7 @@
         pen.stroke();
     },
     outlineRect: function (x, y, width, height, pen) {
-        if (!assertDefined(x, y, width, height, pen))
-            return;
+        if (!assertDefined(x, y, width, height, pen)) return;
 
         pen.beginPath();
         pen.moveTo(x, y);
@@ -58,8 +53,7 @@
         pen.stroke();
     },
     line: function (x1, y1, x2, y2, pen) {
-        if (!assertDefined(x1, y1, x2, y2, pen, pen.strokeStyle))
-            return;
+        if (!assertDefined(x1, y1, x2, y2, pen, pen.strokeStyle)) return;
 
         pen.beginPath();
         pen.moveTo(x1, y1);
@@ -68,12 +62,11 @@
         pen.stroke();
     },
     arrow: function (x1, y1, x2, y2, pen) {
-        if (!assertDefined(x1, y1, x2, y2, pen, pen.strokeStyle))
-            return;
+        if (!assertDefined(x1, y1, x2, y2, pen, pen.strokeStyle)) return;
 
         //http://stackoverflow.com/questions/808826/draw-arrow-on-canvas-tag
         function canvas_arrow(context, fromx, fromy, tox, toy) {
-            var headlen = 5;   // length of head in pixels
+            var headlen = 5; // length of head in pixels
             var angle = Math.atan2(toy - fromy, tox - fromx);
             context.moveTo(fromx, fromy);
             context.lineTo(tox, toy);
@@ -87,12 +80,11 @@
         pen.stroke();
     },
     arrowHead: function (x1, y1, x2, y2, pen) {
-        if (!assertDefined(x1, y1, x2, y2, pen, pen.strokeStyle))
-            return;
+        if (!assertDefined(x1, y1, x2, y2, pen, pen.strokeStyle)) return;
 
         //http://stackoverflow.com/questions/808826/draw-arrow-on-canvas-tag
         function canvas_arrow(context, fromx, fromy, tox, toy) {
-            var headlen = 5;   // length of head in pixels
+            var headlen = 5; // length of head in pixels
             var angle = Math.atan2(toy - fromy, tox - fromx);
             context.moveTo(fromx, fromy);
             context.moveTo(tox, toy);
@@ -106,8 +98,7 @@
         pen.stroke();
     },
     text: function (x, y, text, pen) {
-        if (!assertDefined(x, y, text, pen))
-            return;
+        if (!assertDefined(x, y, text, pen)) return;
 
         pen.beginPath();
         pen.fillText(text, x, y);
@@ -116,19 +107,17 @@
         pen.fill();
     },
     cenText: function (x, y, text, pen) {
-        if (!assertDefined(x, y, text, pen))
-            return;
+        if (!assertDefined(x, y, text, pen)) return;
 
         this.text(x - pen.measureText(text).width / 2, y, text, pen);
     }
 };
 
 function setStrokeAndColor(pen, borderWidth, borderColor) {
-    if(borderWidth) {
+    if (borderWidth) {
         pen.lineWidth = borderWidth;
         pen.strokeStyle = borderColor;
-    }
-    else {
+    } else {
         borderWidth = 0;
         pen.lineWidth = 0;
         pen.strokeStyle = "transparent";
@@ -138,15 +127,15 @@ function setStrokeAndColor(pen, borderWidth, borderColor) {
 }
 
 DRAW = {
-    circle: function(pen, centerPos, r, insideColor, borderWidth, borderColor) {
+    circle: function (pen, centerPos, r, insideColor, borderWidth, borderColor) {
         DRAW.arc(pen, centerPos, r, 0, Math.PI * 2, insideColor, borderWidth, borderColor);
     },
-    arcRect: function(pen, rect, insideColor, borderWidth, borderColor) {
-        var centerPos = new Vector(rect.x + rect.w/2, rect.y + rect.h/2);
-        var r = rect.w/2 + rect.h/2; //Hmm... maybe not best
+    arcRect: function (pen, rect, insideColor, borderWidth, borderColor) {
+        var centerPos = new Vector(rect.x + rect.w / 2, rect.y + rect.h / 2);
+        var r = rect.w / 2 + rect.h / 2; //Hmm... maybe not best
         DRAW.arc(pen, centerPos, r, 0, Math.PI * 2, insideColor, borderWidth, borderColor);
     },
-    arc: function(pen, centerPos, r, angleStart, angleEnd, insideColor, borderWidth, borderColor) {
+    arc: function (pen, centerPos, r, angleStart, angleEnd, insideColor, borderWidth, borderColor) {
         borderWidth = setStrokeAndColor(pen, borderWidth, borderColor);
 
         pen.fillStyle = insideColor;
@@ -157,7 +146,7 @@ DRAW = {
         pen.fill();
         pen.stroke();
     },
-    piePiece: function(pen, centerPos, r, angleStart, angleEnd, insideColor, borderWidth, borderColor) {
+    piePiece: function (pen, centerPos, r, angleStart, angleEnd, insideColor, borderWidth, borderColor) {
         borderWidth = setStrokeAndColor(pen, borderWidth, borderColor);
 
         pen.fillStyle = insideColor;
@@ -169,14 +158,14 @@ DRAW = {
         pen.fill();
         pen.stroke();
     },
-    rect: function(pen, rect, insideColor, borderWidth, borderColor) {
+    rect: function (pen, rect, insideColor, borderWidth, borderColor) {
         borderWidth = setStrokeAndColor(pen, borderWidth, borderColor);
 
         pen.fillStyle = insideColor;
 
         pen.beginPath();
         pen.rect(rect.x + borderWidth / 2, rect.y + borderWidth / 2,
-                 rect.w - borderWidth, rect.h - borderWidth);
+        rect.w - borderWidth, rect.h - borderWidth);
         pen.fill();
         pen.stroke();
     },

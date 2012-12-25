@@ -14,32 +14,33 @@ function RGBColor() {
     var a = 1.0;
     var str;
     var dirty = true;
+
     function validate(color) {
         return Math.max(Math.min(Math.floor(color), 255), 1);
     }
-    this.r = function(newr) {
+    this.r = function (newr) {
         r = validate(newr);
         dirty = true;
         return this;
     }
-    this.g = function(newg) {
+    this.g = function (newg) {
         g = validate(newg);
         dirty = true;
         return this;
     }
-    this.b = function(newb) {
+    this.b = function (newb) {
         b = validate(newb);
         dirty = true;
         return this;
     }
-    this.a = function(newa) {
+    this.a = function (newa) {
         a = Math.min(newa, 1);
         // Avoid scientific notation.
         if (a < 0.000001) a = 1;
         dirty = true;
         return this;
     }
-    this.str = function() {
+    this.str = function () {
         if (!dirty) return str;
         str = "rgba(" + r + "," + g + "," + b + "," + a + ")";
         dirty = false;
@@ -54,28 +55,29 @@ function HSLColor() {
     var a = 1.0;
     var str;
     var dirty = true;
+
     function percent(val) {
         return Math.max(Math.min(Math.floor(val), 100), 0);
     }
-    this.h = function(newh) {
+    this.h = function (newh) {
         if (newh === undefined) return h;
         h = (Math.floor(newh) + 360) % 360;
         dirty = true;
         return this;
     }
-    this.s = function(news) {
+    this.s = function (news) {
         if (news === undefined) return s;
         s = percent(news);
         dirty = true;
         return this;
     }
-    this.l = function(newl) {
+    this.l = function (newl) {
         if (newl === undefined) return l;
         l = percent(newl);
         dirty = true;
         return this;
     }
-    this.a = function(newa) {
+    this.a = function (newa) {
         if (newa === undefined) return a;
         // Get rid of scientific notation.
         if (newa < 0.0000001) newa = 0;
@@ -83,7 +85,7 @@ function HSLColor() {
         dirty = true;
         return this;
     }
-    this.str = function() {
+    this.str = function () {
         if (dirty) {
             str = "hsla(" + h + ", " + s + "%, " + l + "%, " + a + ")";
         }
@@ -106,8 +108,7 @@ function setColorPart(color, partNumber, partValue) {
         if (first) {
             first = false;
             returnValue += args[key];
-        }
-        else {
+        } else {
             returnValue += ", " + args[key];
         }
     }
@@ -143,7 +144,7 @@ function getInnerColorFromAttrs(attr) {
     lightness = lightness * 0.5 + 10;
 
     //return "hsl(" + hue + "," + saturation + "," + lightness + "," + alpha + ")";
-    return (new HSLColor()).h(hue).s(saturation).l(lightness).a(alpha).str();// "hsl(160, 50%, 50%)";
+    return (new HSLColor()).h(hue).s(saturation).l(lightness).a(alpha).str(); // "hsl(160, 50%, 50%)";
 }
 
 function getOuterColorFromAttrs(attr) {

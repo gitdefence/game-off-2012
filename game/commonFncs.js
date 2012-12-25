@@ -13,8 +13,7 @@ function swap(obj, one, two) {
 }
 
 function mergeToArray(value, array) {
-    if (nullOrUndefined(value))
-        return array;
+    if (nullOrUndefined(value)) return array;
 
     if ((value.length === undefined || value.length !== 0)) {
         if (typeof value === "number") {
@@ -23,9 +22,12 @@ function mergeToArray(value, array) {
             //This is probably the fastest way to check if it is probably an array, if it isn't and it has length... well then:
             //http://stackoverflow.com/questions/332422/how-do-i-get-the-name-of-an-objects-type-in-javascript
             if (value.length !== undefined) {
-                if (value.length > 0)
-                    for (var key in value) //concat would mean when you call this you have to do arr = merg(val, arr)
+                if (value.length > 0) {
+                    for (var key in value) {
+                        //concat would mean when you call this you have to do arr = merg(val, arr)
                         array.push(value[key]);
+                    }
+                }
             } else if (value) {
                 array.push(value);
             }
@@ -37,27 +39,27 @@ function mergeToArray(value, array) {
 
 //Gets an element from object, or returns null if there are no objects
 function getAnElement(object) {
-    for (var key in object)
+    for (var key in object) {
         return object[key];
+    }
     return null;
 }
 
 //Don't use this often! If you really need the count (length) you should keep track of it
 function countElements(object) {
     var count = 0;
-    for (var key in object)
+    for (var key in object) {
         count++;
+    }
     return count;
 }
 
 function hasAtleastXElements(object, x) {
-    if (!x)
-        return true;
+    if (!x) return true;
 
     for (var key in object) {
         x--;
-        if (!x)
-            return true;
+        if (!x) return true;
     }
 
     return false;
@@ -65,6 +67,7 @@ function hasAtleastXElements(object, x) {
 
 function sortArrayByProperty(a, prop) {
     a.sort(cmp)
+
     function cmp(a, b) {
         // Avoid multiple object dereferences in 
         // tight inner loop.
@@ -82,16 +85,16 @@ function sortArrayByProperty(a, prop) {
 
 //If given an object it turns a random key from it
 function pickRandom(array) {
-    if(!assertDefined(array.length))
-        return;
+    if (!assertDefined(array.length)) return;
 
     return array[Math.floor(Math.random() * array.length)];
 }
 
 function pickRandomKey(object) {
     var keys = [];
-    for(var key in object)
+    for (var key in object) {
         keys.push(key)
+    }
     return keys[Math.floor(Math.random() * keys.length)];
 }
 
@@ -100,8 +103,7 @@ function pickRandomKey(object) {
 //an answer from stack overlow...
 //http://stackoverflow.com/questions/8177964/in-javascript-how-can-i-set-rgba-without-specifying-the-rgb
 function setAlpha(color, newAlpha) {
-    if (!assertDefined(color, newAlpha))
-        return;
+    if (!assertDefined(color, newAlpha)) return;
     return color.replace(/[^,]+(?=\))/, newAlpha);
 }
 
@@ -129,16 +131,9 @@ function mergeObject(objectOne, objectTwo) {
 
 function clamp(val, min, max) {
     //Like my code?
-    if (isNaN(val))
-        return min / 2 + max / 2;
+    if (isNaN(val)) return min / 2 + max / 2;
 
-    return val <
-           min ?
-           min :
-           val >
-           max ?
-           max : 
-           val;
+    return val < min ? min : val > max ? max : val;
 }
 
 
@@ -166,8 +161,7 @@ function makeTiled(pen, makeTileFnc, array, tPosBox, xNum, yNum, percentBuffer) 
                 yPos += height;
             }
 
-            if (makeTileFnc(value, pen, new TemporalPos(xPos, yPos, drawnWidth, drawnHeight)))
-                xPos += width;
+            if (makeTileFnc(value, pen, new TemporalPos(xPos, yPos, drawnWidth, drawnHeight))) xPos += width;
         }
     }
 }
@@ -175,43 +169,28 @@ function makeTiled(pen, makeTileFnc, array, tPosBox, xNum, yNum, percentBuffer) 
 //This is reference code for Quentin, don't touch this code.
 //This should really not be in here.
 //Sorts arr by the given property (uses quickSort)
-function sortArrayByPropertyCustom
-(
-    arrObj,
-    property
-) {
+function sortArrayByPropertyCustom(arrObj, property) {
 
-    if (arrObj.length <= 1)
-        return;
+    if (arrObj.length <= 1) return;
 
     sortArrayByPropertyPrivate(arrObj, 0, arrObj.length - 1, property);
 
-    function sortArrayByPropertyPrivate
-    (
-        arrObj,
-        startIndex,
-        endIndex,
-        property
-    ) {
+    function sortArrayByPropertyPrivate(arrObj, startIndex, endIndex, property) {
         var pivotPoint;
 
         if (startIndex + 1 == endIndex) {
-            if (arrObj[startIndex][property] > arrObj[endIndex][property])
-                swap(arrObj, startIndex, endIndex);
+            if (arrObj[startIndex][property] > arrObj[endIndex][property]) swap(arrObj, startIndex, endIndex);
             return;
         }
 
         //Make the pivot point the median of the first middle and last
         //(also we do a bit of sorting here too)
         var middleIndex = Math.floor((startIndex + endIndex) / 2);
-        if (arrObj[middleIndex][property] < arrObj[startIndex][property])
-            swap(arrObj, middleIndex, startIndex);
+        if (arrObj[middleIndex][property] < arrObj[startIndex][property]) swap(arrObj, middleIndex, startIndex);
 
-        if (arrObj[endIndex][property] < arrObj[startIndex][property])
-            swap(arrObj, endIndex, startIndex);
+        if (arrObj[endIndex][property] < arrObj[startIndex][property]) swap(arrObj, endIndex, startIndex);
 
-        if (arrObj[endIndex][property] < arrObj[middleIndex][property])
-            swap(arrObj, endIndex, middleIndex);
+        if (arrObj[endIndex][property] < arrObj[middleIndex][property]) swap(arrObj, endIndex, middleIndex);
 
         var pivotPoint = middleIndex;
         var pivotValue = arrObj[middleIndex][property];
@@ -227,31 +206,26 @@ function sortArrayByPropertyCustom
         //< here instead of <= sorts it, but leaves lessEnd and greaterStart possibly wrong
         while (curPos <= greaterStart) {
             if (arrObj[curPos][property] < pivotValue) {
-                if (curPos != lessEnd)
-                    swap(arrObj, curPos, lessEnd);
+                if (curPos != lessEnd) swap(arrObj, curPos, lessEnd);
 
                 curPos++;
                 lessEnd++;
-            }
-            else if (arrObj[curPos][property] > pivotValue) {
+            } else if (arrObj[curPos][property] > pivotValue) {
                 swap(arrObj, curPos, greaterStart--);
-            }
-            else {
+            } else {
                 curPos++;
             }
         }
 
         greaterStart++;
 
-        if (lessEnd - startIndex > 0)
-            sortArrayByPropertyPrivate(arrObj, startIndex, lessEnd - 1, property);
-        if (endIndex - greaterStart > 0)
-            sortArrayByPropertyPrivate(arrObj, greaterStart, endIndex, property);
+        if (lessEnd - startIndex > 0) sortArrayByPropertyPrivate(arrObj, startIndex, lessEnd - 1, property);
+        if (endIndex - greaterStart > 0) sortArrayByPropertyPrivate(arrObj, greaterStart, endIndex, property);
     }
 }
 
 // From http://fitzgeraldnick.com/weblog/26/ with slight modifications
-function bind(thisCtx, name /*, variadic args to curry */) {
+function bind(thisCtx, name /*, variadic args to curry */ ) {
     var args = Array.prototype.slice.call(arguments, 2);
     return function () {
         return thisCtx[name].apply(thisCtx, args.concat(Array.prototype.slice.call(arguments)));

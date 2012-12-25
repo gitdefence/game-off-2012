@@ -1,5 +1,5 @@
 // Loads all the scripts in this folder (well, at least, as of now...)
-(function() {
+(function () {
     function loadScript(name) {
         var s = document.createElement('script')
         s.src = 'ui/' + name + '.js';
@@ -13,8 +13,7 @@
         'toggleButton',
         'textWrapper',
         'vbox',
-        'hbox',
-    ];
+        'hbox', ];
     for (var i = 0; i < scripts.length; i++) {
         loadScript(scripts[i]);
     }

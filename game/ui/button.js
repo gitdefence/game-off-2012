@@ -1,15 +1,14 @@
 function Button(text, callback, zorder) {
     this.tPos = new TemporalPos(0, 0, 0, 0);
-    
-    if (!zorder)
-        zorder = 15;
-    
+
+    if (!zorder) zorder = 15;
+
     this.base = new BaseObj(this, zorder, true);
-    
+
     var hover = false;
     var down = false;
-    
-    this.draw = function(pen) {
+
+    this.draw = function (pen) {
         //Draw box
         if (down) {
             pen.fillStyle = "#555";
@@ -19,9 +18,9 @@ function Button(text, callback, zorder) {
             pen.fillStyle = "black";
         }
         pen.strokeStyle = "green";
-        
+
         ink.rect(this.tPos.x, this.tPos.y, this.tPos.w, this.tPos.h, pen);
-        
+
         // Draw text
         pen.fillStyle = "green";
         pen.font = "14px courier";
@@ -29,29 +28,29 @@ function Button(text, callback, zorder) {
         var cen = this.tPos.getCenter();
         ink.cenText(cen.x, cen.y, text, pen);
     }
-    
-    this.resize = function(rect) {
+
+    this.resize = function (rect) {
         this.tPos = rect;
         return this;
     }
-    
-    this.click = function() {
+
+    this.click = function () {
         if (callback) callback();
     };
-    
-    this.mouseover = function() {
+
+    this.mouseover = function () {
         hover = true;
     };
-    
-    this.mouseout = function() {
+
+    this.mouseout = function () {
         hover = false;
     };
-    
-    this.mousedown = function() {
+
+    this.mousedown = function () {
         down = true;
     };
-    
-    this.mouseup = function() {
+
+    this.mouseup = function () {
         down = false;
     };
 }

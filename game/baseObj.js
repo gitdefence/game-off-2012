@@ -1,46 +1,32 @@
-//Add some more documentation to this!
-
-
-//raiseEvent
-    //raiseEvent(name, arguments)
-        //Calls the function with the name on our object (and gives it arguments),
-        //and calls raiseEvent on our children. Then merges the results in an array (merging arrays,
-        //but ignoring undefined and null) and returns that.
-    //Notes
-        //Update is basically just raiseEvent("update", dt)
-
-/********************************* CODE START *********************************/
-
 var uniqueBaseObjNumber = 1;
+
+// Add some more documentation to this!
 function BaseObj(holder, zindex, dynamicZIndex) {
-    if (!assertDefined("BaseObj", holder))
-        return;
+    if (!assertDefined("BaseObj", holder)) return;
 
     //Strange... but needed
     holder.base = this;
 
-//Identifier properties    
+    //Identifier properties    
     this.type = getRealType(holder); //.constructor.name;
-    if (dynamicZIndex)
-        this.type += zindex;
+    if (dynamicZIndex) this.type += zindex;
 
     //If its not a string then the object degenerates to an array.
     this.id = 'q' + uniqueBaseObjNumber++;
 
-   
-//Drawing properties
+
+    //Drawing properties
     //Will be set to the position in the array it is in,
     //and so will be used to determine order when zindex is equal.
     this.zoffset = 0; //<--------- THIS IS ALSO QUADTREE MAINTAINED
 
-    if (!zindex)
-        zindex = 0;
+    if (!zindex) zindex = 0;
 
     //Individual objects cannot change their zindex! If they are the same type they must have the same zindex!
     this.zindex = zindex;
 
 
-//Hierarchical properties
+    //Hierarchical properties
     this.rootNode = holder; //Be default we are our own rootNode    
     this.holder = holder;
     this.parent = null;
@@ -69,8 +55,7 @@ function BaseObj(holder, zindex, dynamicZIndex) {
     //This just makes easier to maintain our arrays. It doesn't really create them,
     //so array and arrayLengths must still be members initialized in our constructor
     function addToArray(BaseObj, obj, array, arrayLengths) {
-        if (!assertDefined("addToArray", BaseObj, BaseObj[array], BaseObj[arrayLengths], obj, obj.base))
-            return;
+        if (!assertDefined("addToArray", BaseObj, BaseObj[array], BaseObj[arrayLengths], obj, obj.base)) return;
 
         if (!BaseObj[array][obj.base.type]) {
             BaseObj[array][obj.base.type] = {};
@@ -84,31 +69,25 @@ function BaseObj(holder, zindex, dynamicZIndex) {
     };
 
     this.addObject = function (obj) {
-        if (!assertDefined("addObject", obj) || !assertDefined("addObject", obj.base))
-            return;
+        if (!assertDefined("addObject", obj) || !assertDefined("addObject", obj.base)) return;
 
         obj.base.parent = this.holder;
         obj.base.setRootNode(this.rootNode);
 
         addToArray(this, obj, "children", "lengths");
 
-        if(obj.added)
-            obj.added();
+        if (obj.added) obj.added();
 
         //Hmm... I don't like this loop, too specific
         obj.base.loopThroughAllTypes(function (child) {
-            if (child.parentAdded)
-                child.parentAdded();
+            if (child.parentAdded) child.parentAdded();
         });
-    };    
+    };
 
     function removeFromArray(BaseObj, obj, array, arrayLengths) {
-        if (!assertDefined(BaseObj) || 
-            !assertDefined("removeFromArray", BaseObj, BaseObj[array], BaseObj[arrayLengths], obj, obj.base))
-            return;
+        if (!assertDefined(BaseObj) || !assertDefined("removeFromArray", BaseObj, BaseObj[array], BaseObj[arrayLengths], obj, obj.base)) return;
 
-        if (!BaseObj[array][obj.base.type])
-            return;
+        if (!BaseObj[array][obj.base.type]) return;
 
         if (BaseObj[array][obj.base.type][obj.base.id]) {
             delete BaseObj[array][obj.base.type][obj.base.id];
@@ -117,21 +96,22 @@ function BaseObj(holder, zindex, dynamicZIndex) {
     }
 
     this.loopThroughAllTypes = function (funcToExecute) {
-        for (var type in this.children)
-            for (var id in this.children[type])
+        for (var type in this.children) {
+            for (var id in this.children[type]) {
                 if (funcToExecute(this.children[type][id])) {
                     return;
                 }
+            }
+        }
 
     };
 
     this.removeObject = function (obj) {
-        if (!assertDefined("removeObject", obj, obj.base))
-            return;
+        if (!assertDefined("removeObject", obj, obj.base)) return;
 
         //Set its root node to itself to let it know we are no longer its parent
         obj.base.parent = obj;
-        obj.base.setRootNode(obj);        
+        obj.base.setRootNode(obj);
 
         removeFromArray(this, obj, "children", "lengths");
     };
@@ -143,28 +123,24 @@ function BaseObj(holder, zindex, dynamicZIndex) {
 
             //Also destroy our children (keeps allChildren working properly)
             this.loopThroughAllTypes(function (child) {
-                if (child.base)
-                    child.base.destroySelf();
+                if (child.base) child.base.destroySelf();
             });
         }
     }
 
     this.setRootNode = function (rootNode) {
-        if (!assertDefined("setRootNode", rootNode))
-            return;
+        if (!assertDefined("setRootNode", rootNode)) return;
 
         //Remove stuff from old rootNode
         if (this.rootNode) {
             removeFromArray(this.rootNode.base, this.holder, "allChildren", "allLengths");
-            if (this.rootNode.curQuadTree)
-                this.rootNode.curQuadTree.removeFromTree(this.holder);
+            if (this.rootNode.curQuadTree) this.rootNode.curQuadTree.removeFromTree(this.holder);
         }
 
         this.rootNode = rootNode;
 
         addToArray(this.rootNode.base, this.holder, "allChildren", "allLengths");
-        if (this.rootNode.curQuadTree)
-            this.rootNode.curQuadTree.addToTree(this.holder);
+        if (this.rootNode.curQuadTree) this.rootNode.curQuadTree.addToTree(this.holder);
 
         this.loopThroughAllTypes(function (child) {
             if (child.base) {
@@ -180,10 +156,9 @@ function BaseObj(holder, zindex, dynamicZIndex) {
         }
         //This is harder, you need to also remove them from their parents
         if (this.allChildren[type]) {
-            for(var key in this.allChildren[type]) {
+            for (var key in this.allChildren[type]) {
                 var toRemove = this.allChildren[type][key];
-                if(toRemove.base.parent != this.holder)
-                    delete toRemove.base.parent.base.children[type][key];
+                if (toRemove.base.parent != this.holder) delete toRemove.base.parent.base.children[type][key];
             }
             this.allChildren[type] = {};
             this.allLengths[type] = 0;
@@ -212,8 +187,7 @@ function BaseObj(holder, zindex, dynamicZIndex) {
         //(read http://stackoverflow.com/questions/5999998/how-can-i-check-if-a-javascript-variable-is-function-type
         //before fixing this in order to implement the most efficient solution to checking if something is a function
         //for different browsers).
-        if (holder[name] && !holder.hidden)
-            mergeToArray(holder[name](args), returnedValues);
+        if (holder[name] && !holder.hidden) mergeToArray(holder[name](args), returnedValues);
 
         return returnedValues;
     }
@@ -222,8 +196,7 @@ function BaseObj(holder, zindex, dynamicZIndex) {
     //to all of its children. Does not collect the return values as this
     //concept is being phased out as it is not really OO sound.
     this.callRaise = function (name, args) {
-        if(holder[name] && !holder.hidden)
-            holder[name](args);
+        if (holder[name] && !holder.hidden) holder[name](args);
 
         this.loopThroughAllTypes(function (child) {
             if (child.base) {
@@ -244,8 +217,7 @@ function BaseObj(holder, zindex, dynamicZIndex) {
 
     //Unfortunately this has to be recursive
     this.canHandleEvent = function (eventName) {
-        if (holder[eventName])
-            return true;
+        if (holder[eventName]) return true;
 
 
         eventName = "parent_" + eventName;
@@ -265,8 +237,7 @@ function BaseObj(holder, zindex, dynamicZIndex) {
     this.update = function (dt) {
         var returnedValues = [];
 
-        if (holder.update)
-            mergeToArray(holder.update(dt), returnedValues);
+        if (holder.update) mergeToArray(holder.update(dt), returnedValues);
 
         this.loopThroughAllTypes(function (child) {
             if (child.base) {
@@ -278,15 +249,17 @@ function BaseObj(holder, zindex, dynamicZIndex) {
     };
 
     this.draw = function (pen) {
-        if (holder.draw)
-            holder.draw(pen);
+        if (holder.draw) holder.draw(pen);
 
         //Sort objects by z-index (low to high) and then draw by that order
         var childWithZIndex = [];
 
         for (var key in this.allChildren) {
             if (getAnElement(this.allChildren[key])) {
-                childWithZIndex.push({ zindex: getAnElement(this.allChildren[key]).base.zindex, array: this.allChildren[key] });
+                childWithZIndex.push({
+                    zindex: getAnElement(this.allChildren[key]).base.zindex,
+                    array: this.allChildren[key]
+                });
             }
         }
 
@@ -307,14 +280,13 @@ function BaseObj(holder, zindex, dynamicZIndex) {
             for (var key in childWithZIndex[y].array) {
                 var child = childWithZIndex[y].array[key];
                 pen.save();
-                if (child.draw && !child.hidden)
-                    child.draw(pen);
+                if (child.draw && !child.hidden) child.draw(pen);
                 pen.restore();
             }
         }
 
         //if (holder.draw)
-          //  holder.draw(pen);
+        //  holder.draw(pen);
     };
-    
+
 }

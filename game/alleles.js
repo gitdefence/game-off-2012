@@ -19,7 +19,9 @@ function choose(choices) {
         realChoices.push(obj);
     }
 
-    realChoices.sort(function (a, b) { return a.chance - b.chance; });
+    realChoices.sort(function (a, b) {
+        return a.chance - b.chance;
+    });
 
     var curValue = 0;
     for (var key in realChoices) {
@@ -42,264 +44,516 @@ var AllAlleleGroups = {
     //Make some for all of the attack types and target strategies.
     //Some major bonuses
 
-//BASELINE BONUS
-    rangeBase: function () { return choose(
-        {
-            0.5: { range: 30 }, //Roughly even distribution of base stats
-            0.7: { range: 50 },
-            0.9: { range: 70 },
-            1: { range: 150 },  //With a minor chance of huge benefit (this is really good, as
-                                //no matter what the target tower stats the best phenotype
-                                //for this allele will improve it or make it the same).
-        }); },
+    //BASELINE BONUS
+    rangeBase: function () {
+        return choose({
+            0.5: {
+                range: 30
+            }, //Roughly even distribution of base stats
+            0.7: {
+                range: 50
+            },
+            0.9: {
+                range: 70
+            },
+            1: {
+                range: 150
+            }, //With a minor chance of huge benefit (this is really good, as
+            //no matter what the target tower stats the best phenotype
+            //for this allele will improve it or make it the same).
+        });
+    },
 
-    damageBase: function () { return choose(
-        {
-            0.5: { damage: 3 }, //Roughly even distribution of base stats
-            0.7: { damage: 5 },
-            0.9: { damage: 7 },
-            1: { damage: 15 },  //With a minor chance of huge benefit (this is really good, as
-                                //no matter what the target tower stats the best phenotype
-                                //for this allele will improve it or make it the same).
-        }); },
+    damageBase: function () {
+        return choose({
+            0.5: {
+                damage: 3
+            }, //Roughly even distribution of base stats
+            0.7: {
+                damage: 5
+            },
+            0.9: {
+                damage: 7
+            },
+            1: {
+                damage: 15
+            }, //With a minor chance of huge benefit (this is really good, as
+            //no matter what the target tower stats the best phenotype
+            //for this allele will improve it or make it the same).
+        });
+    },
 
-    hpBase: function () { return choose(
-        {
-            0.5: { hp: 30 },
-            0.7: { hp: 50 },
-            0.9: { hp: 70 },
-            1: { hp: 150 },
-        }); },
+    hpBase: function () {
+        return choose({
+            0.5: {
+                hp: 30
+            },
+            0.7: {
+                hp: 50
+            },
+            0.9: {
+                hp: 70
+            },
+            1: {
+                hp: 150
+            },
+        });
+    },
 
-    hpRegenBase: function () { return choose(
-        {
-            0.5: { hpRegen: 3 },
-            0.7: { hpRegen: 5 },
-            0.9: { hpRegen: 7 },
-            1: { hpRegen: 15 },
-        }); },
+    hpRegenBase: function () {
+        return choose({
+            0.5: {
+                hpRegen: 3
+            },
+            0.7: {
+                hpRegen: 5
+            },
+            0.9: {
+                hpRegen: 7
+            },
+            1: {
+                hpRegen: 15
+            },
+        });
+    },
 
-    attSpeedBase: function () { return choose(
-        {
-            0.5: { attSpeed: 0 },
-            0.7: { attSpeed: 0.2 },
-            0.9: { attSpeed: 0.3 },
-            1: { attSpeed: 0.5 },
-        }); },
+    attSpeedBase: function () {
+        return choose({
+            0.5: {
+                attSpeed: 0
+            },
+            0.7: {
+                attSpeed: 0.2
+            },
+            0.9: {
+                attSpeed: 0.3
+            },
+            1: {
+                attSpeed: 0.5
+            },
+        });
+    },
 
-    attack1: function () { return choose(
-        {
-            0.166: { attack: allAttackTypes.Laser },
-            0.333: { attack: allAttackTypes.Bullet },
-            0.500: { attack: allAttackTypes.Chain },
-            0.666: { attack: allAttackTypes.Pulse },
-            0.833: { attack: allAttackTypes.DOT },
-            1.0: { attack: allAttackTypes.Slow },
-        }); },
+    attack1: function () {
+        return choose({
+            0.166: {
+                attack: allAttackTypes.Laser
+            },
+            0.333: {
+                attack: allAttackTypes.Bullet
+            },
+            0.500: {
+                attack: allAttackTypes.Chain
+            },
+            0.666: {
+                attack: allAttackTypes.Pulse
+            },
+            0.833: {
+                attack: allAttackTypes.DOT
+            },
+            1.0: {
+                attack: allAttackTypes.Slow
+            },
+        });
+    },
 
-    targetBase: function () { return choose(
-        {
-            0.333: { target: targetStrategies.Closest },
-            0.666: { target: targetStrategies.Random },
-            1.000: { target: targetStrategies.Farthest },
-        }); },
-//BONUS BASELINE
+    targetBase: function () {
+        return choose({
+            0.333: {
+                target: targetStrategies.Closest
+            },
+            0.666: {
+                target: targetStrategies.Random
+            },
+            1.000: {
+                target: targetStrategies.Farthest
+            },
+        });
+    },
+    //BONUS BASELINE
 
-//BONUS ATTACKS
-//Bonus attack or damage bonus
-    attack2: function () { return choose(
-        {
-            0.760: { damage: 10 },
-            0.800: { attack: allAttackTypes.Laser },
-            0.840: { attack: allAttackTypes.Bullet },
-            0.880: { attack: allAttackTypes.Chain },
-            0.920: { attack: allAttackTypes.Pulse },
-            0.960: { attack: allAttackTypes.DOT },
-            1.000: { attack: allAttackTypes.Slow },
-        }); },
-//Bonus attack or attack speed bonus
-    attack3: function () { return choose(
-        {
-            0.800: { attSpeed: 2 },
-            0.840: { attack: allAttackTypes.Bullet },
-            0.880: { attack: allAttackTypes.Chain },
-            0.920: { attack: allAttackTypes.Pulse },
-            0.960: { attack: allAttackTypes.DOT },
-            1.000: { attack: allAttackTypes.Slow },
-        }); },
-//BONUS ATTACKS
+    //BONUS ATTACKS
+    //Bonus attack or damage bonus
+    attack2: function () {
+        return choose({
+            0.760: {
+                damage: 10
+            },
+            0.800: {
+                attack: allAttackTypes.Laser
+            },
+            0.840: {
+                attack: allAttackTypes.Bullet
+            },
+            0.880: {
+                attack: allAttackTypes.Chain
+            },
+            0.920: {
+                attack: allAttackTypes.Pulse
+            },
+            0.960: {
+                attack: allAttackTypes.DOT
+            },
+            1.000: {
+                attack: allAttackTypes.Slow
+            },
+        });
+    },
+    //Bonus attack or attack speed bonus
+    attack3: function () {
+        return choose({
+            0.800: {
+                attSpeed: 2
+            },
+            0.840: {
+                attack: allAttackTypes.Bullet
+            },
+            0.880: {
+                attack: allAttackTypes.Chain
+            },
+            0.920: {
+                attack: allAttackTypes.Pulse
+            },
+            0.960: {
+                attack: allAttackTypes.DOT
+            },
+            1.000: {
+                attack: allAttackTypes.Slow
+            },
+        });
+    },
+    //BONUS ATTACKS
 
-//ATTRIBUTE SPECIALIZATIONS (these give the tower unique
-//tradeoffs which should make it a distinct tower type (like high damage low attack speed)
-    specization1: function () { return choose(
-        {
+    //ATTRIBUTE SPECIALIZATIONS (these give the tower unique
+    //tradeoffs which should make it a distinct tower type (like high damage low attack speed)
+    specization1: function () {
+        return choose({
             //Hard to kill
-            0.25: { hpRegen: 50, hp: 200, damage: -13, attSpeed: -1 },
+            0.25: {
+                hpRegen: 50,
+                hp: 200,
+                damage: -13,
+                attSpeed: -1
+            },
             //Gene spreader
-            0.50: { upload: 50, download: -4, range: -80 },
+            0.50: {
+                upload: 50,
+                download: -4,
+                range: -80
+            },
             //Pew pew pew
-            0.75: { attSpeed: 2, damage: -13},
+            0.75: {
+                attSpeed: 2,
+                damage: -13
+            },
             //Boom
-            1.00: { attSpeed: -1, damage: 13},
-        }); },
-    specization2: function () { return choose(
-        {
+            1.00: {
+                attSpeed: -1,
+                damage: 13
+            },
+        });
+    },
+    specization2: function () {
+        return choose({
             //Nothing
-            0.80: { range: 1 },
+            0.80: {
+                range: 1
+            },
             //Germ
-            0.85: { hpRegen: 50, hp: -100},
+            0.85: {
+                hpRegen: 50,
+                hp: -100
+            },
             //Why!?
-            0.90: { attSpeed: -1, damage: -13, range: 200 },
+            0.90: {
+                attSpeed: -1,
+                damage: -13,
+                range: 200
+            },
             //Fatty
-            0.95: { hpRegen: -50, hp: 1000},
+            0.95: {
+                hpRegen: -50,
+                hp: 1000
+            },
             //Super-charge (not sure if this will work?)
-            1.00: { currentHp: 1000},
-        }); },
-//ATTRIBUTE SPECIALIZATIONS
+            1.00: {
+                currentHp: 1000
+            },
+        });
+    },
+    //ATTRIBUTE SPECIALIZATIONS
 
-//SCARCE MEDIUM BONUS
-    rangeMediumBonus: function () { return choose(
-        {
-            0.5: { },
-            0.7: { range: 50 },
-            0.9: { range: 70 },
-            1: { range: 150 },
-        }); },
+    //SCARCE MEDIUM BONUS
+    rangeMediumBonus: function () {
+        return choose({
+            0.5: {},
+            0.7: {
+                range: 50
+            },
+            0.9: {
+                range: 70
+            },
+            1: {
+                range: 150
+            },
+        });
+    },
 
-    damageMediumBonus: function () { return choose(
-        {
-            0.5: { },
-            0.7: { damage: 5 },
-            0.9: { damage: 7 },
-            1: { damage: 15 },
-        }); },
+    damageMediumBonus: function () {
+        return choose({
+            0.5: {},
+            0.7: {
+                damage: 5
+            },
+            0.9: {
+                damage: 7
+            },
+            1: {
+                damage: 15
+            },
+        });
+    },
 
-    hpMediumBonus: function () { return choose(
-        {
-            0.5: { },
-            0.7: { hp: 50 },
-            0.9: { hp: 70 },
-            1: { hp: 150 },
-        }); },
+    hpMediumBonus: function () {
+        return choose({
+            0.5: {},
+            0.7: {
+                hp: 50
+            },
+            0.9: {
+                hp: 70
+            },
+            1: {
+                hp: 150
+            },
+        });
+    },
 
-    hpRegenMediumBonus: function () { return choose(
-        {
-            0.5: { },
-            0.7: { hpRegen: 5 },
-            0.9: { hpRegen: 7 },
-            1: { hpRegen: 15 },
-        }); },
+    hpRegenMediumBonus: function () {
+        return choose({
+            0.5: {},
+            0.7: {
+                hpRegen: 5
+            },
+            0.9: {
+                hpRegen: 7
+            },
+            1: {
+                hpRegen: 15
+            },
+        });
+    },
 
-    attSpeedMediumBonus: function () { return choose(
-        {
-            0.5: { },
-            0.7: { attSpeed: 0.2 },
-            0.9: { attSpeed: 0.3 },
-            1: { attSpeed: 0.5 },
-        }); },
-//SCARCE MEDIUM BONUS
+    attSpeedMediumBonus: function () {
+        return choose({
+            0.5: {},
+            0.7: {
+                attSpeed: 0.2
+            },
+            0.9: {
+                attSpeed: 0.3
+            },
+            1: {
+                attSpeed: 0.5
+            },
+        });
+    },
+    //SCARCE MEDIUM BONUS
 
-//RARE SUPER BONUS
-    rangeSuperBonus: function () { return choose(
-        {
-            0.5: { },
-            0.7: { range: 50 },
-            0.9: { range: 70 },
-            1: { range: 150 },
-        }); },
+    //RARE SUPER BONUS
+    rangeSuperBonus: function () {
+        return choose({
+            0.5: {},
+            0.7: {
+                range: 50
+            },
+            0.9: {
+                range: 70
+            },
+            1: {
+                range: 150
+            },
+        });
+    },
 
-    damageSuperBonus: function () { return choose(
-        {
-            0.9: { },
-            1: { damage: 30 },
-        }); },
+    damageSuperBonus: function () {
+        return choose({
+            0.9: {},
+            1: {
+                damage: 30
+            },
+        });
+    },
 
-    hpSuperBonus: function () { return choose(
-        {
-            0.9: { },
-            1: { hp: 250 },
-        }); },
+    hpSuperBonus: function () {
+        return choose({
+            0.9: {},
+            1: {
+                hp: 250
+            },
+        });
+    },
 
-    hpRegenSuperBonus: function () { return choose(
-        {
-            0.9: { },
-            1: { hpRegen: 25 },
-        }); },
+    hpRegenSuperBonus: function () {
+        return choose({
+            0.9: {},
+            1: {
+                hpRegen: 25
+            },
+        });
+    },
 
-    attSpeedSuperBonus: function () { return choose(
-        {
-            0.9: { },
-            1: { attSpeed: 3.5 },
-        }); },
-//RARE SUPER BONUS
+    attSpeedSuperBonus: function () {
+        return choose({
+            0.9: {},
+            1: {
+                attSpeed: 3.5
+            },
+        });
+    },
+    //RARE SUPER BONUS
 };
 
 //All alleles must be balanced, they either specialize in one of many aspects or are a tradeoff
-var TowerAlleles =
-{
-    rangeBase: function () { return {range: Math.floor(random(250, 260))}; },
-    damageBase: function () { return choose(
-        {
-            0.5: { damage: 1 },
-            0.7: { damage: 1.3 },
-            1: { damage: 1.5 },
-        }); },
-    hpBase: function () { return choose(
-        {
-            0.5: { hp: 100 },
-            0.7: { hp: 130 },
-            1: { hp: 150 },
-        }); },
-    hpRegenBase: function () { return choose(
-        {
-            0.5: { hpRegen: 1.0 },
-            0.7: { hpRegen: 1.3 },
-            1: { hpRegen: 1.5 },
-        }); },
-    attSpeedBase: function () { return {attSpeed: round(random(0.9, 1.1), 1)}; },
+var TowerAlleles = {
+    rangeBase: function () {
+        return {
+            range: Math.floor(random(250, 260))
+        };
+    },
+    damageBase: function () {
+        return choose({
+            0.5: {
+                damage: 1
+            },
+            0.7: {
+                damage: 1.3
+            },
+            1: {
+                damage: 1.5
+            },
+        });
+    },
+    hpBase: function () {
+        return choose({
+            0.5: {
+                hp: 100
+            },
+            0.7: {
+                hp: 130
+            },
+            1: {
+                hp: 150
+            },
+        });
+    },
+    hpRegenBase: function () {
+        return choose({
+            0.5: {
+                hpRegen: 1.0
+            },
+            0.7: {
+                hpRegen: 1.3
+            },
+            1: {
+                hpRegen: 1.5
+            },
+        });
+    },
+    attSpeedBase: function () {
+        return {
+            attSpeed: round(random(0.9, 1.1), 1)
+        };
+    },
 
     //Specializations:
 
     //Spec group 1:
 
 
-    spec1: function () { return pickRandom(
-        [
-            { hp: 100, hpRegen: 1, range: -50 }, //Bruiser part 1
-            { hp: 200, hpRegen: 2, damage: -0.8 }, //Bruiser part 2
-            { damage: -0.5, attSpeed: 1 }, //Pew pew
-            { damage: 10, attSpeed: -0.85 }, //BOOM!
-        ]); },
+    spec1: function () {
+        return pickRandom(
+        [{
+            hp: 100,
+            hpRegen: 1,
+            range: -50
+        }, //Bruiser part 1
+        {
+            hp: 200,
+            hpRegen: 2,
+            damage: -0.8
+        }, //Bruiser part 2
+        {
+            damage: -0.5,
+            attSpeed: 1
+        }, //Pew pew
+        {
+            damage: 10,
+            attSpeed: -0.85
+        }, //BOOM!
+        ]);
+    },
 
 
 };
 
-var BugAlleles =
-{
-    rangeBase: function () { return choose(
-        {
-            0.5: { range: 250 },
-            0.7: { range: 270 },
-            1: { range: 290 },
-        }); },
-    damageBase: function () { return choose(
-        {
-            0.5: { damage: 0.4 },
-            0.7: { damage: 0.6 },
-            1: { damage: 1.0 },
-        }); },
-    hpBase: function () { return {hp: Math.floor(random(8, 15))}; },
-    attSpeedBase: function () { return choose(
-        {
-            0.5: { attSpeed: 0.5 },
-            0.7: { attSpeed: 0.75 },
-            1: { attSpeed: 1 },
-        }); },
-    movementSpeedBase: function () { return choose(
-        {
-            0.5: { speed: 15 },
-            0.7: { speed: 20 },
-            1: { speed: 25 },
-        }); },
+var BugAlleles = {
+    rangeBase: function () {
+        return choose({
+            0.5: {
+                range: 250
+            },
+            0.7: {
+                range: 270
+            },
+            1: {
+                range: 290
+            },
+        });
+    },
+    damageBase: function () {
+        return choose({
+            0.5: {
+                damage: 0.4
+            },
+            0.7: {
+                damage: 0.6
+            },
+            1: {
+                damage: 1.0
+            },
+        });
+    },
+    hpBase: function () {
+        return {
+            hp: Math.floor(random(8, 15))
+        };
+    },
+    attSpeedBase: function () {
+        return choose({
+            0.5: {
+                attSpeed: 0.5
+            },
+            0.7: {
+                attSpeed: 0.75
+            },
+            1: {
+                attSpeed: 1
+            },
+        });
+    },
+    movementSpeedBase: function () {
+        return choose({
+            0.5: {
+                speed: 15
+            },
+            0.7: {
+                speed: 20
+            },
+            1: {
+                speed: 25
+            },
+        });
+    },
 
 };

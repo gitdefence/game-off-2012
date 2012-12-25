@@ -15,8 +15,7 @@ function Line(start, end, color, zorder, arrowHeadPercents) {
         pen.strokeStyle = this.color;
         pen.lineWidth = 2;
 
-        if (!this.color)
-            fail("should not happen.");
+        if (!this.color) fail("should not happen.");
 
         var s = this.start;
         var e = this.end;
@@ -37,12 +36,17 @@ function Line(start, end, color, zorder, arrowHeadPercents) {
     };
 }
 
-function Circle(center, radius, color, fillColor, zorder) {    
+function Circle(center, radius, color, fillColor, zorder) {
     this.radius = radius;
     this.color = color;
     this.fillColor = fillColor;
 
-    this.tPos = { x: center.x, y: center.y, h: 0, w: 0 };  //We lie about this because it doesn't matter
+    this.tPos = {
+        x: center.x,
+        y: center.y,
+        h: 0,
+        w: 0
+    }; //We lie about this because it doesn't matter
 
     this.base = new BaseObj(this, zorder, true);
 

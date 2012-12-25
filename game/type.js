@@ -1,8 +1,7 @@
 function assertDefined(functionName) {
     var allDefined = true;
 
-    for(var i = 0; i < arguments.length; i++)
-    {
+    for (var i = 0; i < arguments.length; i++) {
         if (nullOrUndefined(arguments[i]) || realIsNan(arguments[i])) {
             fail("Variable is required but is undefined in " + functionName);
             allDefined = false;
@@ -26,8 +25,7 @@ function defined() {
 function getRealType(object) {
     //This nan check shouldn't be needed, but sometimes things (like attributes)
     //go to NaN and I can't figure out why.
-    if (!realIsNan(object) && !assertDefined(object))
-        return "undefined";
+    if (!realIsNan(object) && !assertDefined(object)) return "undefined";
 
     //http://stackoverflow.com/questions/332422/how-do-i-get-the-name-of-an-objects-type-in-javascript    
     var funcNameRegex = /function (.{1,})\(/;

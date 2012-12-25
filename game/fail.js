@@ -3,8 +3,7 @@ function fail(errorMessage) {
     if (DFlag.debug) {
         debugger;
         throw errorMessage ? errorMessage : "error";
-    }
-    else {
+    } else {
         console.log(errorMessage);
     }
 }

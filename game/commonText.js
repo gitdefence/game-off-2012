@@ -5,7 +5,7 @@ function prefixNumber(num, places) {
     var pos = Math.floor(Math.log(num) / Math.log(1000));
     if (pos < 0) pos = 0;
     var num = num / Math.pow(1000, pos);
-    
+
     var pre = prefixes[pos];
     if (pre === undefined) pre = "???";
 
@@ -18,7 +18,7 @@ function prefixNumber(num, places) {
 function round(num, places) {
     if (isNaN(num)) return 0;
     if (places === undefined) places = 0;
-    
+
     var decimalValue = Math.pow(10, places);
     return Math.round(num * decimalValue) / decimalValue;
 }
@@ -37,6 +37,8 @@ function formatToDisplay(text) {
 
     text = text.replace(/_/g, " ");
     text = text.replace(/([A-Z])/g, " $1");
-    text = text.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+    text = text.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
     return text;
 }

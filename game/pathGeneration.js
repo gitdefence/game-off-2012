@@ -1,6 +1,8 @@
-
 function generatePath(eng, game) {
-    var curPos = { x: 0, y: 0 };
+    var curPos = {
+        x: 0,
+        y: 0
+    };
 
     var NUM_TILES_X = game.numTilesX;
     var NUM_TILES_Y = game.numTilesY;
@@ -9,7 +11,19 @@ function generatePath(eng, game) {
 
     var meanderFactor = 40;
     var curMeander = 0;
-    var vels = [{ x: 1, y: 0 }, { x: 0, y: 1 }, { x: -1, y: 0 }, { x: 0, y: -1}];
+    var vels = [{
+        x: 1,
+        y: 0
+    }, {
+        x: 0,
+        y: 1
+    }, {
+        x: -1,
+        y: 0
+    }, {
+        x: 0,
+        y: -1
+    }];
 
     //Just temp
     var curUniqueBoardNum = 2;
@@ -25,8 +39,9 @@ function generatePath(eng, game) {
     var uniqueBoard = [];
     for (var x = 0; x < NUM_TILES_X; x++) {
         uniqueBoard[x] = [];
-        for (var y = 0; y < NUM_TILES_Y; y++)
+        for (var y = 0; y < NUM_TILES_Y; y++) {
             uniqueBoard[x][y] = false;
+        }
     }
 
     function isValid(pos) {
@@ -35,10 +50,8 @@ function generatePath(eng, game) {
 
     function isDeadEnd(startPos) {
         //Not a dead end if any of surrounding are not deadEnds
-        if (!isValid(startPos))
-            return true;
-        if (uniqueBoard[startPos.x][startPos.y] == curUniqueBoardNum || board[startPos.x][startPos.y])
-            return true;
+        if (!isValid(startPos)) return true;
+        if (uniqueBoard[startPos.x][startPos.y] == curUniqueBoardNum || board[startPos.x][startPos.y]) return true;
         uniqueBoard[startPos.x][startPos.y] = curUniqueBoardNum;
 
         if (startPos.x == (NUM_TILES_X - 1) || startPos.y == (NUM_TILES_Y - 1)) {
@@ -47,13 +60,19 @@ function generatePath(eng, game) {
 
         var deadEnd = true;
         for (var i = 0; i < 4; i++) {
-            var surrounding = { x: startPos.x + vels[i].x, y: startPos.y + vels[i].y };
+            var surrounding = {
+                x: startPos.x + vels[i].x,
+                y: startPos.y + vels[i].y
+            };
             deadEnd &= isDeadEnd(surrounding); //1 not dead end is fine
         }
 
         return deadEnd;
     }
-    var prevPos = { x: 0, y: 0 };
+    var prevPos = {
+        x: 0,
+        y: 0
+    };
     var prevPath = null;
     var pathPos = 1;
     while (true) {
@@ -63,16 +82,14 @@ function generatePath(eng, game) {
 
             eng.base.addObject(curPath);
             break;
-        }
-        else {
+        } else {
             board[curPos.x][curPos.y] = true;
 
             var curPath;
 
             if (!prevPath) {
                 curPath = new Path_Start(curPos.x * TILE_SIZE, curPos.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-            }
-            else {
+            } else {
                 curPath = new Path(curPos.x * TILE_SIZE, curPos.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 prevPath.nextPath = curPath;
             }
@@ -95,7 +112,10 @@ function generatePath(eng, game) {
 
                 var nextVel = vels[next];
 
-                var nextPos = { x: curPos.x + nextVel.x, y: curPos.y + nextVel.y };
+                var nextPos = {
+                    x: curPos.x + nextVel.x,
+                    y: curPos.y + nextVel.y
+                };
 
                 curUniqueBoardNum++;
                 if (isValid(nextPos) && !board[nextPos.x][nextPos.y] && !isDeadEnd(nextPos)) {
@@ -104,8 +124,7 @@ function generatePath(eng, game) {
                 }
             }
 
-            if (curMeander >= meanderFactor)
-                curMeander = 0;
+            if (curMeander >= meanderFactor) curMeander = 0;
         }
     }
 }

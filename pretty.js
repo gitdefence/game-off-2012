@@ -4,12 +4,23 @@ walk('game', function(err, results) {
     if (err) throw err;
     for (var i = 0; i < results.length; i++) {
         var name = results[i];
+        if (!name.endsWith('.js')) {
+            results.splice(i--, 1)
+            continue;
+        }
         var contents = fs.readFileSync(name, 'utf-8');
-        var cleaned = js_beautify(contents);
+        var cleaned = js_beautify(contents, {
+            jslint_happy: true,
+        });
         fs.writeFileSync(name, cleaned);
     }
     console.log(results);
 });
+
+// From http://stackoverflow.com/questions/280634/endswith-in-javascript
+String.prototype.endsWith = function(suffix) {
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};
 
 // From http://stackoverflow.com/questions/5827612/node-js-fs-readdir-recursive-directory-search
 function walk(dir, done) {

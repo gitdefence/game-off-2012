@@ -1,4 +1,4 @@
-﻿//A specialized object which serves as the top level object for any simulation system.
+﻿ //A specialized object which serves as the top level object for any simulation system.
 //The specific type of game is determined by the game object that holds this, and by the objects in the system.
 
 //For now engine does both simulation and drawing, in the future it should only do simulation.
@@ -12,7 +12,7 @@ function Engine(pos, game) {
 
     this.tPos = pos;
     this.color = "black";
-    
+
     this.base = new BaseObj(this);
 
     //Usage of this will likely become deprecated
@@ -28,8 +28,7 @@ function Engine(pos, game) {
     var lastFPSUpdate = firstStart;
     var gameTimeAccumulated = 0;
     this.run = function (timestamp) {
-        if (DFlag.engineTicks)
-            DFlag.engineTicks++;
+        if (DFlag.engineTicks) DFlag.engineTicks++;
 
         var updateAmount = timestamp - firstStart;
         firstStart = timestamp;
@@ -49,8 +48,9 @@ function Engine(pos, game) {
 
         var newObjects = this.base.update(updateAmount / 1000);
 
-        for (var key in newObjects)
-            this.base.addObject(newObjects[key]);        
+        for (var key in newObjects) {
+            this.base.addObject(newObjects[key]);
+        }
     };
 
     this.update = function (dt) {

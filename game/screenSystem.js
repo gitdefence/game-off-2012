@@ -9,13 +9,13 @@ function ScreenSystem(canvas) {
     var screens = {};
     var activeScreen = null;
 
-    this.addScreen = function(name, screen) {
+    this.addScreen = function (name, screen) {
         screens[name] = screen;
     }
 
-    this.setActiveScreen = function(name) {
+    this.setActiveScreen = function (name) {
         if (!screens[name]) return;
-        
+
         activeScreen = screens[name];
         activeScreen.screenSystem = this;
 
@@ -31,7 +31,7 @@ function ScreenSystem(canvas) {
 
     function bindInput(input) {
         if (!input) return;
-        
+
         var events = input.events;
         for (var eventName in events) {
             // Preserve this context
@@ -46,15 +46,15 @@ function ScreenSystem(canvas) {
             $(canvas).on(eventName, events[eventName]);
         }
     };
-    
-    var reqAnim = (function() {
-        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(cb) {
-            window.setTimeout(function() {
+
+    var reqAnim = (function () {
+        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (cb) {
+            window.setTimeout(function () {
                 cb(Date.now());
             }, 1000 / 60);
         };
     })();
-    
+
     function tick(timestamp) {
         if (activeScreen && activeScreen.run) {
             activeScreen.run(timestamp);

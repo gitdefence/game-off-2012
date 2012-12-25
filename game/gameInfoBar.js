@@ -1,4 +1,3 @@
-
 //Make list with lits of alleles to create default tower types.
 
 function GameInfoBar(pos) {
@@ -9,7 +8,7 @@ function GameInfoBar(pos) {
     var oldmoney = 0;
 
     var hbox = new HBox();
-    
+
     var vbox1 = new VBox();
     var healthIndi = new Label("");
     vbox1.add(healthIndi);
@@ -29,16 +28,16 @@ function GameInfoBar(pos) {
 
     var nextLevelTimeIndi = new Label("");
     vbox3.add(nextLevelTimeIndi);
-    
+
     gotoNextLevel = new Button("Send Next Wave Now", bind(this, "skipNextLevel"));
     vbox3.add(gotoNextLevel);
-    
+
     hbox.add(vbox1);
     hbox.add(vbox3);
     this.base.addObject(hbox);
     hbox.resize(pos);
 
-    this.skipNextLevel = function() {
+    this.skipNextLevel = function () {
         getGame(this).lvMan.nwicounter = -1;
     }
 

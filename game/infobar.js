@@ -73,13 +73,13 @@ function Infobar(pos) {
                 pen.color = "Green";
                 pen.fillStyle = "Transparent";
                 //ink.rect(xs, y, (xe - xs), 15, pen);
-                
+
                 // Baby go down down down down dowwwwwn
                 for (var key in arrayAttr) {
                     var val = arrayAttr[key];
+
                     function tryPrintAsNumber(val, name, extraInfo) {
-                        if (typeof val != "number")
-                            return false;
+                        if (typeof val != "number") return false;
 
                         var valtxt = prefixNumber(val, 1);
                         if (defined(extraInfo[name])) {
@@ -105,13 +105,11 @@ function Infobar(pos) {
 
                             function addBarPart(val) {
                                 var direction = val < 0 ? -1 : +1;
-                                var curWidth = (Math.log(Math.abs(val) / baseStat + 2)) *
-                                factor * direction;
+                                var curWidth = (Math.log(Math.abs(val) / baseStat + 2)) * factor * direction;
                                 if (val > 0) {
                                     pen.fillStyle = "Green";
                                     ink.rect(startX, startY, curWidth, totalHeight * 0.5, pen);
-                                }
-                                else {
+                                } else {
                                     pen.fillStyle = "Red";
                                     ink.rect(startX, startY + totalHeight * 0.5, curWidth,
                                     totalHeight * 0.5, pen);
@@ -127,8 +125,7 @@ function Infobar(pos) {
                                     if (key == name) {
                                         var impact = allele.delta[key];
                                         // I'm sorry, you're stuck here forever now. This is the point of no return...
-                                        if (impact > 0)
-                                            startX += addBarPart(impact) * (impact < 0 ? -1 : 1);
+                                        if (impact > 0) startX += addBarPart(impact) * (impact < 0 ? -1 : 1);
                                     }
                                 }
                             }
@@ -138,8 +135,7 @@ function Infobar(pos) {
                                 for (var key in allele.delta) {
                                     if (key == name) {
                                         var impact = allele.delta[key];
-                                        if (impact < 0)
-                                            startX += addBarPart(impact) * (impact < 0 ? -1 : 1);
+                                        if (impact < 0) startX += addBarPart(impact) * (impact < 0 ? -1 : 1);
                                     }
                                 }
                             }
@@ -195,8 +191,7 @@ function Infobar(pos) {
         var undisplayedExtra = {};
 
         for (var key in extraInfo) {
-            if (!extraInfoDisplayed[key])
-                undisplayedExtra[key] = new extraInfo[key]();
+            if (!extraInfoDisplayed[key]) undisplayedExtra[key] = new extraInfo[key]();
         }
 
         displayAttributes(undisplayedExtra);
@@ -214,7 +209,7 @@ function Infobar(pos) {
     }
     //End of draw
 
-    this.sellTower = function() {
+    this.sellTower = function () {
         this.obj.base.destroySelf();
     }
 }

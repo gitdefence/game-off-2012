@@ -64,7 +64,7 @@ function TowerDragger(pos, towerGeneratorFnc) {
 
             var tower = this.placingTower;
 
-            if(!repeatPlace) {
+            if (!repeatPlace) {
                 placeOffset.set(e);
                 placeOffset.sub(this.tPos);
 
@@ -87,7 +87,7 @@ function TowerDragger(pos, towerGeneratorFnc) {
     }
 
     this.click = function (e) {
-        if(firstClick) {
+        if (firstClick) {
             firstClick = false;
             return;
         }
@@ -97,17 +97,16 @@ function TowerDragger(pos, towerGeneratorFnc) {
 
         if (this.placingTower) {
             //They already clicked on the placer, so they are trying to place now
-            if(tryPlaceTower(this.placingTower, this.placingTower.tPos, eng)) {
+            if (tryPlaceTower(this.placingTower, this.placingTower.tPos, eng)) {
                 this.placingTower = false;
                 delete game.input.globalMouseMove[this.base.id];
                 delete game.input.globalMouseClick[this.base.id];
 
-                if(game.input.ctrlKey) {
+                if (game.input.ctrlKey) {
                     this.mousedown(e, true);
                     firstClick = false;
                 }
-            }
-            else {
+            } else {
                 //Nothing, we could not place tower but they paid for it so
                 //they have to place it somewhere!
             }
@@ -158,7 +157,9 @@ function Towerbar(pos) {
 
                 for (var key in obj) {
                     var attackType = obj[key];
-                    tower.genes.addAllele(new Allele("attack" + key, { attack: attackType }));
+                    tower.genes.addAllele(new Allele("attack" + key, {
+                        attack: attackType
+                    }));
                 }
 
                 return tower;

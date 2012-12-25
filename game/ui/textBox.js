@@ -11,7 +11,7 @@ function TextBox(text, zorder) {
     wrapper.textAlign = "center";
     this.base.addObject(wrapper);
 
-    this.draw = function(pen) {
+    this.draw = function (pen) {
         pen.fillStyle = "black";
         pen.strokeStyle = "green";
         ink.rect(this.tPos.x, this.tPos.y, this.tPos.w, this.tPos.h, pen);
@@ -23,19 +23,19 @@ function TextBox(text, zorder) {
         return this;
     }
 
-    this.mouseover = function() {
+    this.mouseover = function () {
         hover = true;
     };
 
-    this.mouseout = function() {
+    this.mouseout = function () {
         hover = false;
     };
 
-    this.mousedown = function() {
+    this.mousedown = function () {
         down = true;
     };
 
-    this.mouseup = function() {
+    this.mouseup = function () {
         down = false;
     };
 }

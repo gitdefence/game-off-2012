@@ -2,16 +2,19 @@
 function VBox() {
     this.base = new BaseObj(this, 15);
     this.tPos = new TemporalPos(0, 0, 0, 0);
-    
+
     var children = [];
-    
+
     // height is optional, if not given,
     // all children will have same height.
     this.add = function (ui, height) {
-        children.push({ui: ui, height: height});
+        children.push({
+            ui: ui,
+            height: height
+        });
         this.base.addObject(ui);
     }
-    
+
     this.resize = function (rect) {
         var h = 0;
         var shared = 0;
@@ -26,7 +29,7 @@ function VBox() {
             throw "Attempting to make a vbox smaller than it's fixed size children allow!";
         }
         this.tPos = rect;
-        
+
         var sharedHeight = (rect.h - h) / shared;
         var y = rect.y;
         for (i = 0; i < children.length; i++) {
@@ -38,8 +41,8 @@ function VBox() {
             c.ui.resize(r);
         }
     }
-    
-    this.globalResize = function(ev) {
+
+    this.globalResize = function (ev) {
         console.log(ev);
     }
 }

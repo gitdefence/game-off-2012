@@ -6,13 +6,11 @@ function AttackCycle() {
     this.chargePercent = 0;
 
     this.update = function (dt) {
-        if(!this.base.parent.attr.attSpeed)
-            return;
+        if (!this.base.parent.attr.attSpeed) return;
 
         var objDelay = 0;
         objDelay = 1 / this.base.parent.attr.attSpeed;
-        if(objDelay < 0)
-            objDelay = 1 / 0;
+        if (objDelay < 0) objDelay = 1 / 0;
 
         this.maxCounter = objDelay;
 
@@ -44,7 +42,7 @@ function AttackCycle() {
 
 function UpdateTicker(objWithDelay, tickDelayName, parentTickFunctionName, inverseRate) {
     this.base = new BaseObj(this);
-    
+
     this.objWithDelay = objWithDelay;
     this.tickDelayName = tickDelayName;
 
@@ -62,12 +60,10 @@ function UpdateTicker(objWithDelay, tickDelayName, parentTickFunctionName, inver
         if (this.inverseRate) {
             if (this.objWithDelay[this.tickDelayName] < 0) {
                 objDelay = Math.E / Math.exp(this.objWithDelay[this.tickDelayName]);
-            }
-            else {
+            } else {
                 objDelay = 1 / this.objWithDelay[this.tickDelayName];
             }
-        }
-        else {
+        } else {
             objDelay = this.objWithDelay[this.tickDelayName];
         }
 
@@ -87,8 +83,7 @@ function Lifetime(lifetime) {
     this.update = function (dt) {
         this.lifetime -= dt;
 
-        if (this.lifetime < 0)
-            this.base.parent.base.destroySelf();
+        if (this.lifetime < 0) this.base.parent.base.destroySelf();
     }
 }
 
@@ -112,16 +107,14 @@ function Selectable() {
             this.ignoreNext = false;
             return;
         }
-        if (this.topMost)
-            game.changeSel(this.base.parent);
+        if (this.topMost) game.changeSel(this.base.parent);
     }
 
     this.parent_die = function () {
         var eng = this.base.rootNode;
         var game = eng.game;
 
-        if(game.selectedObj == this.base.parent)
-            game.changeSel(null);
+        if (game.selectedObj == this.base.parent) game.changeSel(null);
     }
 }
 
@@ -183,7 +176,7 @@ function MotionDelay(start, end, time, callback) {
         }
 
         var start = this.start;
-        var end = this.end;        
+        var end = this.end;
 
         var progress = this.time / this.baseTime;
 
@@ -207,8 +200,7 @@ function AttributeTween(start, end, time, callbackName, attributeName) {
     this.update = function (dt) {
         this.time -= dt;
         if (this.time < 0) {
-            if (this.callbackName && this.callbackName.length > 0)
-                this.base.parent[this.callbackName]();            
+            if (this.callbackName && this.callbackName.length > 0) this.base.parent[this.callbackName]();
 
             this.base.destroySelf();
             return;
@@ -267,15 +259,15 @@ function AliveCounter(boundZeroCallback) {
 
     this.aliveCount = 0;
 
-    this.addAliveTracker = function(obj) {
+    this.addAliveTracker = function (obj) {
         obj.base.addObject(new DeathTrigger(bind(this, "death")));
         this.aliveCount++;
     }
 
-    this.death = function() {
+    this.death = function () {
         this.aliveCount--;
 
-        if(this.aliveCount == 0) {
+        if (this.aliveCount == 0) {
             boundZeroCallback();
             this.base.destroySelf();
         }
@@ -287,7 +279,7 @@ function DeathTrigger(boundCallback) {
 
     this.callback = boundCallback;
 
-    this.parent_die = function() {
+    this.parent_die = function () {
         this.callback();
         this.base.destroySelf();
     }

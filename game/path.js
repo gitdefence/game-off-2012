@@ -1,12 +1,11 @@
-
 function Path_End(x, y, w, h) {
     this.tPos = new TemporalPos(x, y, w, h, 0, 0);
     this.base = new BaseObj(this, 2);
-    
+
     this.update = function (dt) {
         this.tPos.update(dt);
     };
-    
+
     this.draw = function (pen) {
         var p = this.tPos;
         pen.fillStyle = "grey";
@@ -18,7 +17,7 @@ function Path_End(x, y, w, h) {
 function Path_Start(x, y, w, h) {
     this.tPos = new TemporalPos(x, y, w, h, 0, 0);
     this.base = new BaseObj(this, 2);
-    
+
     this.update = function (dt) {
         if (this.nextPath && !this.pathLine) {
             var eng = getEng(this);
@@ -27,7 +26,7 @@ function Path_Start(x, y, w, h) {
             eng.base.addObject(this.pathLine);
         }
     };
-    
+
     this.draw = function (pen) {
         var p = this.tPos;
         pen.fillStyle = "yellow";
@@ -39,11 +38,11 @@ function Path_Start(x, y, w, h) {
 
 function Path_Line(pathBase) {
     this.path = pathBase;
-    
+
     //Our shape is a lie! (its off, not that it really matters)
     this.tPos = pathBase.tPos;
     this.base = new BaseObj(this, 3);
-    
+
     this.update = function (dt) {
         this.tPos.update(dt);
     };
