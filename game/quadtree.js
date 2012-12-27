@@ -294,8 +294,8 @@ function QuadTree(arrObjs, splitThreshold) {
             if (splitX) failedX = true;
             else failedY = true;
         }
-                    
-        / / How the ranges are now
+
+        // How the ranges are now
         //startIndex <= less < lessEnd
         //lessEnd <= mixed < greaterStart
         //greaterStart <= greater < endIndex
