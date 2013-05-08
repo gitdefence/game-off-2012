@@ -485,7 +485,7 @@ function hardcodePath(underlyingGame) {
         curY++;
         placePath();
     }
-    
+
 
     curPath.nextPath = pathEnd;
 }
@@ -501,10 +501,11 @@ function Tutorial(pos) {
     this.localEngine = localEngine;
 
     this.input = new InputHandler();
+	this.input.bind(document.querySelector('canvas'));
 
     localEngine.base.addChild(new MouseMoveThrough(underlyingGame.engine.tpos));
 
-    
+
     this.states = [];
 
     for (var key in tutorialstates)
@@ -512,7 +513,7 @@ function Tutorial(pos) {
 
     this.curState = null;
     this.curStatePos = -1;
-            
+
 
     this.advanceState = function () {
         var prevState = this.curState;
@@ -521,7 +522,7 @@ function Tutorial(pos) {
         }
 
         this.curStatePos++;
-        
+
         if (this.states[this.curStatePos]) {
             this.curState = new this.states[this.curStatePos]();
             localEngine.base.addChild(this.curState);

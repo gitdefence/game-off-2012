@@ -10,7 +10,7 @@
 
     //The only reason this would be false is if multiple people are sharing the input handler
     this.consumeEvents = true;
-    
+
     this.mX = -1;
     this.mY = -1;
     this.mdX = -1; //Mouse down
@@ -21,9 +21,9 @@
     this.events = {};
 
     this.resizeEvent = null;
-    
+
     var canvas;
-    
+
     this.events.resize = function (e) {
         this.resizeEvent = e;
     }
@@ -67,18 +67,18 @@
         this.muX = pos.x;
         this.muY = pos.y;
     }
-    
+
     this.unBind = function (canvas) {
         $(canvas).off();
         $(window).off();
     }
-    
+
     this.bind = function (newCanvas) {
         canvas = newCanvas;
         for (var name in this.events) {
             // Preserve this context
             this.events[name] = this.events[name].bind(this);
-            
+
             // Resize event is only on window.
             var src = name == "resize" ? window : canvas;
             $(src).on(name, this.events[name]);
@@ -123,23 +123,25 @@
     this.handleEvents = function (eng) {
         this.handleMouseEvents(eng);
 
-        if (this.resizeEvent) {
-            console.log("this.resizeEvent:", this.resizeEvent);
+        if (!this.resizeEvent) return;
 
-            var game = eng.game;
-            var minWidth = game.numTilesX * game.tileSize + 150;
-            var minHeight = game.numTilesY * game.tileSize;
-            var width = Math.max(window.innerWidth, minWidth);
-            var height = Math.max(window.innerHeight, minHeight);
+        console.log("this.resizeEvent:", this.resizeEvent);
 
-            this.resizeEvent.width = canvas.width = width;
-            this.resizeEvent.height = canvas.height = height;
-            
-            eng.base.raiseEvent("globalResize", this.resizeEvent);
+        var game = eng.game;
+        var minWidth = game.numTilesX * game.tileSize + 150;
+        var minHeight = game.numTilesY * game.tileSize;
+        var width = Math.max(window.innerWidth, minWidth);
+        var height = Math.max(window.innerHeight, minHeight);
 
-            if (this.consumeEvents)
-                this.resizeEvent = null;
-        }
+        this.resizeEvent.width = width;
+        if (canvas) canvas.width = width;
+        this.resizeEvent.height = height;
+        if (canvas) canvas.height = height;
+
+        eng.base.raiseEvent("globalResize", this.resizeEvent);
+
+        if (this.consumeEvents)
+            this.resizeEvent = null;
     };
 
     //Called in update and uses async flags set when we get events
@@ -204,7 +206,7 @@
             }
 
             var curMouseOver = throwMouseEventAt(this.mX, this.mY, "mouseover", eng, this.globalMouseMove);
-            //Can actually find mouseout more efficiently... as we have previous and current mouseover...            
+            //Can actually find mouseout more efficiently... as we have previous and current mouseover...
             if (this.prevMouseOver && this.prevMouseOver.length > 0) {
                 for (var i = 0; i < this.prevMouseOver.length; i++) {
                     if (vecToRect({ x: this.mX, y: this.mY }, this.prevMouseOver[i].tpos).magSq() != 0) {
