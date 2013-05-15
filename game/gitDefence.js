@@ -57,19 +57,35 @@
         var eng = this.engine;
         eng.run(timestamp);
 
-        this.input.handleEvents(eng);
+        lastDitchErrorCheck(this.input.handleEvents.bind(this.input, eng), function (error) {
+            //Wipe all input, and reset the screen
+            this.input = new InputHandler();
+            input = this.input;
+
+            this.screenSystem.resetActiveScreen();
+        }.bind(this), LAST_DITCH_ATTEMPT_RECOVERY);
     };
 
     this.draw = function (pen) {
         engine.base.draw(pen);
 
-        if (!selection) return;
+        //If this code expands seriously consider moving it to a real object.
+        var drawSelection = function () {
+            if (!selection) return;
 
-        pen.strokeStyle = selection.color;
-        pen.fillStyle = "transparent";
-        pen.lineWidth = 2;
-        var p = selection.tpos.center();
-        ink.circ(p.x, p.y, selection.attr.range, pen);
+            pen.strokeStyle = selection.color;
+            pen.fillStyle = "transparent";
+            pen.lineWidth = 2;
+            var p = selection.tpos.center();
+            ink.circ(p.x, p.y, selection.attr.range, pen);
+        };
+
+        //Exceptions do need to be handled here though, in my singular test case this specific code crashed,
+        //so it can happen and there is no reason to believe it is any safer than any other code.
+        lastDitchErrorCheck(drawSelection, function (error) {
+            //If we fail, just clear the selection, this will prevent us from being run anyway!
+            selection = null;
+        }, LAST_DITCH_ATTEMPT_RECOVERY);
     }
 
     this.selection = function () {

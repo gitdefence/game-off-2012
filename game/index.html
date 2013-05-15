@@ -23,9 +23,18 @@ canvas {
 <body>
 
 <script>
-    console = window.console || {};
-    console.log = console.log || function () { };
-    console.warn = console.warn || function () { };
+    //http://digitalize.ca/2010/04/javascript-tip-save-me-from-console-log-errors/
+    //Using a try catch for this makes me want to bludgeon my right-hand with a
+    //CRT monitor. However... apparently IE is retarded and I don't every want to change this
+    //in the future... so if we can console.log, then we are good, if not then we just make it not crash.
+    try {
+        console.log("console.log works");
+    } catch(error) {
+        //No point in messing around to much, they clearly don't want console to work, and are clearly
+        //not US, so we might as well just not crash for them...
+        console = {};
+        console.log = console.error = console.info = console.debug = console.warn = console.trace = console.dir = console.dirxml = console.group = console.groupEnd = console.time = console.timeEnd = console.assert = console.profile = function () { };
+    }
 </script>
 
 <canvas id="myCanvas"></canvas>
@@ -34,6 +43,7 @@ canvas {
 
 <script src="defaultDebug.js"></script>
 <script src="debug.js"></script>
+<script src="framework/lastDitchExceptionHandling.js"></script>
 
 <script src="fail.js"></script>
 <script src="type.js"></script>
