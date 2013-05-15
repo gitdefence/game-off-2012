@@ -1,4 +1,4 @@
-﻿ //System to switch between different things being active (like game, menu, etc)
+ //System to switch between different things being active (like game, menu, etc)
 function ScreenSystem(canvas) {
     var pen = canvas.getContext("2d");
 
@@ -34,9 +34,14 @@ function ScreenSystem(canvas) {
     
     function tick() {
         if (active && active.run) {
-            active.run(Date.now());
-            pen.clearRect(0, 0, canvas.width, canvas.height);
-            active.draw(pen);
+            //Last ditch try catch, if this fails we kinda just give up
+            try {
+                active.run(Date.now());
+                pen.clearRect(0, 0, canvas.width, canvas.height);
+                active.draw(pen);
+            } catch (error) {
+                console.error(error);
+            }
         }
         reqAnim(tick.bind(this));
     }
