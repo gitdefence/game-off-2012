@@ -226,10 +226,17 @@ function BaseObj(holder, zindex, dynamicZIndex) {
     }
 
     self.update = function (dt) {
-        if (holder.update) holder.update(dt);
+        if (holder.update) lastDitchErrorCheck(holder.update.bind(holder, dt), function(){}, LAST_DITCH_NO_RECOVERY);
 
         self.eachChild(function (child) {
-            if (child.base) child.base.update(dt);
+            if (child.base) {
+                lastDitchErrorCheck(
+                    child.base.update.bind(child.base.update, dt), 
+                //Last ditch error function (we remove the child, so they don't cause anymore trouble).
+                    self.removeChild.bind(self, child),
+                    LAST_DITCH_DESTRUCTIVE_RECOVERY
+                );
+            }
         });
     };
 
@@ -261,7 +268,7 @@ function BaseObj(holder, zindex, dynamicZIndex) {
         //If drawing ourself fails, there is really nothing we can do, we cannot reliably
         //remove ourself as we may have no parent and instead someone may be calling our draw raw.
         //(A better lastDitch attempt is done when drawing our children).
-        lastDitchErrorCheck(draw.bind(this, pen), function(){}, LAST_DITCH_NO_RECOVERY);
+        lastDitchErrorCheck(draw.bind(self, pen), function(){}, LAST_DITCH_NO_RECOVERY);
 
         //Sort objects by z-index (low to high) and then draw by that order
         var childWithZIndex = [];
