@@ -223,7 +223,7 @@ function Tower() {
         this.outerWidth = outerWidth;
 
         //Show HP regen?
-        var innerWidth = Math.log(this.attr.hp / this.attr.damage / this.attr.attSpeed + 10) * 6; //Math.pow(this.attr.hpRegen * 10, 0.9);
+        var innerWidth = Math.log(Math.abs(this.attr.hp / this.attr.damage / this.attr.attSpeed + 10)) * 6; //Math.pow(this.attr.hpRegen * 10, 0.9);
 
         var center = this.tpos.center();
 
@@ -271,7 +271,7 @@ function Tower() {
 
         var numberOfBars = this.attr.hp / hpPerBar;
         var barsFilled = this.attr.currentHp / hpPerBar;
-        var barsPerSide = Math.ceil(timePerSide * this.attr.hpRegen / hpPerBar);
+        var barsPerSide = Math.ceil(timePerSide * Math.max(this.attr.hpRegen, 0) / hpPerBar);
 
         //Shows HP
         var outerWidth = Math.pow(this.attr.hp / 50, 0.9);
