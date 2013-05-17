@@ -4,6 +4,7 @@ function Genes() {
 
     this.alleles = {};
 
+
     var addingAlleles = false;
     this.startAlleleAdd = function() {
         addingAlleles = true;
@@ -29,6 +30,25 @@ function Genes() {
         if (game.selection() == parent) {
             game.infobar.updateAttr(parent);
         }
+    }
+
+    //Get/setter for the next allele the user can use on this tower.
+    //They can trash the allele or use it, but they won't know what to
+    //do until we show them what the allele is. We do this by displaying
+    //information on top of the tower's statistics, so we need to expose
+    //a way for the infobar to get at the allele is should be displaying.
+    //This can of course return null if there is no next allele.
+    //Calls updateInfoBarAttributes when you change the next allele, so
+    //you don't have to.
+    var topAllele = null;
+    this.topAllele = function (newTopAllele) {
+        if (newTopAllele === undefined) {
+            return topAllele;
+        }
+
+        topAllele = newTopAllele;
+
+        this.updateInfoBarAttributes();
     }
 
     this.addAllele = function (allele) {

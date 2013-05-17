@@ -19,6 +19,7 @@ function AlleleVisual(obj, attrName) {
 
     self.resize = function (rect) {
         this.tpos = rect;
+        this.base.dirty();
     }
 
     self.redraw = function (canvas) {
@@ -46,11 +47,33 @@ function AttributeInfo(attrHolder, attrName) {
     var self = this;
     self.base = new BaseObj(self, 10);
 
+    var topAlleleDelta = 0;
+    var topAllele = attrHolder.genes.topAllele();
+    if (topAllele) {
+        function addToDelta(allele, factor) {
+            var change = allele.delta[attrName] || 0;
+
+            topAlleleDelta += change * factor;
+        }
+
+        //If we had it added, indicate that it is being replaced
+        if (attrHolder.genes.alleles[topAllele.group])
+            addToDelta(attrHolder.genes.alleles[topAllele.group], -1);
+
+        //Indicate we are adding the allele
+        addToDelta(topAllele, 1);
+    }
+
     var infoParts = new HBox();
 
-    var attrNameLabel = new Label(attrName).setTextType(new Text().align("left"));
+    var attrNameLabel = new Label(formatToDisplay(attrName)).setTextType(new Text().align("left"));
     var alleleInfo = new AlleleVisual(attrHolder, attrName);
-    var attrValueLabel = new Label(round(attrHolder.attr[attrName], 2)).setTextType(new Text().align("right"));
+
+    var numberToDisplay = round(attrHolder.attr[attrName], 2) + "";
+    if (topAlleleDelta != 0) {
+        numberToDisplay = "(" + topAlleleDelta + ") " + numberToDisplay;
+    }
+    var attrValueLabel = new Label(numberToDisplay).setTextType(new Text().align("right"));
 
     self.added = function () {
         self.base.addChild(infoParts);
@@ -73,7 +96,6 @@ function TargetStrategiesVisual(obj) {
 
     var vbox = new VBox();
 
-    
 
     self.added = function () {
         self.base.addChild(vbox);
@@ -210,6 +232,7 @@ function Infobar(pos) {
     this.clearDisplay = function () {
         this.base.setAttributeRecursive("hidden", true);
     }
+
 
     /*
     this.draw = function (pen) {

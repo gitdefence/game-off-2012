@@ -48,10 +48,18 @@ function AllelePointSystem(pos) {
         if (game.money < totalCost) return;
         if (!(selected instanceof Tower)) return;
 
+        var newTopAllele = selected.allelesGenerated.length == 0;
+
         game.money -= totalCost;
         for (var i = 0; i < num; i++) {
             selected.generateAllele();
         }
+
+        if (newTopAllele) {
+            selected.genes.topAllele(selected.allelesGenerated[0]);
+        }
+
+        game.infobar.updateAttr(selected);
     }
 
     function spendPoint() {
@@ -63,6 +71,8 @@ function AllelePointSystem(pos) {
             var allele = selected.allelesGenerated[0];
             selected.allelesGenerated.splice(0, 1);
             selected.genes.addAllele(allele);
+
+            selected.genes.topAllele(selected.allelesGenerated[0]);
         }
     }
 
@@ -73,6 +83,8 @@ function AllelePointSystem(pos) {
 
         if (selected.allelesGenerated.length > 0) {
             selected.allelesGenerated.splice(0, 1);
+
+            selected.genes.topAllele(selected.allelesGenerated[0]);
         }
     }
 
@@ -134,9 +146,11 @@ function AllelePointSystem(pos) {
             }
         }
 
+        //If we had it added, indicate that it is being replaced
         if (selected.genes.alleles[allele.group])
             addToExtraInfo(selected.genes.alleles[allele.group], -1);
 
+        //Indicate we are adding the allele
         addToExtraInfo(allele, 1);
     }
 
