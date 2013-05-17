@@ -122,7 +122,6 @@ function Tower_Connection(t1, t2) {
             var holderSelected = this.base.parent == game.selection();
 
             deleteButton.hidden = !holderSelected;
-            line.hidden = !holderSelected;
         }
 
         deleteButton.resize(getDeleteButtonPos());
