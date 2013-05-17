@@ -10,6 +10,7 @@ function Bug(startPath) {
     }());
 
     self.attr = {};
+    self.targetStrategy = new targetStrategies.Random();
     self.setBaseAttrs = function () {
         //Lol, prevCur...
         var prevCurHp = self.attr.hp || self.attr.currentHp;
