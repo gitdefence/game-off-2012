@@ -35,8 +35,6 @@ function Bug(startPath) {
     self.setBaseAttrs();
 
     self.tpos = new Rect(cen.x - r, cen.y - r, r * 2, r * 2);
-    //Very important, used by other people so they know we are really a circle!
-    self.circle = true;
 
     self.base = new BaseObj(self, 11);
     var velocity = new Vector(1, 0).mag(self.attr.speed);
@@ -162,8 +160,8 @@ function Bug(startPath) {
         var pen = canvas.ctx();
         pen.save();
         pen.translate(
-            range - self.tpos.x - self.tpos.w/2,
-            range - self.tpos.y - self.tpos.h/2);
+            range - self.tpos.x,
+            range - self.tpos.y);
         actualRedraw(pen);
         pen.restore();
     }
