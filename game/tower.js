@@ -47,7 +47,10 @@ function Tower_Connection(t1, t2) {
         delta.sub(t1.tpos.center());
         delta.mult(1/2);
 
-        assertDefined(width, height);
+        if (!assertDefined(width, height)) {
+            width = 1;
+            height = 1;
+        }
 
         var pos = t2.tpos.center();
         pos.sub(delta);
