@@ -11,6 +11,11 @@ function VBox() {
         children.push({ui: ui, height: height});
         this.base.addChild(ui);
     }
+
+    this.clear = function () {
+        children = [];
+        this.base.removeAllChildren();
+    }
     
     this.resize = function (rect) {
         var h = 0;
