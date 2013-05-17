@@ -49,6 +49,27 @@ function Text() {
         return this;
     }
 
+    // We cannot neccessarily set the fontSize, but we can set the maximum font
+    // size which may be decreased in size to fit the bounding rectangle.
+    this.maxFontSize = function (newFontSize) {
+        if (newFontSize === undefined) {
+            return newFontSize;
+        }
+        fontSize = newFontSize;
+        dirty = true;
+        return this;
+    }
+
+    var color = "green";
+    this.color = function (newColor) {
+        if (newColor === undefined) {
+            return color;
+        }
+        color = newColor;
+        dirty = true;
+        return this;
+    }
+
     // The amount of space allocated for each line, as a function
     // of the font size. As lines are positioned in the center of
     // the space allocted for them, the space is evenly distributed
@@ -98,8 +119,8 @@ function Text() {
             dirty = false;
         }
         pen.font = font();
-        pen.fillStyle = "green";
-        pen.strokeStyle = "green";
+        pen.fillStyle = color;
+        pen.strokeStyle = color;
         pen.textAlign = align;
         pen.textBaseline = "middle";
 

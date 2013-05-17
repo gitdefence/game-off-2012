@@ -42,41 +42,15 @@ function AlleleVisual(obj, attrName) {
     }
 }
 
-function TargetStrategiesVisual(obj) {
-    var self = this;
-
-    self.base = new BaseObj(self, 10);
-
-    var vbox = new VBox();
-
-    var strategyLabel = new Label("Target Strategy");
-    var strategy = new Label(obj.attr.targetStrategy);
-
-    self.added = function () {
-        self.base.addChild(vbox);
-
-        vbox.add(strategyLabel);
-        vbox.add(strategy);
-    }
-
-    self.resize = function (rect) {
-        this.tpos = rect;
-        vbox.resize(rect);
-    }
-}
-
-function AttackTypesVisual(obj) {
-}
-
 function AttributeInfo(attrHolder, attrName) {
     var self = this;
     self.base = new BaseObj(self, 10);
 
     var infoParts = new HBox();
 
-    var attrNameLabel = new Label(attrName).align("left");
+    var attrNameLabel = new Label(attrName).setTextType(new Text().align("left"));
     var alleleInfo = new AlleleVisual(attrHolder, attrName);
-    var attrValueLabel = new Label(attrHolder.attr[attrName]);
+    var attrValueLabel = new Label(round(attrHolder.attr[attrName], 2)).setTextType(new Text().align("right"));
 
     self.added = function () {
         self.base.addChild(infoParts);
@@ -89,6 +63,80 @@ function AttributeInfo(attrHolder, attrName) {
     self.resize = function (rect) {
         this.tpos = rect;
         infoParts.resize(rect);
+    }
+}
+
+function TargetStrategiesVisual(obj) {
+    var self = this;
+
+    self.base = new BaseObj(self, 10);
+
+    var vbox = new VBox();
+
+    var strategyLabel = new Label("Target Strategy").setTextType(new Text().maxFontSize(20));
+    var strategy = new Label(formatToDisplay(getRealType(obj.attr.targetStrategy)));
+
+    self.added = function () {
+        self.base.addChild(vbox);
+
+        vbox.add(strategyLabel, 30);
+        vbox.add(strategy, 20);
+    }
+
+    self.resize = function (rect) {
+        this.tpos = rect;
+        vbox.resize(rect);
+    }
+}
+
+function AttackTypesVisual(obj) {
+    var self = this;
+
+    self.base = new BaseObj(self, 10);
+
+    var vbox = new VBox();
+
+    var typesLabel = new Label("Attack Types").setTextType(new Text().maxFontSize(20));
+
+    self.added = function () {
+        self.base.addChild(vbox);
+
+        vbox.add(typesLabel, 30);
+
+        for (var key in obj.attr.attackTypes) {
+            var attackTypeObj = obj.attr.attackTypes[key];
+
+            vbox.add(new Label(formatToDisplay(getRealType(attackTypeObj))), 20);
+
+            for (var type in attackTypeObj) {
+                var value = attackTypeObj[type];
+                if (typeof value != "number") continue;
+
+                var divider = new HBox();
+                divider.add(new Label(formatToDisplay(type)).setTextType(
+                                    new Text()
+                                    .align("left")
+                                    .maxFontSize(10)
+                                    .color("white")
+                                )
+                            );
+                divider.add(new Label(formatToDisplay(value + ""))
+                                .setTextType(
+                                    new Text()
+                                    .align("right")
+                                    .maxFontSize(10)
+                                    .color("white")
+                                )
+                            );
+
+                vbox.add(divider, 20);
+            }
+        }
+    }
+
+    self.resize = function (rect) {
+        this.tpos = rect;
+        vbox.resize(rect);
     }
 }
 
@@ -140,8 +188,8 @@ function Infobar(pos) {
             attributeVBox.add(new AttributeInfo(obj, attr), 30);
         }
 
-        attributeVBox.add(new TargetStrategiesVisual(obj));
-        //attributeVBox.add(new AttackTypesVisual(obj));
+        attributeVBox.add(new TargetStrategiesVisual(obj), 50);
+        attributeVBox.add(new AttackTypesVisual(obj));
 
         attributeVBox.resize(this.tpos);
 
