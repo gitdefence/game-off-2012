@@ -63,7 +63,7 @@ function Tower_Connection(t1, t2) {
     this.added = function() {
         deleteButton = new Button("-", bind(that, "deleteSelf"), 50);
 
-        this.base.parent.base.parent.base.addChild(deleteButton);
+        this.base.addChild(deleteButton);
         deleteButton.resize(getDeleteButtonPos());
     }
 
@@ -116,7 +116,14 @@ function Tower_Connection(t1, t2) {
         line.start = t1.tpos.center();
         line.end = t2.tpos.center();
 
-        deleteButton.hidden = !this.base.parent.hover;
+        var game = getGame(this);
+
+        if (game && this.base.parent) {
+            var holderSelected = this.base.parent == game.selection();
+
+            deleteButton.hidden = !holderSelected;
+            line.hidden = !holderSelected;
+        }
 
         deleteButton.resize(getDeleteButtonPos());
 
