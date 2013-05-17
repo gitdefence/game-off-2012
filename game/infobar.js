@@ -32,7 +32,7 @@ function AlleleVisual(obj, attrName) {
         var h = this.tpos.h - boxWidth * 2;
 
         for (var ix = 0; ix < attrChanges.length; ix++) {
-            w = Math.log(Math.abs(attrChanges[ix])) * 5;
+            w = Math.abs(Math.log(Math.abs(attrChanges[ix])) * 5);
             DRAW.rect(pen, new Rect(x, y, w, h),
                            attrChanges[ix] >= 0 ? "Green" : "Red",
                            boxWidth,
@@ -42,22 +42,31 @@ function AlleleVisual(obj, attrName) {
     }
 }
 
-/*
-for (var key in obj.genes.alleles) {
-    var allele = obj.genes.alleles[key];
-    for (var key in allele.delta) {
-        if (key == name) {
-            var impact = allele.delta[key];
-            if (impact < 0)
-                startX += addBarPart(impact) * (impact < 0 ? -1 : 1);
-        }
+function TargetStrategiesVisual(obj) {
+    var self = this;
+
+    self.base = new BaseObj(self, 10);
+
+    var vbox = new VBox();
+
+    var strategyLabel = new Label("Target Strategy");
+    var strategy = new Label(obj.attr.targetStrategy);
+
+    self.added = function () {
+        self.base.addChild(vbox);
+
+        vbox.add(strategyLabel);
+        vbox.add(strategy);
+    }
+
+    self.resize = function (rect) {
+        this.tpos = rect;
+        vbox.resize(rect);
     }
 }
 
-var direction = val < 0 ? -1 : +1;
-    var curWidth = (Math.log(Math.abs(val) / baseStat + 2)) *
-    factor * direction;
-    */
+function AttackTypesVisual(obj) {
+}
 
 function AttributeInfo(attrHolder, attrName) {
     var self = this;
@@ -126,8 +135,13 @@ function Infobar(pos) {
         attributeVBox.clear();
 
         for (var attr in obj.attr) {
+            if (attr == "targetStrategy" || attr == "attackTypes") continue;
+
             attributeVBox.add(new AttributeInfo(obj, attr), 30);
         }
+
+        attributeVBox.add(new TargetStrategiesVisual(obj));
+        //attributeVBox.add(new AttackTypesVisual(obj));
 
         attributeVBox.resize(this.tpos);
 
