@@ -33,6 +33,15 @@
     this.infobar = new Infobar();
     hbox.add(this.infobar, 200);
 
+    var flowLayout = new FlowLayout();
+    hbox.add(flowLayout, 200);
+    flowLayout.add(new Label().text("Testing"));
+    flowLayout.add(new Label().text("The"));
+    flowLayout.add(new Label().text("FlowLayout!"));
+    for (var i = 0; i < 100; i++) {
+        flowLayout.add(new Label().text("Row " + i));
+    }
+
     engine.globalResize = function (ev) {
         console.log("gitDefence globalResize", ev);
         hbox.resize(new Rect(0, 0, ev.width, ev.height));

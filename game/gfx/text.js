@@ -131,21 +131,23 @@ function Text() {
     this.resize = function (newRect) {
         rect = newRect;
         curFontSize = fontSize;
-        if (shrink) {
-            while (true) {
-                var newRect2 = fitText(newRect.clone());
-                if (newRect2.w <= newRect.w && newRect2.h <= newRect.h) {
-                    usedHeight = newRect2.h;
-                    return newRect;
-                }
-                curFontSize--;
-                if (curFontSize < 0) {
-                    throw "WTF";
-                }
+
+        if (!shrink) return fitText(newRect.clone());
+
+        while (true) {
+            var fittedRect = fitText(newRect.clone());
+            if (fittedRect.w <= newRect.w && fittedRect.h <= newRect.h) {
+                usedHeight = fittedRect.h;
+                return;
             }
-        } else {
-            return fitText(newRect.clone());
+            if (curFontSize-- < 0) throw "WTF";
         }
+    }
+
+    this.optimalHeight = function (width) {
+        var rect = new Rect(0, 0, width, 0);
+        rect = fitText(rect);
+        return rect.h;
     }
 
     function fitText (rect) {
