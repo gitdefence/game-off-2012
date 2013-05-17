@@ -1,11 +1,72 @@
+//Gives a visual representation for how alleles impact various attributes.
+function AlleleVisual(obj, attrName) {
+    var self = this;
+
+    this.base = new BaseObj(self, 11);
+    this.tpos = new Rect(0, 0, 0, 0);
+
+    var attrChanges = [];
+
+    for (var key in obj.genes.alleles) {
+        var allele = obj.genes.alleles[key];
+        for (var key in allele.delta) {
+            if (key == attrName) {
+                var impact = allele.delta[key];
+                attrChanges.push(impact);
+            }
+        }
+    }
+
+    self.resize = function (rect) {
+        this.tpos = rect;
+    }
+
+    self.redraw = function (canvas) {
+        var pen = canvas.ctx();
+
+        var boxWidth = 1;
+
+        var x = boxWidth;
+        var y = boxWidth;
+        var w = 0;
+        var h = this.tpos.h - boxWidth * 2;
+
+        for (var ix = 0; ix < attrChanges.length; ix++) {
+            w = Math.log(Math.abs(attrChanges[ix])) * 5;
+            DRAW.rect(pen, new Rect(x, y, w, h),
+                           attrChanges[ix] >= 0 ? "Green" : "Red",
+                           boxWidth,
+                           "White");
+            x += w;
+        }
+    }
+}
+
+/*
+for (var key in obj.genes.alleles) {
+    var allele = obj.genes.alleles[key];
+    for (var key in allele.delta) {
+        if (key == name) {
+            var impact = allele.delta[key];
+            if (impact < 0)
+                startX += addBarPart(impact) * (impact < 0 ? -1 : 1);
+        }
+    }
+}
+
+var direction = val < 0 ? -1 : +1;
+    var curWidth = (Math.log(Math.abs(val) / baseStat + 2)) *
+    factor * direction;
+    */
+
 function AttributeInfo(attrHolder, attrName) {
     var self = this;
     self.base = new BaseObj(self, 10);
 
     var infoParts = new HBox();
 
-    var attrNameLabel = new Label(attrName);
-    var alleleInfo = new Button(attrName);
+    var attrNameLabel = new Label(attrName).align("left");
+    var alleleInfo = new AlleleVisual(attrHolder, attrName);
     var attrValueLabel = new Label(attrHolder.attr[attrName]);
 
     self.added = function () {

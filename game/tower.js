@@ -240,13 +240,15 @@ function Tower() {
 
         var totalWidth = outerWidth + innerWidth;
 
-        if(changeSize) {
+        if (changeSize) {
             this.tpos.x = center.x - totalWidth;
             this.tpos.y = center.y - totalWidth;
 
             this.tpos.w = totalWidth * 2;
             this.tpos.h = totalWidth * 2;
         }
+
+        assertDefined(this.tpos.x, this.tpos.y, this.tpos.w, this.tpos.h);
 
         this.lineWidth = outerWidth;
     }
