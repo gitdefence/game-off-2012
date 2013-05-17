@@ -155,7 +155,7 @@ function Bug(startPath) {
 
     function redraw(canvas) {
         var range = self.attr.range;
-        canvas.resize(new Rect(0, 0, range*2, range*2));
+        canvas.resize(new Rect(0, 0, range*2 + self.tpos.w, range*2 + + self.tpos.h));
 
         var pen = canvas.ctx();
         pen.save();
