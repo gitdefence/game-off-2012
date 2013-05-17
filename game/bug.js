@@ -35,6 +35,9 @@ function Bug(startPath) {
     self.setBaseAttrs();
 
     self.tpos = new Rect(cen.x - r, cen.y - r, r * 2, r * 2);
+    //Very important, used by other people so they know we are really a circle!
+    self.circle = true;
+
     self.base = new BaseObj(self, 11);
     var velocity = new Vector(1, 0).mag(self.attr.speed);
 

@@ -102,7 +102,7 @@ function Selectable() {
             pen.beginPath();
             pen.strokeStyle = "red";
             pen.lineWidth = 2;
-            var b = this.base.parent.box;
+            var b = this.base.parent.tpos;
             pen.rect(b.x, b.y, b.w, b.h);
             pen.stroke();
         }
