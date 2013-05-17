@@ -21,7 +21,7 @@ function Tower_Packet(t1, t2, speed, allele) {
     }
 
     this.update = function() {
-        packet.tpos = t1.tpos.center();
+        packet.tpos.origin(t1.tpos.center());
     }
 }
 
@@ -46,6 +46,8 @@ function Tower_Connection(t1, t2) {
         var delta = t2.tpos.center();
         delta.sub(t1.tpos.center());
         delta.mult(1/2);
+
+        assertDefined(width, height);
 
         var pos = t2.tpos.center();
         pos.sub(delta);
