@@ -149,19 +149,22 @@ function Bug(startPath) {
             redraw(canvas);
             canvasDirty = false;
         }
-        canvas.moveTo(new Vector(self.tpos.x - self.attr.range, self.tpos.y - self.attr.range));
+        canvas.moveTo(new Vector(self.tpos.x - self.attr.range + self.tpos.w / 2, 
+                                 self.tpos.y - self.attr.range + self.tpos.h / 2));
         canvas.drawTo(pen);
     }
 
     function redraw(canvas) {
         var range = self.attr.range;
-        canvas.resize(new Rect(0, 0, range*2 + self.tpos.w, range*2 + self.tpos.h));
+        var canvasSize = new Rect(0, 0, range*2, range*2);
+        canvas.resize(canvasSize);
 
         var pen = canvas.ctx();
         pen.save();
+        DRAW.rect(pen, canvasSize, "transparent", 1, "blue");
         pen.translate(
-            range - self.tpos.x,
-            range - self.tpos.y);
+            range - self.tpos.x - self.tpos.w / 2,
+            range - self.tpos.y - self.tpos.h / 2);
         actualRedraw(pen);
         pen.restore();
     }
