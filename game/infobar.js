@@ -1,3 +1,27 @@
+function AttributeInfo(attrHolder, attrName) {
+    var self = this;
+    self.base = new BaseObj(self, 10);
+
+    var infoParts = new HBox();
+
+    var attrNameLabel = new Label(attrName);
+    var alleleInfo = new Button(attrName);
+    var attrValueLabel = new Label(attrHolder.attr[attrName]);
+
+    self.added = function () {
+        self.base.addChild(infoParts);
+
+        infoParts.add(attrNameLabel);
+        infoParts.add(alleleInfo);
+        infoParts.add(attrValueLabel);
+    }
+
+    self.resize = function (rect) {
+        this.tpos = rect;
+        infoParts.resize(rect);
+    }
+}
+
 function Infobar(pos) {
     this.base = new BaseObj(this, 14);
     this.tattr = null;
@@ -21,14 +45,9 @@ function Infobar(pos) {
         this.base.addChild(outerVBox);
 
         outerVBox.add(attributeHBox);
-        outerVBox.add(new Button("test"));
         outerVBox.add(allelePoints, 220);
 
-        //attributeHBox.add(attributeVBox);
-        //attributeHBox.add(new Label("test"));
-
-        //attributeVBox.add(new Label("test"));
-        //attributeVBox.add(new Label("test2"));
+        attributeHBox.add(attributeVBox);
     };
 
     this.resize = function (rect) {
@@ -40,7 +59,17 @@ function Infobar(pos) {
     this.obj = null;
     this.updateAttr = function (obj) {
         this.base.setAttributeRecursive("hidden", false);
+
         this.obj = obj;
+
+        attributeVBox.clear();
+
+        for (var attr in obj.attr) {
+            attributeVBox.add(new AttributeInfo(obj, attr), 30);
+        }
+
+        attributeVBox.resize(this.tpos);
+
         return;
     }
 

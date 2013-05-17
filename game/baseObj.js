@@ -119,6 +119,20 @@ function BaseObj(holder, zindex, dynamicZIndex) {
         removeFromArray(self, obj, "children", "lengths");
     };
 
+    self.removeAllChildren = function() {
+        for(var type in self.children) {
+            for(var id in self.children[type]) {
+                var child = self.children[type][id];
+                //Set its root node to itself to let it know we are no longer its parent
+                child.base.parent = child;
+                child.base.setRootNode(child);
+            }
+        }
+
+        self.children = {};
+        self.lengths = {};
+    }
+
     self.destroySelf = function () {
         if (!self.parent) return;
 

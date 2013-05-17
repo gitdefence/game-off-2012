@@ -11,6 +11,11 @@ function HBox() {
         children.push({ui: ui, width: width});
         this.base.addChild(ui);
     }
+
+    this.clear = function () {
+        children = [];
+        this.base.removeAllChildren();
+    }
     
     this.resize = function (rect) {
         var w = 0;

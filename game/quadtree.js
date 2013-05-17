@@ -41,7 +41,7 @@ function QuadTree(arrObjs, splitThreshold) {
         if (!assertDefined("removeFromTree", obj, obj.base))
             return;
 
-        if (!obj.tpos)
+        if (!obj.tpos || !obj.base.quadNode)
             return;
 
         delete obj.base.quadNode.ids[obj.base.id];

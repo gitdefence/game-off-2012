@@ -13,6 +13,24 @@ function Genes() {
         this.recalculateAttributes();
     }
 
+    //Can't think of the best place to have this logic.
+    //This place kind of makes sense, the genes kinda know
+    //they are being displayed, so they try to inform who
+    //is displaying them when they changed.
+    this.updateInfoBarAttributes = function () {
+        var game = getGame(this);
+
+        var parent = this.base.parent;
+
+        if (!parent || !game) return;
+
+        //If our parent is selected, we are probably
+        //being displayed
+        if (game.selection() == parent) {
+            game.infobar.updateAttr(parent);
+        }
+    }
+
     this.addAllele = function (allele) {
         if (!assertDefined(allele))
             return;
@@ -32,19 +50,16 @@ function Genes() {
             this.recalculateAttributes();
     };
 
-    this.removeAlleleGroup = function (group) {
-        if(this.alleles[group.group])
-            delete this.alleles[group.group];
-    }
-
-    this.recalculateAttributes = function() {
+    this.recalculateAttributes = function () {
         var holder = this.base.parent;
         holder.setBaseAttrs();
 
-        for(var key in this.alleles) {
+        for (var key in this.alleles) {
             this.alleles[key].apply(holder);
         }
         holder.attr.currentHp = holder.attr.hp;
+
+        this.updateInfoBarAttributes();
     }
 
     //Should only be called if you are fully replacing the targeting strategy and attack types
