@@ -161,7 +161,6 @@ function Bug(startPath) {
 
         var pen = canvas.ctx();
         pen.save();
-        DRAW.rect(pen, canvasSize, "transparent", 1, "blue");
         pen.translate(
             range - self.tpos.x - self.tpos.w / 2,
             range - self.tpos.y - self.tpos.h / 2);
