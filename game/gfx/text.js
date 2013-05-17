@@ -146,6 +146,7 @@ function Text() {
 
     this.optimalHeight = function (width) {
         var rect = new Rect(0, 0, width, 0);
+        curFontSize = fontSize;
         rect = fitText(rect);
         return rect.h;
     }
