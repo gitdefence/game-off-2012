@@ -41,13 +41,13 @@ function SCircle(center, radius, color, fillColor, zorder) {
     this.radius = radius;
     this.color = color;
     this.fillColor = fillColor;
-    
-    this.tpos = { x: center.x, y: center.y, h: 0, w: 0 };  //We lie about this because it doesn't matter
+
+    this.tpos = new Rect(center.x - this.radius / 2, center.y - this.radius / 2, this.radius, this.radius);
     
     this.base = new BaseObj(this, zorder, true);
-    
+
     this.lineWidth = 2;
-    
+
     this.draw = function (pen) {
         var p = this.tpos;
         var radius = this.radius;
@@ -60,7 +60,7 @@ function SCircle(center, radius, color, fillColor, zorder) {
         pen.fillStyle = fillColor;
         pen.strokeStyle = color;
         
-        ink.circ(p.x, p.y, radius, pen);
+        ink.circ(p.x + radius / 2, p.y + radius / 2, radius, pen);
     };
 }
 

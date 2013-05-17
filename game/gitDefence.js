@@ -81,7 +81,7 @@
             selection = object;
             this.infobar.updateAttr(object);
         } else {
-            this.unselect(object);
+            this.unselect(selection);
         }
     }
 
