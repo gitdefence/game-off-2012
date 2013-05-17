@@ -151,6 +151,12 @@ var targetStrategies = {
         this.drawGlyph = function (pen, box) {
             box = box.clone();
 
+            box.x += box.w * 0.35;
+            box.y += box.h * 0.85;
+            
+            box.w *= 0.7;
+            box.h *= 0.7;
+
             var color = "grey";
 
             var circlePos = [0.7, 0.9, 0.1];
