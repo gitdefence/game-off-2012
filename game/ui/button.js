@@ -7,6 +7,7 @@ function Button(text, callback) {
     var textWrapper = new Text();
     textWrapper.text(text);
 
+    /*
     this.redraw = function (canvas) {
         var p = new Path();
         var r = this.tpos.clone().origin(new Vector(0, 0)).shrink(1.5);
@@ -18,8 +19,27 @@ function Button(text, callback) {
         canvas.stroke(p, "green", 1);
         canvas.fill(p, fill);
 
-        canvas.fill(textWrapper, "green");
+        //canvas.fill(textWrapper, "green");
+
+        var context = canvas.ctx();
+
+        context.fillStyle = "green";
+        context.font = "bold 16px Arial";
+        context.fillText("Test 123", this.tpos.x, this.tpos.y);
+
         return;
+    }
+    */
+
+    this.draw = function (pen) {
+        textWrapper.resize(this.tpos);
+        textWrapper.apply(pen, "fill");
+
+        /*
+        pen.fillStyle = "green";
+        pen.font = "bold 16px Arial";
+        pen.fillText(text, this.tpos.x, this.tpos.y + 20);
+        */
     }
 
     this.resize = function (rect) {

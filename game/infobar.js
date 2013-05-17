@@ -9,18 +9,33 @@ function Infobar(pos) {
     //For each displayed item gives extra info to be displayed in brackets)
     this.extraInfo = {};
 
-    this.allelePoints = new AllelePointSystem();
-    this.base.addChild(this.allelePoints);
-
-    this.resize = function (rect) {
-        this.tpos = rect;
-        this.allelePoints.resize(new Rect(rect.x, rect.y + rect.h - 200, rect.w, 190));
-    }
+    var allelePoints = new AllelePointSystem();
+    var outerVBox = new VBox();
+    var attributeHBox = new HBox();
+    var attributeVBox = new VBox();
 
     //Add our buttons, should really be done just in the constructor with our given pos information
     this.added = function () {
         this.clearDisplay();
+
+        this.base.addChild(outerVBox);
+
+        outerVBox.add(attributeHBox);
+        outerVBox.add(new Button("test"));
+        outerVBox.add(allelePoints, 220);
+
+        //attributeHBox.add(attributeVBox);
+        //attributeHBox.add(new Label("test"));
+
+        //attributeVBox.add(new Label("test"));
+        //attributeVBox.add(new Label("test2"));
     };
+
+    this.resize = function (rect) {
+        outerVBox.resize(rect);
+        this.tpos = rect;
+        //this.allelePoints.resize(new Rect(rect.x, rect.y + rect.h - 200, rect.w, 190));
+    }
 
     this.obj = null;
     this.updateAttr = function (obj) {
@@ -33,6 +48,7 @@ function Infobar(pos) {
         this.base.setAttributeRecursive("hidden", true);
     }
 
+    /*
     this.draw = function (pen) {
         pen.fillStyle = "green";
         pen.font = "15px courier";
@@ -200,6 +216,7 @@ function Infobar(pos) {
         displayAttributes(undisplayedExtra);
     }
     //End of draw
+    */
 
     this.sellTower = function() {
         this.obj.base.destroySelf();

@@ -27,3 +27,5 @@ DFlag.quadtree = {};
 // DFlag.quadtree.leafCount = 0;
 // DFlag.quadtree.leafDepthWeighted = 0;
 // DFlag.quadtree.leafObjectCount = 0;
+
+//DFlag.quadtree.draw = false;
