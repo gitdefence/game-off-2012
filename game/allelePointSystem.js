@@ -56,7 +56,7 @@ function AllelePointSystem(pos) {
         }
 
         if (newTopAllele) {
-            selected.genes.topAllele(selected.allelesGenerated[0]);
+            selected.genes.topAllele(selected.allelesGenerated[0] || null);
         }
 
         game.infobar.updateAttr(selected);
@@ -72,7 +72,7 @@ function AllelePointSystem(pos) {
             selected.allelesGenerated.splice(0, 1);
             selected.genes.addAllele(allele);
 
-            selected.genes.topAllele(selected.allelesGenerated[0]);
+            selected.genes.topAllele(selected.allelesGenerated[0] || null);
         }
     }
 
