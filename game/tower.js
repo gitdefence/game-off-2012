@@ -207,6 +207,8 @@ function Tower() {
     this.generateAllele = function () {
         var genAllGroup = pickRandomKey(AllAlleleGroups);
 
+        genAllGroup = "attack1";
+
         var alleleGenerated = new Allele(genAllGroup, AllAlleleGroups[genAllGroup]());
         this.allelesGenerated.push(alleleGenerated);
     }
