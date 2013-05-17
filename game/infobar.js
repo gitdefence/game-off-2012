@@ -73,14 +73,19 @@ function TargetStrategiesVisual(obj) {
 
     var vbox = new VBox();
 
-    var strategyLabel = new Label("Target Strategy").setTextType(new Text().maxFontSize(20));
-    var strategy = new Label(formatToDisplay(getRealType(obj.attr.targetStrategy)));
+    
 
     self.added = function () {
         self.base.addChild(vbox);
 
+        var strategyLabel = new Label("Target Strategy").setTextType(new Text().maxFontSize(20));
         vbox.add(strategyLabel, 30);
-        vbox.add(strategy, 20);
+
+
+        var typeTitle = new HBox();
+        typeTitle.add(new FakeDrawObject(obj.attr.targetStrategy.drawGlyph, false), 20);
+        typeTitle.add(new Label(formatToDisplay(getRealType(obj.attr.targetStrategy))));
+        vbox.add(typeTitle, 20);
     }
 
     self.resize = function (rect) {
@@ -106,21 +111,27 @@ function AttackTypesVisual(obj) {
         for (var key in obj.attr.attackTypes) {
             var attackTypeObj = obj.attr.attackTypes[key];
 
-            vbox.add(new Label(formatToDisplay(getRealType(attackTypeObj))), 20);
+            var typeTitle = new HBox();
+
+            typeTitle.add(new FakeDrawObject(attackTypeObj.drawGlyph, false), 20);
+            typeTitle.add(new Label(formatToDisplay(getRealType(attackTypeObj))));
+
+            vbox.add(typeTitle, 20);
 
             for (var type in attackTypeObj) {
                 var value = attackTypeObj[type];
                 if (typeof value != "number") continue;
 
-                var divider = new HBox();
-                divider.add(new Label(formatToDisplay(type)).setTextType(
+                var typeDivider = new HBox();
+
+                typeDivider.add(new Label(formatToDisplay(type)).setTextType(
                                     new Text()
                                     .align("left")
                                     .maxFontSize(10)
                                     .color("white")
                                 )
                             );
-                divider.add(new Label(formatToDisplay(value + ""))
+                typeDivider.add(new Label(formatToDisplay(value + ""))
                                 .setTextType(
                                     new Text()
                                     .align("right")
@@ -129,7 +140,7 @@ function AttackTypesVisual(obj) {
                                 )
                             );
 
-                vbox.add(divider, 20);
+                vbox.add(typeDivider, 20);
             }
         }
     }

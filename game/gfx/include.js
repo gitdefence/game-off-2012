@@ -6,4 +6,5 @@ loadScripts('gfx/', [
    'ink_old',
    'shapes_old',
    'text',
+   'fakeDrawObject'
 ]);

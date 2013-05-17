@@ -18,6 +18,8 @@ var targetStrategies = {
             return target;
         };
         this.drawGlyph = function (pen, box) {
+            box = box.clone();
+
 	        var color = "grey";
 
             box.x += box.w * 0.4;
@@ -74,6 +76,11 @@ var targetStrategies = {
             return targets[randomPos];        
         };
         this.drawGlyph = function(pen, box) {
+            box = box.clone();
+
+            box.x += box.w * 0.25;
+            box.y += box.h;
+
             var color = "grey";
 
             pen.beginPath();
@@ -142,6 +149,8 @@ var targetStrategies = {
             }
         };
         this.drawGlyph = function (pen, box) {
+            box = box.clone();
+
             var color = "grey";
 
             var circlePos = [0.7, 0.9, 0.1];

@@ -87,6 +87,8 @@ function AttackTemplate(attackType, attacker, target, damage, baseAttacker, curr
 
 //This is needed because old glyphs draw in the wrong spot. This fixes that.
 function adjustBoxForOldGlyphs(box) {
+    box = box.clone();
+
     box.x += box.w * 0.20;
     box.y += box.h * 0.85;
     box.w *= 0.75;
@@ -105,65 +107,39 @@ var allAttackTypes = {
     //Each charge bar is constant damage, number of rows relates to charge speed (1 row per constant time)
     Laser: function laser() {
         this.damagePercent = 200;
-        this.drawGlyph = function (pen, box, user) {
-            var baseColor = globalColorPalette.laser;
+        this.drawGlyph = function (pen, box) {
+            box = adjustBoxForOldGlyphs(box);
 
-            var bufferPercent = 0.15;
+            //Draw text
+            pen.fillStyle = "#000000";
+            pen.font = box.h + "px arial";
+            pen.textAlign = 'left';
 
-            box.x += box.w * bufferPercent;
-            box.y += box.h * bufferPercent;
+            var start = new Vector(box.x + box.w * 0.1, box.y - box.h * 0.2);
+            var end = new Vector(box.x + (box.w*0.7), box.y - box.h);
 
-            box.w *= (1 - bufferPercent * 2);
-            box.h *= (1 - bufferPercent * 2);
+            pen.strokeStyle = globalColorPalette.laser;
+	        pen.lineWidth = 2;
+	        ink.line(start.x, start.y, end.x, end.y, pen);
 
-            var percentCharge = user.attackCycle.chargePercent;
-            var damage = user.attr.damage;
+            pen.lineWidth = 0.8;
 
-            var damagePerModule = 0.1;
+            var dist = cloneObject(start);
+            dist.sub(end);
+            dist = dist.mag() * 0.3;
 
-            var damageModules = Math.ceil(damage / damagePerModule);
-            var modulesFilled = damage * percentCharge / damagePerModule;
+            end = start;
 
-            var timePerRow = 0.5;
+            for(var i = 0; i <= Math.PI * 2; i += Math.PI / 3 * 0.5)
+            {
+                start = cloneObject(end);
 
-            var rows = user.attackCycle.maxCounter / timePerRow;
+                var delta = new Vector(Math.cos(i) * dist, Math.sin(i) * dist);
+                start.add(delta);
 
-
-
-            var posX = 0;
-            var posY = 0;
-            var width = rows / damageModules;
-            var height = 1 / rows;
-
-
-
-            var widthBuffer = 0.2;
-            var heightBuffer = 0.1;
-
-            while(damageModules > 0) {
-                function drawPart(color) {
-                    DRAW.rect(pen, new Rect(
-                        posX + width * widthBuffer,
-                        posY + height * heightBuffer,
-                        width * (1 - widthBuffer * 2),
-                        height * (1 - heightBuffer * 2)).project(box), color);
-                }
-
-                if(modulesFilled >= 1) {
-                    drawPart("blue");
-                } else {
-                    drawPart("grey");
-                }
-
-                posX += width;
-
-                if(posX >= 1) {
-                    posX = 0;
-                    posY += height;
-                }
-
-                modulesFilled--;
-                damageModules--;
+                pen.strokeStyle = globalColorPalette.laser;
+	            pen.lineWidth = 2;
+	            ink.line(start.x, start.y, end.x, end.y, pen);
             }
         };
         this.AttackNode = function(attackTemplate)
@@ -198,87 +174,17 @@ var allAttackTypes = {
     Bullet: function bullet() {
         this.bulletSpeed = 50;
         this.damagePercent = 300;
-        this.drawGlyph = function (pen, box, user) {
-            var baseColor = globalColorPalette.laser;
+        this.drawGlyph = function (pen, box) {
+            box = adjustBoxForOldGlyphs(box);
 
-            var percentCharge = user.attackCycle.chargePercent;
+            pen.lineWidth = 0;
+	        pen.fillStyle = "#ffffff";        
+            pen.strokeStyle = "transparent";
+	        ink.circ(box.x+(box.w*0.35), box.y-(box.w*0.5), box.w*0.4, pen);
 
-            var damage = user.attr.damage;
-
-            var damagePerModule = 0.1;
-
-            var damageModules = Math.ceil(damage / damagePerModule);
-            var modulesFilled = damage * percentCharge / damagePerModule;
-
-            //Hexagon fill is:
-            //Layer size = layer * 6, layer 0 is 1... but we exclude layer 0 for now
-            //So layer number = (width - 1) / 2
-            //number = ((layer number) * 6 + 6) / 2 * (layer number)
-            //number = ((layer number) + 1) * 3 * (layer number)
-            //number/3 = lr^2 + lr
-            //x = (-b +- sqrt(b^2 - 4ac))/(2a)
-            //x = (sqrt(1 + 4n/3) - 1) / 2... rounded up
-            //1, 6, 12, 18
-            //So total width is:
-
-            var circleWidths = Math.ceil(Math.sqrt(1 + 4 * damageModules / 3)) + 1;
-
-            //damageModules = 18;
-
-            box.x += box.w * 0.07;
-            box.y += box.h * 0.01;
-
-            box.w *= 0.85;
-            box.h *= 0.85;
-
-            var width = 1 / circleWidths / 2;
-            var height = 1 / circleWidths / 2;
-            var posX = 0.5 - width * 1.5;
-            var posY = 0.5 - height * 1.5;
-
-            var moveDelta = width * 2;
-
-            var angle = 0;
-            var curDist = 0;
-            var curMove = 1;
-
-            var angleIncrement = Math.PI / 3;
-            var angleChanges = 5.5;
-
-            while(damageModules > 0) {
-
-                function drawPart(color) {
-                    DRAW.arcRect(pen, new Rect(posX, posY, width, height).project(box), color);
-                }
-
-                drawPart("grey");
-
-                if(modulesFilled >= 1) {
-                    drawPart("yellow");
-                }
-
-                posX += Math.cos(angle) * moveDelta;
-                posY += Math.sin(angle) * moveDelta;
-
-                curDist++;
-
-                if(curDist >= curMove) {
-                    curDist = 0;
-                    angle += angleIncrement;
-
-                    if(angle > angleIncrement * angleChanges) {
-                        angle = 0;
-                        curDist = 0;
-                        curMove++;
-
-                        posX += Math.cos(angleIncrement * 4) * moveDelta;
-                        posY += Math.sin(angleIncrement * 4) * moveDelta;
-                    }
-                }
-
-                modulesFilled--;
-                damageModules--;
-            }
+    	    pen.strokeStyle = "transparent";
+            pen.fillStyle = "orange";
+	        ink.circ(box.x+(box.w*0.35), box.y-(box.w*0.5), box.w*0.3, pen);
         };
         this.AttackNode = function(attackTemplate)
         {
