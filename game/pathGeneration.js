@@ -1,6 +1,4 @@
-// Unfortunately, Tile has to be here becuase tower placement
-// only works on top of a tile. Eventually we should get rid of
-// it, but having it works fine for now.
+//Only 1 tile is placed, so it is basically the game board now.
 function Tile(x, y, w, h) {
     this.tpos = new Rect(x, y, w, h);
     this.base = new BaseObj(this, 1);

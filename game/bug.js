@@ -35,6 +35,7 @@ function Bug(startPath) {
     self.setBaseAttrs();
 
     self.tpos = new Rect(cen.x - r, cen.y - r, r * 2, r * 2);
+
     self.base = new BaseObj(self, 11);
     var velocity = new Vector(1, 0).mag(self.attr.speed);
 
@@ -148,7 +149,8 @@ function Bug(startPath) {
             redraw(canvas);
             canvasDirty = false;
         }
-        canvas.moveTo(new Vector(self.tpos.x - self.attr.range, self.tpos.y - self.attr.range));
+        canvas.moveTo(new Vector(self.tpos.x - self.attr.range + self.tpos.w / 2, 
+                                 self.tpos.y - self.attr.range + self.tpos.h / 2));
         canvas.drawTo(pen);
     }
 
@@ -159,8 +161,8 @@ function Bug(startPath) {
         var pen = canvas.ctx();
         pen.save();
         pen.translate(
-            range - self.tpos.x - self.tpos.w/2,
-            range - self.tpos.y - self.tpos.h/2);
+            range - self.tpos.x - self.tpos.w / 2,
+            range - self.tpos.y - self.tpos.h / 2);
         actualRedraw(pen);
         pen.restore();
     }
