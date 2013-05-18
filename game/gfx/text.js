@@ -166,14 +166,24 @@ function Text() {
         }
     }
 
-    // Currently, self messes up the internal state, so make sure you
-    // always call resize() after calling self to clean it up again. (It's
+    // Currently, this messes up the internal state, so make sure you
+    // always call resize() after calling this to clean it up again. (It's
     // not a huge deal since that's the usual use-case anyway)
     self.optimalHeight = function (width) {
         var rect = new Rect(0, 0, width, 0);
         curFontSize = fontSize;
         rect = fitText(rect);
         return rect.h;
+    }
+
+    self.optimalWidth = function (height) {
+        var measuredRect = null;
+        var fontSize = curFontSize + 1;
+        do {
+            c.font = font(--fontSize);
+            measuredRect = c.measureText(text);
+        } while (measuredRect.height > height);
+        return measuredRect.width;
     }
 
     function fitText (rect) {
@@ -190,8 +200,8 @@ function Text() {
 
     }
 
-    function font () {
-        return curFontSize + "px courier";
+    function font (reqFontSize) {
+        return (reqFontSize || curFontSize) + "px courier";
     }
 
     function lineHeight () {

@@ -32,4 +32,6 @@ function Label() {
     self.maxFontSize = dirtyMethod(textObj.maxFontSize);
     self.color = dirtyMethod(textObj.color);
     self.lineSpacing = dirtyMethod(textObj.lineSpacing);
+
+    self.optimalWidth = textObj.optimalWidth;
 }

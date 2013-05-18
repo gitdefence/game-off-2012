@@ -86,9 +86,9 @@ function AlleleVisual(_obj, _attrName) {
                 var replacing = alleleToCompare && alleleToCompare.group == group;
                 deltaBars.add(new DeltaBar(allele, attrName, replacing ? "remove" : "current"));
             }
-
-            deltaBars.add(new Label().text("test"));
         }
+
+        deltaBars.add(new Button().text("t"));
 
         self.base.dirty();
     }
