@@ -144,7 +144,7 @@ function Bug(startPath) {
         pen.save();
         pen.translate(
             range - self.tpos.x - self.tpos.w / 2,
-            range - self.tpos.y - self.tpos.w / 2);
+            range - self.tpos.y - self.tpos.h / 2);
         actualRedraw(pen);
         pen.restore();
     }
