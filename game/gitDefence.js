@@ -1,4 +1,4 @@
-﻿function GitDefence(pos) {
+function GitDefence(pos) {
     var engine = new Engine(pos, this);
     this.engine = engine;
 
@@ -96,8 +96,8 @@
 
     this.unselect = function (object) {
         if (object !== selection) return;
-
         selection = null;
-        this.infobar.clearDisplay();
+
+        this.infobar.updateAttr(selection);
     }
 }
