@@ -27,7 +27,7 @@ function applyAttack(attackTemplate) {
     var attackKeys = getSortedKeys(attackTypes);
     var curAttackIndex = attackKeys.indexOf(attackTemplate.currentAtbox);
 
-    var newAttackType = attackTypes[curAttackIndex + 1];
+    var newAttackType = attackTypes[attackKeys[curAttackIndex + 1]];
 
     if(curAttackIndex >= 0 && newAttackType) {
         var newAttTemplate = cloneObject(attackTemplate); //Clone it just incase it has its own attributes
