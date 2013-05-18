@@ -5,7 +5,11 @@
 // this file, which is version controlled.
 
 var DFlag = {};
-DFlag.debug = false;
+
+//Changed to true for testing purposes. Anyone playing the game from now
+//until 'release' should get crashes, as we would rather find bugs than
+//give them a good play experience :D
+DFlag.debug = true;
 
 //DFlag.zindexCheck = true;
 //DFlag.lotsamoney = true;
