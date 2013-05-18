@@ -139,6 +139,8 @@ function AttributeInfos(obj, topAllele) {
 
     var height = 0;
 
+    var attrInfos = {};
+
     self.added = function (rect) {
         attrBox.add(new BufferedControl(
                     attrHeader,
@@ -148,7 +150,8 @@ function AttributeInfos(obj, topAllele) {
         for (var attr in obj.attr) {
             if (attr == "targetStrategy" || attr == "attackTypes") continue;
 
-            attrBox.add(new AttributeInfo(obj, attr, topAllele));
+            attrInfos[attr] = new AttributeInfo(obj, attr, topAllele);
+            attrBox.add(attrInfos[attr]);
         }
 
         self.base.addChild(attrBox);
@@ -157,6 +160,12 @@ function AttributeInfos(obj, topAllele) {
     self.resize = function (rect) {
         attrBox.resize(rect);
         self.tpos = rect;
+    }
+
+    self.updateAttribute = function (attrName) {
+        if (attrInfos[attrName]) {
+            
+        }
     }
 
     self.optimalHeight = function (width) {

@@ -20,9 +20,18 @@ function applyAttack(attackTemplate) {
         fail("darn it! got to figure out how this happens.");
     }
 
+    var game = getGame(target) || getGame(attacker) || getGame(baseAttacker);
+
     target.attr.currentHp -= damage;
     baseAttacker.attr.hitCount++;
 
+    if(target == game.selection()) {
+        game.infobar.updateAttribute("currentHp");
+    }
+
+    if(baseAttacker == game.selection()) {
+        game.infobar.updateAttribute("hitCount");
+    }
 
     var attackKeys = getSortedKeys(attackTypes);
     var curAttackIndex = attackKeys.indexOf(attackTemplate.currentAtbox);
@@ -38,8 +47,6 @@ function applyAttack(attackTemplate) {
     }
 
     if(target.attr.currentHp <= 0) {
-        var game = getGame(target) || getGame(attacker) || getGame(baseAttacker);
-
         target.base.destroySelf();
 
         baseAttacker.attr.kills++;

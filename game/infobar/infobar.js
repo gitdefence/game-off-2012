@@ -49,6 +49,7 @@ function Infobar(pos) {
         if(self.tpos) self.resize(self.tpos);
     }
 
+    var attrInfos = null;
     self.obj = null;
     self.updateAttr = function (obj) {
         self.obj = obj;
@@ -61,7 +62,7 @@ function Infobar(pos) {
                 topAllele = obj.allelesGenerated && obj.allelesGenerated[0];
             }
 
-            var attrInfos = new AttributeInfos(obj, topAllele);
+            attrInfos = new AttributeInfos(obj, topAllele);
             attributeVBox.add(attrInfos);
 
             var targetStrats = new TargetStrategiesVisual(obj, topAllele);
@@ -72,6 +73,13 @@ function Infobar(pos) {
         }
 
         updateDisplay();
+    }
+
+    //This happens a lot, so we don't want to do the expensive layout.
+    self.updateAttribute = function (attrName) {
+        if (attrInfos) {
+            attrInfos.updateAttribute(attrName);
+        }
     }
 
     self.update = function () {

@@ -21,8 +21,8 @@ function TargetStrategiesVisual(obj, alleleToCompare) {
         }
     }
 
-    self.optimalHeight = function () {
-        return 30 + 20 * targetStrategies.length;
+    self.optimalHeight = function (width) {
+        return vbox.optimalHeight(width);
     }
 
     self.added = function () {
@@ -46,8 +46,13 @@ function TargetStrategiesVisual(obj, alleleToCompare) {
                 textToDisplay = "(" + targetObj.delta + ") " + textToDisplay;
             }
 
-            typeTitle.add(new Label(textToDisplay));
-            vbox.add(typeTitle);
+            typeTitle.add(new Label().text(textToDisplay).maxFontSize(16));
+
+            vbox.add(new BufferedControl(
+                    typeTitle,
+                    new Rect(0, 8, 0, 2),
+                    new Rect(0, 0.15, 0, 0.05)
+                ));
         }
     }
 
