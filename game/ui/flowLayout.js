@@ -42,5 +42,6 @@ function FlowLayout() {
         for (var i = 0; i < children.length; i++) {
             totalHeight += children[i].optimalHeight(width);
         }
+        return totalHeight;
     }
 }
