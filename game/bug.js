@@ -30,8 +30,7 @@ function Bug(startPath) {
             kills:          0,
             value:          5,
         };
-        self.attr.attackTypes = {}; //Index is allele group
-        self.attr.targetStrategy = new targetStrategies.Random();
+        self.attr.attackTypes = [];
     }
     self.setBaseAttrs();
 
@@ -139,13 +138,13 @@ function Bug(startPath) {
 
     function redraw(canvas) {
         var range = self.attr.range;
-        canvas.resize(new Rect(0, 0, range*2 + self.tpos.w, range*2 + + self.tpos.h));
+        canvas.resize(new Rect(0, 0, range*2, range*2));
 
         var pen = canvas.ctx();
         pen.save();
         pen.translate(
-            range - self.tpos.x,
-            range - self.tpos.y);
+            range - self.tpos.x - self.tpos.w / 2,
+            range - self.tpos.y - self.tpos.w / 2);
         actualRedraw(pen);
         pen.restore();
     }
