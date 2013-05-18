@@ -38,8 +38,4 @@ function VBox() {
             c.ui.resize(r);
         }
     }
-
-    this.globalResize = function(ev) {
-        console.log(ev);
-    }
 }

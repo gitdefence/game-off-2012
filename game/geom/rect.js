@@ -16,52 +16,14 @@ var Rect = (function () {
             h = -h;
         }
 
-        this._x = x;
-        this._y = y;
-        this._w = w;
-        this._h = h;
-        Object.defineProperties(this, {
-            x: {
-                get: function () {
-                    return this._x
-                },
-                set: function (x) {
-                    if (x !== x || x === undefined) throw "Invalid value for x";
-                    this._x = x
-                },
-            },
-            y: {
-                get: function () {
-                    return this._y;
-                },
-                set: function (y) {
-                    if (y !== y || y === undefined) throw "Invalid value for y";
-                    this._y = y;
-                },
-            },
-            w: {
-                get: function () {
-                    return this._w
-                },
-                set: function (w) {
-                    if (w !== w || !w) throw "Invalid value for w";
-                    this._w = w
-                },
-            },
-            h: {
-                get: function () {
-                    return this._h
-                },
-                set: function (h) {
-                    if (h !== h || !h) throw "Invalid value for h";
-                    this._h = h
-                },
-            },
-        });
-//         this.x = x;
-//         this.y = y;
-//         this.w = w;
-//         this.h = h;
+        if (DFlag.debug) {
+            addDebugWatchers(this);
+        }
+
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
     }
 
     var p = Rect.prototype;
@@ -92,10 +54,8 @@ var Rect = (function () {
         this.x = rect.x + this.x * rect.w;
         this.y = rect.y + this.y * rect.h;
 
-        var w = this.w * rect.w;
-        if (w != 0) this.w = w;
-        var h = this.h * rect.h;
-        if (h != 0) this.h = h;
+        this.w *= rect.w;
+        this.h *= rect.h;
 
         return this;
     }
@@ -108,10 +68,8 @@ var Rect = (function () {
         this.x = (this.x - rect.x) / rect.w;
         this.y = (this.y - rect.y) / rect.h;
 
-        var w = this.w / rect.w;
-        if (w != 0) this.w = w;
-        var h = this. h / rect.h
-        if (h != 0) this.h = h;
+        this.w /= rect.w;
+        this. h /= rect.h;
 
         return this;
     }
@@ -163,4 +121,45 @@ var Rect = (function () {
     }
 
     return Rect;
+
+    function addDebugWatchers(obj) {
+        Object.defineProperties(obj, {
+            x: {
+                get: function () {
+                    return this._x
+                },
+                set: function (x) {
+                    if (x !== x || x === undefined) throw "Invalid value for x";
+                    this._x = x
+                },
+            },
+            y: {
+                get: function () {
+                    return this._y;
+                },
+                set: function (y) {
+                    if (y !== y || y === undefined) throw "Invalid value for y";
+                    this._y = y;
+                },
+            },
+            w: {
+                get: function () {
+                    return this._w
+                },
+                set: function (w) {
+                    if (w !== w || w === undefined) throw "Invalid value for w";
+                    this._w = w
+                },
+            },
+            h: {
+                get: function () {
+                    return this._h
+                },
+                set: function (h) {
+                    if (h !== h || h === undefined) throw "Invalid value for h";
+                    this._h = h
+                },
+            },
+        });
+    }
 } ());

@@ -144,6 +144,9 @@ function Text() {
         }
     }
 
+    // Currently, this messes up the internal state, so make sure you
+    // always call resize() after calling this to clean it up again. (It's
+    // not a huge deal since that's the usual use-case anyway)
     this.optimalHeight = function (width) {
         var rect = new Rect(0, 0, width, 0);
         curFontSize = fontSize;

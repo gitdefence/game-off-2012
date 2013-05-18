@@ -61,8 +61,4 @@ function HBox() {
         }
         return max;
     }
-
-    this.globalResize = function(ev) {
-        console.log(ev);
-    }
 }
