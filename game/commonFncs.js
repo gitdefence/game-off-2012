@@ -83,6 +83,14 @@ function sortArrayByProperty(a, prop) {
     }
 }
 
+/*
+function findElementByProperty(obj, prop, value) {
+    for (var key in obj) {
+        if(obj[
+    }
+}
+*/
+
 //Needed to do stable sorts
 function mergesort(array, fncLessEqualThan) {
     var array2 = new Array();

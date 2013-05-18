@@ -20,42 +20,42 @@ function AttackTypesVisual(obj, alleleToCompare) {
     }
 
     //No need for a stable sort yet, there should be no group overlap
-    sortArrayByProperty(originalAttackTypeContainers, "group");
+    sortArrayByProperty(originalAttackTypeContainers, "group", originalAttackTypeContainers);
+    findAttackTypeDelta(alleleToCompare, obj.genes.alleles, attackTypeContainers, originalAttackTypeContainers);
 
-    //Refactor this code and make it have more functions and less nesting.
-    var topAllele = alleleToCompare;
-    if (topAllele && topAllele.delta.attack) {
+    function findAttackTypeDelta(alleleToCompare, curAlleles, attackTypeContainers) {
+        if (!alleleToCompare || !alleleToCompare.delta.attack) return;
+
+        if (!curAlleles[alleleToCompare.group]) return;
+        var prevAllele = curAlleles[alleleToCompare.group];
+
         var attackTypeChange = true;
 
-        var topAlleleAttack = new topAllele.delta.attack();
+        var topAlleleAttack = new alleleToCompare.delta.attack();
         var curAttackObj = null;
 
-        var prevAllele = obj.genes.alleles[topAllele.group];
-
-        if (prevAllele) {
-            var prevAttackObj = null;
-            for (var key in originalAttackTypeContainers) {
-                if (originalAttackTypeContainers[key].group == prevAllele.group) {
-                    prevAttackObj = originalAttackTypeContainers[key];
-                    break;
-                }
+        var prevAttackObj = null;
+        for (var key in originalAttackTypeContainers) {
+            if (originalAttackTypeContainers[key].group == prevAllele.group) {
+                prevAttackObj = originalAttackTypeContainers[key];
+                break;
             }
+        }
 
-            //If there is an allele with the same group as us, we should be able to find it.
-            if (assertDefined(prevAttackObj)) {
-                //Check if we are replacing an attack with the same type
-                if (false && getRealType(prevAttackObj.attackType) == getRealType(topAlleleAttack)) {
-                    attackTypeChange = false;
-                    prevAttackObj.delta = "+-";
-                } else {
-                    //different type
-                    prevAttackObj.delta = "-";
-                }
+        //If there is an allele with the same group as us, we should be able to find it.
+        if (assertDefined(prevAttackObj)) {
+            //Check if we are replacing an attack with the same type
+            if (getRealType(prevAttackObj.attackType) == getRealType(topAlleleAttack)) {
+                attackTypeChange = false;
+                prevAttackObj.delta = "+-";
+            } else {
+                //different type
+                prevAttackObj.delta = "-";
             }
         }
 
         if (attackTypeChange) {
-            attackTypeContainers.push({ attackType: topAlleleAttack, delta: "+", group: topAllele.group });
+            attackTypeContainers.push({ attackType: topAlleleAttack, delta: "+", group: alleleToCompare.group });
         }
     }
 
@@ -70,7 +70,7 @@ function AttackTypesVisual(obj, alleleToCompare) {
         vbox.add(new BufferedControl(
                 typesLabel,
                 new Rect(0, 0, 0, 0),
-                new Rect(0, 1, 0, 0.4)
+                new Rect(0, 1, 0, 0)
             ));
 
         for (var key in attackTypeContainers) {
@@ -89,12 +89,14 @@ function AttackTypesVisual(obj, alleleToCompare) {
             if (DFlag.attackTypesDebug) {
                 attackTypeTitle += group.substring(group.length - 1, group.length);
             }
-            typeTitle.add(new Label(attackTypeTitle));
+            typeTitle.add(new Label(attackTypeTitle).setTextType(
+                            new Text(attackTypeTitle)
+                            .maxFontSize(16)));
 
             vbox.add(new BufferedControl(
                     typeTitle,
-                    new Rect(2, 0, 2, 0),
-                    new Rect(0, 0, 0, 0)
+                    new Rect(0, 8, 0, 2),
+                    new Rect(0, 0.15, 0, 0.05)
                 ));
 
             for (var type in attackTypeObj) {
@@ -121,8 +123,8 @@ function AttackTypesVisual(obj, alleleToCompare) {
 
                 vbox.add(new BufferedControl(
                         typeDivider,
-                        new Rect(2, 0, 2, 0),
-                        new Rect(0, 0, 0, 0)
+                        new Rect(0, 0, 0, 0),
+                        new Rect(0, 0.4, 0, 0)
                     ));
             }
         }

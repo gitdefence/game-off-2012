@@ -162,11 +162,12 @@ function AllelePointSystem(pos) {
 
         var selected = self.base.game().selection();
 
+        //This section needs to be removed.
         if (!selected.allelesGenerated) {
             self.base.setAttributeRecursive("hidden", true);
         } else {
             self.base.setAttributeRecursive("hidden", false);
-            //pointIndicator.text("Allele Points: " + selected.allelesGenerated.length);
+            pointIndicator.text("Allele Points: " + selected.allelesGenerated.length);
         }
         self.addDeltaDisplay();
     }
