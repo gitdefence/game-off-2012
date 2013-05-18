@@ -3,7 +3,7 @@ function TargetStrategiesVisual(obj, alleleToCompare) {
 
     self.base = new BaseObj(self, 10);
 
-    var vbox = new FlowLayout();
+    var ourLayout = new FlowLayout();
 
     //Each element has {strat: attr.targetStrategy, delta:string}
     var targetStrategies = [];
@@ -22,14 +22,14 @@ function TargetStrategiesVisual(obj, alleleToCompare) {
     }
 
     self.optimalHeight = function (width) {
-        return vbox.optimalHeight(width);
+        return ourLayout.optimalHeight(width);
     }
 
     self.added = function () {
-        self.base.addChild(vbox);
+        self.base.addChild(ourLayout);
 
         var strategyLabel = new Label().text("Target Strategy").maxFontSize(20);
-        vbox.add(new BufferedControl(
+        ourLayout.add(new BufferedControl(
                 strategyLabel,
                 new Rect(0, 0, 0, 0),
                 new Rect(0, 1, 0, 0)
@@ -48,7 +48,7 @@ function TargetStrategiesVisual(obj, alleleToCompare) {
 
             typeTitle.add(new Label().text(textToDisplay).maxFontSize(16));
 
-            vbox.add(new BufferedControl(
+            ourLayout.add(new BufferedControl(
                     typeTitle,
                     new Rect(0, 8, 0, 2),
                     new Rect(0, 0.15, 0, 0.05)
@@ -58,6 +58,6 @@ function TargetStrategiesVisual(obj, alleleToCompare) {
 
     self.resize = function (rect) {
         this.tpos = rect;
-        vbox.resize(rect);
+        ourLayout.resize(rect);
     }
 }

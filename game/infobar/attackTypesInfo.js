@@ -3,7 +3,7 @@ function AttackTypesVisual(obj, alleleToCompare) {
 
     self.base = new BaseObj(self, 10);
 
-    var vbox = new FlowLayout();
+    var ourLayout = new FlowLayout();
 
     var typesLabel = new Label().text("Attack Types").maxFontSize(20);
 
@@ -40,9 +40,9 @@ function AttackTypesVisual(obj, alleleToCompare) {
     }
 
     self.added = function () {
-        self.base.addChild(vbox);
+        self.base.addChild(ourLayout);
 
-        vbox.add(new BufferedControl(
+        ourLayout.add(new BufferedControl(
                 typesLabel,
                 new Rect(0, 0, 0, 0),
                 new Rect(0, 1, 0, 0)
@@ -51,18 +51,18 @@ function AttackTypesVisual(obj, alleleToCompare) {
         var addedNewAttack = false;
         for(var iy = 0; iy < attackKeys.length; iy++) {
             var attackType = attackTypes[attackKeys[iy]];
-            addAttackInfo(attackType, attackKeys[iy], vbox);
+            addAttackInfo(attackType, attackKeys[iy], ourLayout);
             if (newAttack && newAttack.group == attackKeys[iy]) {
-                addAttackInfo(newAttack, attackKeys[iy], vbox);
+                addAttackInfo(newAttack, attackKeys[iy], ourLayout);
                 addedNewAttack = true;
             }
         }
 
         if (newAttack && !addedNewAttack) {
-            addAttackInfo(newAttack, newAttack.group, vbox);
+            addAttackInfo(newAttack, newAttack.group, ourLayout);
         }
 
-        function addAttackInfo(attackType, group, vbox) {
+        function addAttackInfo(attackType, group, ourLayout) {
             var delta = attackType.deltaDisplay || "";
             //var group = attackType.group;
 
@@ -81,7 +81,7 @@ function AttackTypesVisual(obj, alleleToCompare) {
                             .text(attackTypeTitle)
                             .maxFontSize(16));
 
-            vbox.add(new BufferedControl(
+            ourLayout.add(new BufferedControl(
                     typeTitle,
                     new Rect(0, 8, 0, 2),
                     new Rect(0, 0.15, 0, 0.05)
@@ -106,7 +106,7 @@ function AttackTypesVisual(obj, alleleToCompare) {
                                     .color("white")
                                 );
 
-                vbox.add(new BufferedControl(
+                ourLayout.add(new BufferedControl(
                         typeDivider,
                         new Rect(0, 0, 0, 0),
                         new Rect(0, 0.4, 0, 0)
@@ -117,7 +117,7 @@ function AttackTypesVisual(obj, alleleToCompare) {
 
     self.resize = function (rect) {
         this.tpos = rect;
-        vbox.resize(rect);
+        ourLayout.resize(rect);
     }
 
     self.redraw = function () {
@@ -125,6 +125,6 @@ function AttackTypesVisual(obj, alleleToCompare) {
     }
 
     self.optimalHeight = function (width) {
-        return vbox.optimalHeight(width);
+        return ourLayout.optimalHeight(width);
     }
 }

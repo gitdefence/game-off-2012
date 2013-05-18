@@ -87,7 +87,7 @@ function AttributeInfo() {
                             .color("white");
 
     var infoParts = new HBox();
-    var mainLayout = new BufferedControl(
+    var ourLayout = new BufferedControl(
                      infoParts,
                      new Rect(0, 0, 0, 0),
                      new Rect(0, 0.4, 0, 0)
@@ -100,7 +100,7 @@ function AttributeInfo() {
         infoParts.add(alleleInfo);
         infoParts.add(attrValueLabel);
 
-        self.base.addChild(mainLayout);
+        self.base.addChild(ourLayout);
     }
 
     function getAlleleDelta(attrHolder, attrName, alleleToCompare) {
@@ -141,11 +141,11 @@ function AttributeInfo() {
 
     self.resize = function (rect) {
         self.tpos = rect;
-        mainLayout.resize(rect);
+        ourLayout.resize(rect);
     }
 
     self.optimalHeight = function (width) {
-        return mainLayout.optimalHeight(width);
+        return ourLayout.optimalHeight(width);
     }
 }
 
@@ -175,7 +175,7 @@ function AttributeInfos(_obj, _topAllele) {
             if (attr == "targetStrategy" || attr == "attackTypes") continue;
 
             //Temporary screening until we remove them
-            if (attr == "upload" || attr == "download" || attr == "hitCount" || attr == "kills" || attr == "value") continue;
+            //if (attr == "upload" || attr == "download" || attr == "hitCount" || attr == "kills" || attr == "value") continue;
 
             attrInfos[attr] = new AttributeInfo();
             attrInfos[attr].updateValue(obj, attr, topAllele);
