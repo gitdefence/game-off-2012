@@ -89,7 +89,7 @@ function Genes() {
         for (var key in this.alleles) {
             this.alleles[key].apply(holder);
         }
-        holder.attr.currentHp = holder.attr.maxHp;
+        holder.attr.hp = holder.attr.maxHp;
 
         //I mean, this could happen, its not an error, you just have crap alleles
         //(However letting the range be 0 may cause errors. Also, no point in not drawing

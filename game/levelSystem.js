@@ -23,8 +23,8 @@ function generateBugArray(bugStart, bugTemplate, count, attributeModifier) {
                 }
             }
         }
-        if (bug.attr.currentHp < bug.attr.maxHp) {
-            bug.attr.currentHp = bug.attr.maxHp;
+        if (bug.attr.hp < bug.attr.maxHp) {
+            bug.attr.hp = bug.attr.maxHp;
         }
 
         waveArray.push(bug);

@@ -139,7 +139,7 @@ TowerStats = {
         range:          10,
         damage:         1,
         maxHp:          10,
-        currentHp:      0,
+        hp:      0,
         hpRegen:        1,
         attSpeed:       0.2,
         upload:         5,
@@ -159,7 +159,7 @@ function Tower() {
             range: TowerStats.range,
             damage: TowerStats.damage,
             maxHp: TowerStats.maxHp,
-            currentHp: TowerStats.currentHp,
+            hp: TowerStats.hp,
             hpRegen: TowerStats.hpRegen,
             attSpeed: TowerStats.attSpeed,
             upload: TowerStats.upload,
@@ -217,18 +217,18 @@ function Tower() {
     }
 
     this.regenTick = function () {
-        if (this.attr.currentHp >= this.attr.maxHp) return;
+        if (this.attr.hp >= this.attr.maxHp) return;
 
         if (this.attr.hpRegen > 0) {
-            this.attr.currentHp += this.attr.hpRegen;
+            this.attr.hp += this.attr.hpRegen;
         }
-        if (this.attr.currentHp > this.attr.maxHp) {
-            this.attr.currentHp = this.attr.maxHp;
+        if (this.attr.hp > this.attr.maxHp) {
+            this.attr.hp = this.attr.maxHp;
         }
 
         var game = getGame(this);
         if (game && this == game.selection()) {
-            game.infobar.updateAttribute("currentHp");
+            game.infobar.updateAttribute("hp");
         }
     }
 
@@ -295,7 +295,7 @@ function Tower() {
         var timePerSide = 10;
 
         var numberOfBars = this.attr.maxHp / hpPerBar;
-        var barsFilled = this.attr.currentHp / hpPerBar;
+        var barsFilled = this.attr.hp / hpPerBar;
         var barsPerSide = Math.max(Math.ceil(timePerSide * this.attr.hpRegen / hpPerBar), 1);
 
         //Shows HP

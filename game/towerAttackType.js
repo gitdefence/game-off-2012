@@ -16,17 +16,17 @@ function applyAttack(attackTemplate) {
     if(!assertDefined(target, attacker, damage, baseAttacker, attackTypes))
         return;
 
-    if(isNaN(target.attr.currentHp)) {
+    if(isNaN(target.attr.hp)) {
         fail("darn it! got to figure out how this happens.");
     }
 
     var game = getGame(target) || getGame(attacker) || getGame(baseAttacker);
 
-    target.attr.currentHp -= damage;
+    target.attr.hp -= damage;
     baseAttacker.attr.hitCount++;
 
     if(target == game.selection()) {
-        game.infobar.updateAttribute("currentHp");
+        game.infobar.updateAttribute("hp");
     }
 
     if(baseAttacker == game.selection()) {
@@ -46,7 +46,7 @@ function applyAttack(attackTemplate) {
         startAttack(newAttTemplate);
     }
 
-    if(target.attr.currentHp <= 0) {
+    if(target.attr.hp <= 0) {
         target.base.destroySelf();
 
         baseAttacker.attr.kills++;
