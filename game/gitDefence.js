@@ -38,8 +38,11 @@
     flowLayout.add(new Label().text("Testing"));
     flowLayout.add(new Label().text("The"));
     flowLayout.add(new Label().text("FlowLayout!"));
-    for (var i = 0; i < 100; i++) {
-        flowLayout.add(new Label().text("Row " + i));
+    for (var i = 0; i < 50; i++) {
+        var hbox2 = new HBox();
+        hbox2.add(new Label().text("Row " + i));
+        hbox2.add(new Button("Testing"));
+        flowLayout.add(hbox2);
     }
 
     engine.globalResize = function (ev) {

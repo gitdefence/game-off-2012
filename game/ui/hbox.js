@@ -47,6 +47,21 @@ function HBox() {
         }
     }
 
+    // Currently, this messes up the internal state, so make sure you
+    // always call resize() after calling this to clean it up again. (It's
+    // not a huge deal since that's the usual use-case anyway)
+    this.optimalHeight = function (width) {
+        calculateWidths(width);
+        var max = 0;
+        for (var i = 0; i < children.length; i++) {
+            var c = children[i];
+            if (!c.ui.optimalHeight) continue;
+            var height = c.ui.optimalHeight(width);
+            if (height > max) max = height;
+        }
+        return max;
+    }
+
     this.globalResize = function(ev) {
         console.log(ev);
     }
