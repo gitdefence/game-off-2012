@@ -138,7 +138,7 @@ function Tower_Connection(t1, t2) {
 TowerStats = {
         range:          10,
         damage:         1,
-        hp:             10,
+        maxHp:          10,
         currentHp:      0,
         hpRegen:        1,
         attSpeed:       0.2,
@@ -155,13 +155,10 @@ function Tower() {
 
     this.attr = {};
     this.setBaseAttrs = function () {
-        //Lol, prevCur...
-        var prevCurHp = this.attr.hp || this.attr.currentHp;
-        if (!prevCurHp) prevCurHp = 0;
         this.attr = {
             range: TowerStats.range,
             damage: TowerStats.damage,
-            hp: TowerStats.hp,
+            maxHp: TowerStats.maxHp,
             currentHp: TowerStats.currentHp,
             hpRegen: TowerStats.hpRegen,
             attSpeed: TowerStats.attSpeed,
@@ -220,13 +217,13 @@ function Tower() {
     }
 
     this.regenTick = function () {
-        if (this.attr.currentHp >= this.attr.hp) return;
+        if (this.attr.currentHp >= this.attr.maxHp) return;
 
         if (this.attr.hpRegen > 0) {
             this.attr.currentHp += this.attr.hpRegen;
         }
-        if (this.attr.currentHp > this.attr.hp) {
-            this.attr.currentHp = this.attr.hp;
+        if (this.attr.currentHp > this.attr.maxHp) {
+            this.attr.currentHp = this.attr.maxHp;
         }
 
         var game = getGame(this);
@@ -245,11 +242,11 @@ function Tower() {
         this.borderColor = getOuterColorFromAttrs(this.attr);
 
         //Shows HP
-        var outerWidth = Math.pow(this.attr.hp / 50, 0.5) * 8;
+        var outerWidth = Math.pow(this.attr.maxHp / 50, 0.5) * 8;
         this.outerWidth = outerWidth;
 
         //Show HP regen?
-        var innerWidth = Math.log(Math.abs(this.attr.hp / this.attr.damage / this.attr.attSpeed + 10)) * 6; //Math.pow(this.attr.hpRegen * 10, 0.9);
+        var innerWidth = Math.log(Math.abs(this.attr.maxHp / this.attr.damage / this.attr.attSpeed + 10)) * 6; //Math.pow(this.attr.hpRegen * 10, 0.9);
 
         var center = this.tpos.center();
 
@@ -297,12 +294,12 @@ function Tower() {
         //Total of hp in bars one one side equal to hp regenerated in x seconds
         var timePerSide = 10;
 
-        var numberOfBars = this.attr.hp / hpPerBar;
+        var numberOfBars = this.attr.maxHp / hpPerBar;
         var barsFilled = this.attr.currentHp / hpPerBar;
         var barsPerSide = Math.max(Math.ceil(timePerSide * this.attr.hpRegen / hpPerBar), 1);
 
         //Shows HP
-        var outerWidth = Math.pow(this.attr.hp / 50, 0.9);
+        var outerWidth = Math.pow(this.attr.maxHp / 50, 0.9);
 
         var layers = Math.ceil(numberOfBars / barsPerSide / 4);
 

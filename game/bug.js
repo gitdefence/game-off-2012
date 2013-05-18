@@ -11,17 +11,13 @@ function Bug(startPath) {
 
     self.attr = {};
     self.setBaseAttrs = function () {
-        //Lol, prevCur...
-        var prevCurHp = self.attr.hp || self.attr.currentHp;
-        if(!prevCurHp)
-            prevCurHp = 0;
         self.attr = {
             // For balancing these are now 0, we get everything from our alleles
             // (except speed, as we have to move, and value).
             // In the future tower will be like self.
             range:          0,
             damage:         0,
-            hp:             0,
+            maxHp:             0,
             currentHp:      0,
             hpRegen:        0,
             attSpeed:       0,
@@ -73,8 +69,8 @@ function Bug(startPath) {
         if (self.attr.hpRegen > 0) {
             self.attr.currentHp += self.attr.hpRegen;
         }
-        if (self.attr.currentHp > self.attr.hp) {
-            self.attr.currentHp = self.attr.hp;
+        if (self.attr.currentHp > self.attr.maxHp) {
+            self.attr.currentHp = self.attr.maxHp;
         }
 
         var game = getGame(this);
@@ -133,7 +129,7 @@ function Bug(startPath) {
         canvasDirty = true;
         self.color = getInnerColorFromAttrs(self.attr);
         self.borderColor = getOuterColorFromAttrs(self.attr);
-        previousHp = self.attr.hp;
+        previousHp = self.attr.maxHp;
     };
 
     self.destroyAtBase = function() {
@@ -177,7 +173,7 @@ function Bug(startPath) {
         var pos = self.tpos;
         var cen = pos.center();
 
-        var hpPercent = self.attr.currentHp / self.attr.hp;
+        var hpPercent = self.attr.currentHp / self.attr.maxHp;
         var hue = hpPercent * 135;
 
         DRAW.arc(pen, cen, self.radius + self.lineWidth,

@@ -27,7 +27,7 @@ var tutorialLevelOne = {
                 targetBase: AllAlleleGroups.targetBase,
                 rangeBase: AllAlleleGroups.rangeBase,
                 speedBase: function () { return { speed: 5 }; },
-                hpBase: function () { return { hp: 10 }; },
+                hpBase: function () { return { maxHp: 10 }; },
                 attSpeedBase: function () { return { attSpeed: -100 }; }, //We don't want it to attack
             },
             //Time until next wave
@@ -50,7 +50,7 @@ var tutorialLevelTwo = {
                 targetBase: AllAlleleGroups.targetBase,
                 rangeBase: AllAlleleGroups.rangeBase,
                 speedBase: function () { return { speed: 5 }; },
-                hpBase: function () { return { hp: 10 }; },
+                hpBase: function () { return { maxHp: 10 }; },
                 attSpeedBase: function () { return { attSpeed: -100 }; }, //We don't want it to attack
             },
             //Time until next wave
