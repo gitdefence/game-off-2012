@@ -95,7 +95,7 @@ function Genes() {
         //(However letting the range be 0 may cause errors. Also, no point in not drawing
         //it, might as well give them a little bit of range so a circle is at least drawn).
         if (holder.attr.range < 1) {
-            holder.attr.range = 1;
+            holder.attr.range = 1; 
         }
 
         this.updateInfoBarAttributes();
