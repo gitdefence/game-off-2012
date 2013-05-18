@@ -174,6 +174,9 @@ function AttributeInfos(_obj, _topAllele) {
         for (var attr in obj.attr) {
             if (attr == "targetStrategy" || attr == "attackTypes") continue;
 
+            //Temporary screening until we remove them
+            if (attr == "upload" || attr == "download" || attr == "hitCount" || attr == "kills" || attr == "value") continue;
+
             attrInfos[attr] = new AttributeInfo();
             attrInfos[attr].updateValue(obj, attr, topAllele);
             attrBox.add(attrInfos[attr]);
