@@ -63,7 +63,8 @@ function AllelePointSystem(pos) {
     }
 
     function spendPoint() {
-        var selected = self.base.game().selection();
+        var game = getGame(self);
+        var selected = game.selection();
 
         if (!(selected instanceof Tower)) return;
 
@@ -71,13 +72,12 @@ function AllelePointSystem(pos) {
             var allele = selected.allelesGenerated[0];
             selected.allelesGenerated.splice(0, 1);
             selected.genes.addAllele(allele);
-
-            selected.genes.topAllele(selected.allelesGenerated[0] || null);
         }
     }
 
     function trashPoint() {
-        var selected = self.base.game().selection();
+        var game = getGame(self);
+        var selected = game.selection();
 
         if (!selected instanceof Tower) return;
 
@@ -161,13 +161,12 @@ function AllelePointSystem(pos) {
 
         var selected = self.base.game().selection();
 
-        if (!(selected instanceof Tower)) {
+        if (!selected.allelesGenerated) {
             self.base.setAttributeRecursive("hidden", true);
-            return;
+        } else {
+            self.base.setAttributeRecursive("hidden", false);
+            pointIndicator.text("Allele Points: " + selected.allelesGenerated.length);
         }
-
-        self.base.setAttributeRecursive("hidden", false);
-        pointIndicator.text("Allele Points: " + selected.allelesGenerated.length);
         self.addDeltaDisplay();
     }
 }

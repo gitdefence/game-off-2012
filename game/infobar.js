@@ -164,6 +164,7 @@ function AttackTypesVisual(obj) {
             delta: "" });
     }
 
+    //No need for a stable sort yet, there should be no group overlap
     sortArrayByProperty(originalAttackTypeContainers, "group");
 
     //Refactor this code and make it have more functions and less nesting.
@@ -205,6 +206,9 @@ function AttackTypesVisual(obj) {
 
     attackTypeContainers = originalAttackTypeContainers.concat(attackTypeContainers);
 
+    //Stable sort to keep the changed attack types after the types they replace.
+    sortArrayByPropertyStable(attackTypeContainers, "group");
+
     self.added = function () {
         self.base.addChild(vbox);
 
@@ -223,7 +227,10 @@ function AttackTypesVisual(obj) {
             if (delta.length > 0) {
                 attackTypeTitle = "(" + delta + ") " + attackTypeTitle;
             }
-            typeTitle.add(new Label(attackTypeTitle + group.substring(group.length - 1, group.length)));
+            if (DFlag.debug) {
+                attackTypeTitle += group.substring(group.length - 1, group.length);
+            }
+            typeTitle.add(new Label(attackTypeTitle));
 
             vbox.add(typeTitle, 20);
 
@@ -314,11 +321,18 @@ function Infobar(pos) {
     self.obj = null;
     self.updateAttr = function (obj) {
         self.obj = obj;
-        updateDisplay();
 
         if (self.obj) {
             attributeVBox.clear();
 
+<<<<<<< HEAD
+=======
+            var topAllele = null;
+            if (hover) {
+                topAllele = obj.allelesGenerated && obj.allelesGenerated[0];
+            }
+
+>>>>>>> More changes, plus major hacks to make allele point system not display when a tower is not selected.
             for (var attr in obj.attr) {
                 if (attr == "targetStrategy" || attr == "attackTypes") continue;
 
@@ -331,6 +345,8 @@ function Infobar(pos) {
 
             attributeVBox.resize(self.tpos);
         }
+
+        updateDisplay();
     }
 
     self.mousemove = function () {
