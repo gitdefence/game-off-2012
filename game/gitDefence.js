@@ -40,7 +40,7 @@
     flowLayout.add(new Label().text("FlowLayout!"));
     for (var i = 0; i < 50; i++) {
         var hbox2 = new HBox();
-        hbox2.add(new Label().text("Row " + i));
+        hbox2.add(new Label().text("Row " + i).align('left'));
         hbox2.add(new Button("Testing"));
         flowLayout.add(hbox2);
     }

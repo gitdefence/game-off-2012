@@ -1,27 +1,32 @@
 function Label() {
-    this.tpos = new Rect(0, 0, 0, 0);
-    this.base = new BaseObj(this);
+    var self = this;
+    self.tpos = new Rect(0, 0, 0, 0);
+    self.base = new BaseObj(self);
 
     var text = new Text();
 
-    this.redraw = function (canvas) {
+    self.redraw = function (canvas) {
         canvas.fill(text, "green");
     }
 
-    this.resize = function (rect) {
-        this.tpos = rect;
-        this.base.dirty();
+    self.resize = function (rect) {
+        self.tpos = rect;
+        self.base.dirty();
         text.resize(new Rect(0, 0, 0, 0).size(rect.size()));
-        return this;
+        return self;
     }
 
-    this.optimalHeight = function (width) {
+    self.optimalHeight = function (width) {
         return text.optimalHeight(width);
     }
 
-    this.text = function (newText) {
-        text.text(newText);
-        this.base.dirty();
-        return this;
+    function dirtyMethod(method) {
+        return function () {
+            method.apply(null, arguments);
+            self.base.dirty();
+            return self;
+        }
     }
+    self.text = dirtyMethod(text.text);
+    self.align = dirtyMethod(text.align);
 }
