@@ -1,10 +1,6 @@
-function Infobar(pos) {
+function Infobar() {
     this.base = new BaseObj(this, 14);
-    this.tattr = null;
-
-    this.tpos = pos;
-
-    var buttonW = 100;
+    this.tpos = new Rect(0, 0, 1, 1);
 
     //For each displayed item gives extra info to be displayed in brackets)
     this.extraInfo = {};

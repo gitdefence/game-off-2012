@@ -1,27 +1,32 @@
-function Label(text) {
-    this.tpos = new Rect(0, 0, 0, 0);
-    this.base = new BaseObj(this);
+function Label() {
+    var self = this;
+    self.tpos = new Rect(0, 0, 0, 0);
+    self.base = new BaseObj(self);
 
-    this.redraw = function (canvas) {
-        var t = new Text();
-        t.text(text);
-        t.resize(new Rect(0, 0, 0, 0).size(this.tpos.size()));
-        canvas.fill(t, "green");
+    var text = new Text();
+
+    self.redraw = function (canvas) {
+        canvas.fill(text, "green");
     }
 
-    this.resize = function (rect) {
-        this.tpos = rect;
-        this.base.dirty();
-        return this;
+    self.resize = function (rect) {
+        self.tpos = rect;
+        self.base.dirty();
+        text.resize(new Rect(0, 0, 0, 0).size(rect.size()));
+        return self;
     }
 
-    this.text = function (newText) {
-        if (newText === undefined) {
-            return text;
-        } else {
-            text = newText;
-            this.base.dirty();
-            return this;
+    self.optimalHeight = function (width) {
+        return text.optimalHeight(width);
+    }
+
+    function dirtyMethod(method) {
+        return function () {
+            method.apply(null, arguments);
+            self.base.dirty();
+            return self;
         }
     }
+    self.text = dirtyMethod(text.text);
+    self.align = dirtyMethod(text.align);
 }

@@ -33,6 +33,18 @@
     this.infobar = new Infobar();
     hbox.add(this.infobar, 200);
 
+    var flowLayout = new FlowLayout();
+    hbox.add(flowLayout, 200);
+    flowLayout.add(new Label().text("Testing"));
+    flowLayout.add(new Label().text("The"));
+    flowLayout.add(new Label().text("FlowLayout!"));
+    for (var i = 0; i < 50; i++) {
+        var hbox2 = new HBox();
+        hbox2.add(new Label().text("Row " + i).align('left'));
+        hbox2.add(new Button("Testing"));
+        flowLayout.add(hbox2);
+    }
+
     engine.globalResize = function (ev) {
         console.log("gitDefence globalResize", ev);
         hbox.resize(new Rect(0, 0, ev.width, ev.height));
