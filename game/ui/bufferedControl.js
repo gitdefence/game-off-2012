@@ -38,6 +38,8 @@ function BufferedControl(initialControl, rectConstantBuffer, rectPercentBuffer) 
            rect.w - (childWidth * rectPercentBuffer.right() + rectConstantBuffer.right()),
            rect.h - (childHeight * rectPercentBuffer.bottom() + rectConstantBuffer.bottom()));
 
+	    uiControlRect.round();
+
 	    uiControl.resize(uiControlRect);
 	    this.tpos = rect;
 	}
@@ -50,14 +52,14 @@ function BufferedControl(initialControl, rectConstantBuffer, rectPercentBuffer) 
         if (uiControl.optimalWidth) {
             self.optimalWidth = function (width) {
                 var childWidth = uiControl.optimalWidth(width);
-                return childWidth * (1 + rectPercentBuffer.right()) + rectConstantBuffer.right();
+                return Math.round(childWidth * (1 + rectPercentBuffer.right()) + rectConstantBuffer.right());
             }
         }
 
         if (uiControl.optimalHeight) {
             self.optimalHeight = function (width) {
                 var childHeight = uiControl.optimalHeight(width);
-                return childHeight * (1 + rectPercentBuffer.bottom()) + rectConstantBuffer.bottom();
+                return Math.round(childHeight * (1 + rectPercentBuffer.bottom()) + rectConstantBuffer.bottom());
             }
         }
     }
