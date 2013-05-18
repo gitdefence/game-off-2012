@@ -6,5 +6,6 @@ loadScripts('ui/', [
     'vbox',
     'hbox',
     'flowLayout',
-    'bufferedControl'
+    'bufferedControl',
+    'fakeDrawObject'
 ]);

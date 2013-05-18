@@ -66,7 +66,7 @@ function AlleleVisual(obj, attrName, alleleToCompare) {
     }
 }
 
-function AttributeInfo(attrHolder, attrName, alleleToCompare, height) {
+function AttributeInfo(attrHolder, attrName, alleleToCompare) {
     var self = this;
     self.base = new BaseObj(self, 10);
 
@@ -88,6 +88,11 @@ function AttributeInfo(attrHolder, attrName, alleleToCompare, height) {
     }
 
     var infoParts = new HBox();
+    var mainLayout = new BufferedControl(
+                     infoParts,
+                     new Rect(0, 0, 0, 0),
+                     new Rect(0, 1, 0, 0)
+                  );
 
     var attrNameLabel = new Label().setTextType(new Text(formatToDisplay(attrName)).align("left"));
     var alleleInfo = new AlleleVisual(attrHolder, attrName, alleleToCompare);
@@ -99,20 +104,20 @@ function AttributeInfo(attrHolder, attrName, alleleToCompare, height) {
     var attrValueLabel = new Label().setTextType(new Text(numberToDisplay).align("right"));
 
     self.added = function () {
-        self.base.addChild(infoParts);
-
         infoParts.add(attrNameLabel);
         infoParts.add(alleleInfo);
         infoParts.add(attrValueLabel);
+
+        self.base.addChild(mainLayout);
     }
 
     self.resize = function (rect) {
         this.tpos = rect;
-        infoParts.resize(rect);
+        mainLayout.resize(rect);
     }
 
-    self.optimalHeight = function () {
-        return height;
+    self.optimalHeight = function (width) {
+        return mainLayout.optimalHeight(width);
     }
 }
 
@@ -128,13 +133,15 @@ function AttributeInfos(obj, topAllele) {
     var height = 0;
 
     self.added = function (rect) {
-        height += 30;
-        attrBox.add(attrHeader);
+        attrBox.add(new BufferedControl(
+                    attrHeader,
+                    new Rect(0, 0, 0, 0),
+                    new Rect(0, 0.5, 0, 0)
+                ));
         for (var attr in obj.attr) {
             if (attr == "targetStrategy" || attr == "attackTypes") continue;
 
-            height += 20;
-            attrBox.add(new AttributeInfo(obj, attr, topAllele, 20));
+            attrBox.add(new AttributeInfo(obj, attr, topAllele));
         }
 
         self.base.addChild(attrBox);

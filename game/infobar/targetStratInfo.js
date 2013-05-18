@@ -3,7 +3,7 @@ function TargetStrategiesVisual(obj, alleleToCompare) {
 
     self.base = new BaseObj(self, 10);
 
-    var vbox = new VBox();
+    var vbox = new FlowLayout();
 
     //Each element has {strat: attr.targetStrategy, delta:string}
     var targetStrategies = [];
@@ -29,7 +29,11 @@ function TargetStrategiesVisual(obj, alleleToCompare) {
         self.base.addChild(vbox);
 
         var strategyLabel = new Label().setTextType(new Text("Target Strategy").maxFontSize(20));
-        vbox.add(strategyLabel, 30);
+        vbox.add(new BufferedControl(
+                strategyLabel,
+                new Rect(0, 0, 0, 0),
+                new Rect(0, 1, 0, 0)
+            ));
 
         for (var ix = 0; ix < targetStrategies.length; ix++) {
             var targetObj = targetStrategies[ix];
@@ -43,7 +47,7 @@ function TargetStrategiesVisual(obj, alleleToCompare) {
             }
 
             typeTitle.add(new Label(textToDisplay));
-            vbox.add(typeTitle, 20);
+            vbox.add(typeTitle);
         }
     }
 

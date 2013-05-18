@@ -150,6 +150,15 @@ var Rect = (function () {
         this.y = newBottom - this.top;
         return this;
     }
+    
+    p.round = function() {
+        this.x = Math.round(this.x);
+        this.y = Math.round(this.y);
+        this.w = Math.round(this.w);
+        this.h = Math.round(this.h);
+
+        return this;
+    }
 
     return Rect;
 
