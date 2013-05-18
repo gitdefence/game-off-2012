@@ -76,6 +76,11 @@ function Bug(startPath) {
         if (self.attr.currentHp > self.attr.hp) {
             self.attr.currentHp = self.attr.hp;
         }
+
+        var game = getGame(this);
+        if (game && this == game.selection()) {
+            game.infobar.updateAttribute("currentHp");
+        }
     }
 
     function move(pos, vec, dt) {

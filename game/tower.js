@@ -220,11 +220,18 @@ function Tower() {
     }
 
     this.regenTick = function () {
+        if (this.attr.currentHp >= this.attr.hp) return;
+
         if (this.attr.hpRegen > 0) {
             this.attr.currentHp += this.attr.hpRegen;
         }
         if (this.attr.currentHp > this.attr.hp) {
             this.attr.currentHp = this.attr.hp;
+        }
+
+        var game = getGame(this);
+        if (game && this == game.selection()) {
+            game.infobar.updateAttribute("currentHp");
         }
     }
 
