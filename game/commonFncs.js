@@ -83,13 +83,12 @@ function sortArrayByProperty(a, prop) {
     }
 }
 
-/*
 function findElementByProperty(obj, prop, value) {
     for (var key in obj) {
-        if(obj[
+        if (obj[prop] == value) return obj[key];
     }
+    return null;
 }
-*/
 
 //Needed to do stable sorts
 function mergesort(array, fncLessEqualThan) {

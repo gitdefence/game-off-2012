@@ -7,62 +7,38 @@ function AttackTypesVisual(obj, alleleToCompare) {
 
     var typesLabel = new Label().setTextType(new Text("Attack Types").maxFontSize(20));
 
-    //Array of { attackType: attr.attackTypes[key], delta: "" };
-    var attackTypeContainers = [];
 
-    var originalAttackTypeContainers = [];
-    for (var group in obj.attr.attackTypes) {
-        originalAttackTypeContainers.push({
-            attackType: obj.attr.attackTypes[group],
-            group: group,
-            delta: ""
-        });
-    }
+    var attackTypes = obj.attr.attackTypes;
+    var attackKeys = getSortedKeys(attackTypes);
+    var newAttack = findAttackTypeDelta(alleleToCompare, attackTypes);
 
-    //No need for a stable sort yet, there should be no group overlap
-    sortArrayByProperty(originalAttackTypeContainers, "group", originalAttackTypeContainers);
-    findAttackTypeDelta(alleleToCompare, obj.genes.alleles, attackTypeContainers, originalAttackTypeContainers);
-
-    function findAttackTypeDelta(alleleToCompare, curAlleles, attackTypeContainers) {
+    function findAttackTypeDelta(alleleToCompare, attackTypes) {
         if (!alleleToCompare || !alleleToCompare.delta.attack) return;
 
-        if (!curAlleles[alleleToCompare.group]) return;
-        var prevAllele = curAlleles[alleleToCompare.group];
+        var attackToReplace = attackTypes[alleleToCompare.group];
 
-        var attackTypeChange = true;
+        var attacksSameKind = attackToReplace &&
+            attackToReplace.AttackNode == alleleToCompare.delta.attack;
 
-        var topAlleleAttack = new alleleToCompare.delta.attack();
-        var curAttackObj = null;
+        //Check if we are replacing an attack with the same type
+        if (attacksSameKind) {
+            //No need to show our attack, it will be the same anyway
+            attackToReplace.deltaDisplay = "+-";
 
-        var prevAttackObj = null;
-        for (var key in originalAttackTypeContainers) {
-            if (originalAttackTypeContainers[key].group == prevAllele.group) {
-                prevAttackObj = originalAttackTypeContainers[key];
-                break;
+            return null;
+        } else {
+            //different type
+            if (attackToReplace) {
+                attackToReplace.deltaDisplay = "-";
             }
-        }
 
-        //If there is an allele with the same group as us, we should be able to find it.
-        if (assertDefined(prevAttackObj)) {
-            //Check if we are replacing an attack with the same type
-            if (getRealType(prevAttackObj.attackType) == getRealType(topAlleleAttack)) {
-                attackTypeChange = false;
-                prevAttackObj.delta = "+-";
-            } else {
-                //different type
-                prevAttackObj.delta = "-";
-            }
-        }
+            var newAttack = new alleleToCompare.delta.attack();
+            newAttack.deltaDisplay = "+";
+            newAttack.group = alleleToCompare.group;
 
-        if (attackTypeChange) {
-            attackTypeContainers.push({ attackType: topAlleleAttack, delta: "+", group: alleleToCompare.group });
+            return newAttack;
         }
     }
-
-    attackTypeContainers = originalAttackTypeContainers.concat(attackTypeContainers);
-
-    //Stable sort to keep the changed attack types after the types they replace.
-    sortArrayByPropertyStable(attackTypeContainers, "group");
 
     self.added = function () {
         self.base.addChild(vbox);
@@ -73,16 +49,29 @@ function AttackTypesVisual(obj, alleleToCompare) {
                 new Rect(0, 1, 0, 0)
             ));
 
-        for (var key in attackTypeContainers) {
-            var attackTypeObj = attackTypeContainers[key].attackType;
-            var delta = attackTypeContainers[key].delta;
-            var group = attackTypeContainers[key].group;
+        var addedNewAttack = false;
+        for(var iy = 0; iy < attackKeys.length; iy++) {
+            var attackType = attackTypes[attackKeys[iy]];
+            addAttackInfo(attackType, attackKeys[iy], vbox);
+            if (newAttack && newAttack.group == attackKeys[iy]) {
+                addAttackInfo(newAttack, attackKeys[iy], vbox);
+                addedNewAttack = true;
+            }
+        }
+
+        if (newAttack && !addedNewAttack) {
+            addAttackInfo(newAttack, newAttack.group, vbox);
+        }
+
+        function addAttackInfo(attackType, group, vbox) {
+            var delta = attackType.deltaDisplay || "";
+            //var group = attackType.group;
 
             var typeTitle = new HBox();
 
-            typeTitle.add(new FakeDrawObject(attackTypeObj.drawGlyph, false), 20);
+            typeTitle.add(new FakeDrawObject(attackType.drawGlyph, false), 20);
 
-            var attackTypeTitle = formatToDisplay(getRealType(attackTypeObj));
+            var attackTypeTitle = formatToDisplay(getRealType(attackType));
             if (delta.length > 0) {
                 attackTypeTitle = "(" + delta + ") " + attackTypeTitle;
             }
@@ -99,8 +88,8 @@ function AttackTypesVisual(obj, alleleToCompare) {
                     new Rect(0, 0.15, 0, 0.05)
                 ));
 
-            for (var type in attackTypeObj) {
-                var value = attackTypeObj[type];
+            for (var type in attackType) {
+                var value = attackType[type];
                 if (typeof value != "number") continue;
 
                 var typeDivider = new HBox();
