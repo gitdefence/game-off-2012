@@ -96,7 +96,7 @@ function AttributeInfo(attrHolder, attrName, alleleToCompare) {
                      new Rect(0, 0.4, 0, 0)
                   );
 
-    var attrNameLabel = new Label().text(formatToDisplay(attrName).align("left");
+    var attrNameLabel = new Label().text(formatToDisplay(attrName)).align("left");
     var alleleInfo = new AlleleVisual(attrHolder, attrName, alleleToCompare);
 
     var numberToDisplay = round(attrHolder.attr[attrName], 2) + "";
@@ -134,7 +134,7 @@ function AttributeInfos(obj, topAllele) {
     self.tpos = new Rect(0, 0, 1, 1);
 
     var attrBox = new FlowLayout();
-    var attrHeader = new Label().text("Attributes").maxFontSize(20));
+    var attrHeader = new Label().text("Attributes").maxFontSize(20);
 
     var height = 0;
 
