@@ -84,7 +84,7 @@ function AllelePointSystem(pos) {
         if (selected.allelesGenerated.length > 0) {
             selected.allelesGenerated.splice(0, 1);
 
-            selected.genes.topAllele(selected.allelesGenerated[0]);
+            selected.genes.topAllele(selected.allelesGenerated[0] || null);
         }
     }
 

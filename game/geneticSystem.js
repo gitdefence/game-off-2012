@@ -79,6 +79,9 @@ function Genes() {
             this.recalculateAttributes();
     };
 
+    //This function is required, in case (which we really should for attack types) we
+    //want to have alleles which apply a percentage change. If we do this, we also need
+    //to make the alleles always applied in the same order.
     this.recalculateAttributes = function () {
         var holder = this.base.parent;
         holder.setBaseAttrs();
