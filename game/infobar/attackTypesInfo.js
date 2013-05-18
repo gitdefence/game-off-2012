@@ -67,7 +67,11 @@ function AttackTypesVisual(obj, alleleToCompare) {
     self.added = function () {
         self.base.addChild(vbox);
 
-        vbox.add(typesLabel);
+        vbox.add(new BufferedControl(
+                typesLabel,
+                new Rect(0, 0, 0, 0),
+                new Rect(0, 1, 0, 0.4)
+            ));
 
         for (var key in attackTypeContainers) {
             var attackTypeObj = attackTypeContainers[key].attackType;
@@ -87,7 +91,11 @@ function AttackTypesVisual(obj, alleleToCompare) {
             }
             typeTitle.add(new Label(attackTypeTitle));
 
-            vbox.add(typeTitle);
+            vbox.add(new BufferedControl(
+                    typeTitle,
+                    new Rect(2, 0, 2, 0),
+                    new Rect(0, 0, 0, 0)
+                ));
 
             for (var type in attackTypeObj) {
                 var value = attackTypeObj[type];
@@ -98,7 +106,7 @@ function AttackTypesVisual(obj, alleleToCompare) {
                 typeDivider.add(new Label().setTextType(
                                     new Text(formatToDisplay(type))
                                     .align("left")
-                                    .maxFontSize(10)
+                                    .maxFontSize(12)
                                     .color("white")
                                 )
                             );
@@ -106,12 +114,16 @@ function AttackTypesVisual(obj, alleleToCompare) {
                                     .setTextType(
                                     new Text(formatToDisplay(value + ""))
                                     .align("right")
-                                    .maxFontSize(10)
+                                    .maxFontSize(12)
                                     .color("white")
                                 )
                             );
 
-                vbox.add(typeDivider);
+                vbox.add(new BufferedControl(
+                        typeDivider,
+                        new Rect(2, 0, 2, 0),
+                        new Rect(0, 0, 0, 0)
+                    ));
             }
         }
     }
@@ -119,6 +131,10 @@ function AttackTypesVisual(obj, alleleToCompare) {
     self.resize = function (rect) {
         this.tpos = rect;
         vbox.resize(rect);
+    }
+
+    self.redraw = function () {
+        return 5;
     }
 
     self.optimalHeight = function (width) {

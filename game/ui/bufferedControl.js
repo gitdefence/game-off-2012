@@ -6,54 +6,59 @@
 // their's is fixed.
 
 //rectConstantBuffer says the pixels on each side we buffer by.
-//rectPercentBuffer says the percent of the respective lengths
-//we buffer by, the sum of your left + right and top + bottom
-//should each be < 1.
-function BufferedControl(rectConstantBuffer, rectPercentBuffer) {
-	this.base = new BaseObj(this);
-	this.tpos = new Rect(0, 0, 0, 0);
+//rectPercentBuffer says the percent of rect we are given (in resize) we take.
+function BufferedControl(initialControl, rectConstantBuffer, rectPercentBuffer) {
+    var self = this;
+	self.base = new BaseObj(self);
+	self.tpos = new Rect(0, 0, 0, 0);
 
-	var uiControl;
+	var uiControl = initialControl;
 
-	this.setControl = function (ui) {
+	self.setControl = function (ui) {
 	    uiControl = ui;
-	    this.base.addChild(uiControl);
+        implementOptimalFunctions(uiControl);
+	    self.base.addChild(uiControl);
 	}
 
-	this.resize = function (rect) {
-        
+	self.added = function () {
+	    if (initialControl) {
+	        self.setControl(uiControl);
+	    }
+	}
 
-		var width = rect.w;
-		var heights = [];
-		var totalHeight = 0;
-		for (var i = 0; i < children.length; i++) {
-			var child = children[i];
-			var height = child.optimalHeight(width);
-			totalHeight += height;
-			heights.push(height);
-		}
+	self.resize = function (rect) {
+	    rect = rect.clone();
 
-		// Make sure we can fit.
-		if (totalHeight > rect.h) {
-			for (var i = 0; i < heights.length; i++) {
-				heights[i] *= rect.h / totalHeight;
-			}
-		}
+	    var childWidth = (rect.w - rectConstantBuffer.right()) / (1 + rectPercentBuffer.right());
+	    var childHeight = (rect.h - rectConstantBuffer.bottom()) / (1 + rectPercentBuffer.bottom());
 
-		var curY = rect.y;
-		for (var i = 0; i < children.length; i++) {
-			var height = heights[i];
-			var childRect = new Rect(rect.x, curY, width, height);
-			children[i].resize(childRect);
-			curY += height;
-		}
+	    var uiControlRect = new Rect(
+           rect.x + childWidth * rectPercentBuffer.x + rectConstantBuffer.x,
+           rect.y + childHeight * rectPercentBuffer.y + rectConstantBuffer.y,
+           rect.w - (childWidth * rectPercentBuffer.right() + rectConstantBuffer.right()),
+           rect.h - (childHeight * rectPercentBuffer.bottom() + rectConstantBuffer.bottom()));
+
+	    uiControl.resize(uiControlRect);
+	    this.tpos = rect;
+	}
+
+    self.draw = function (pen) {
+        //DRAW.rect(pen, this.tpos.clone().shrink(-1), "transparent", 1, "blue");
     }
 
-    this.optimalHeight = function (width) {
-        var totalHeight = 0;
-        for (var i = 0; i < children.length; i++) {
-            totalHeight += children[i].optimalHeight(width);
+    function implementOptimalFunctions(uiControl) {
+        if (uiControl.optimalWidth) {
+            self.optimalWidth = function (width) {
+                var childWidth = uiControl.optimalWidth(width);
+                return childWidth * (1 + rectPercentBuffer.right()) + rectConstantBuffer.right();
+            }
         }
-        return totalHeight;
+
+        if (uiControl.optimalHeight) {
+            self.optimalHeight = function (width) {
+                var childHeight = uiControl.optimalHeight(width);
+                return childHeight * (1 + rectPercentBuffer.bottom()) + rectConstantBuffer.bottom();
+            }
+        }
     }
 }
