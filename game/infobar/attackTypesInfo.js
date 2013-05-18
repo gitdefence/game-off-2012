@@ -5,7 +5,7 @@ function AttackTypesVisual(obj, alleleToCompare) {
 
     var vbox = new FlowLayout();
 
-    var typesLabel = new Label().setTextType(new Text("Attack Types").maxFontSize(20));
+    var typesLabel = new Label().text("Attack Types").maxFontSize(20);
 
     var attackTypes = obj.attr.attackTypes;
     var attackKeys = getSortedKeys(attackTypes);
@@ -77,9 +77,9 @@ function AttackTypesVisual(obj, alleleToCompare) {
             if (DFlag.attackTypesDebug) {
                 attackTypeTitle += group.substring(group.length - 1, group.length);
             }
-            typeTitle.add(new Label(attackTypeTitle).setTextType(
-                            new Text(attackTypeTitle)
-                            .maxFontSize(16)));
+            typeTitle.add(new Label()
+                            .text(attackTypeTitle)
+                            .maxFontSize(16));
 
             vbox.add(new BufferedControl(
                     typeTitle,
@@ -93,21 +93,18 @@ function AttackTypesVisual(obj, alleleToCompare) {
 
                 var typeDivider = new HBox();
 
-                typeDivider.add(new Label().setTextType(
-                                    new Text(formatToDisplay(type))
+                typeDivider.add(new Label()
+                                    .text(formatToDisplay(type))
                                     .align("left")
                                     .maxFontSize(12)
                                     .color("white")
-                                )
-                            );
+                                );
                 typeDivider.add(new Label()
-                                    .setTextType(
-                                    new Text(formatToDisplay(value + ""))
+                                    .text(formatToDisplay(value + ""))
                                     .align("right")
                                     .maxFontSize(12)
                                     .color("white")
-                                )
-                            );
+                                );
 
                 vbox.add(new BufferedControl(
                         typeDivider,

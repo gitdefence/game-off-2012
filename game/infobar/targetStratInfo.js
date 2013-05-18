@@ -28,7 +28,7 @@ function TargetStrategiesVisual(obj, alleleToCompare) {
     self.added = function () {
         self.base.addChild(vbox);
 
-        var strategyLabel = new Label().setTextType(new Text("Target Strategy").maxFontSize(20));
+        var strategyLabel = new Label().text("Target Strategy").maxFontSize(20);
         vbox.add(new BufferedControl(
                 strategyLabel,
                 new Rect(0, 0, 0, 0),

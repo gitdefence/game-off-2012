@@ -22,8 +22,8 @@ function Infobar(pos) {
     //and to reduce the chance of crashes they are constructed there also. 
     //However, they should be initialized in added.
     self.added = function () {
-        selectSomethingPrompt.setTextType(new Text().maxFontSize(20).lineSpacing(1.5).text(
-            "Click on a bug or tower to display its information here."));
+        selectSomethingPrompt.maxFontSize(20).lineSpacing(1.5).text(
+            "Click on a bug or tower to display its information here.");
 
         outerVBox.add(attributeVBox);
         outerVBox.add(allelePoints, 220);
