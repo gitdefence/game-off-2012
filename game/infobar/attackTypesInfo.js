@@ -3,7 +3,7 @@ function AttackTypesVisual(obj, alleleToCompare) {
 
     self.base = new BaseObj(self, 10);
 
-    var vbox = new VBox();
+    var vbox = new FlowLayout();
 
     var typesLabel = new Label().setTextType(new Text("Attack Types").maxFontSize(20));
 
@@ -67,7 +67,7 @@ function AttackTypesVisual(obj, alleleToCompare) {
     self.added = function () {
         self.base.addChild(vbox);
 
-        vbox.add(typesLabel, 30);
+        vbox.add(typesLabel);
 
         for (var key in attackTypeContainers) {
             var attackTypeObj = attackTypeContainers[key].attackType;
@@ -87,7 +87,7 @@ function AttackTypesVisual(obj, alleleToCompare) {
             }
             typeTitle.add(new Label(attackTypeTitle));
 
-            vbox.add(typeTitle, 20);
+            vbox.add(typeTitle);
 
             for (var type in attackTypeObj) {
                 var value = attackTypeObj[type];
@@ -111,7 +111,7 @@ function AttackTypesVisual(obj, alleleToCompare) {
                                 )
                             );
 
-                vbox.add(typeDivider, 20);
+                vbox.add(typeDivider);
             }
         }
     }
@@ -119,5 +119,9 @@ function AttackTypesVisual(obj, alleleToCompare) {
     self.resize = function (rect) {
         this.tpos = rect;
         vbox.resize(rect);
+    }
+
+    self.optimalHeight = function (width) {
+        return vbox.optimalHeight(width);
     }
 }

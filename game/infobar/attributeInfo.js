@@ -145,7 +145,7 @@ function AttributeInfos(obj, topAllele) {
         self.tpos = rect;
     }
 
-    self.optimalHeight = function () {
-        return attrBox.optimalHeight();
+    self.optimalHeight = function (width) {
+        return attrBox.optimalHeight(width);
     }
 }

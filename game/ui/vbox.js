@@ -8,7 +8,7 @@ function VBox() {
     // height is optional, if not given,
     // all children will have same height.
     this.add = function (ui, height) {
-        children.push({ui: ui, height: height});
+        children.push({ui: ui, forcedHeight: height, height: height});
         this.base.addChild(ui);
     }
 
@@ -16,14 +16,24 @@ function VBox() {
         children = [];
         this.base.removeAllChildren();
     }
-    
+
     this.resize = function (rect) {
         var h = 0;
         var shared = 0;
         for (var i = 0; i < children.length; i++) {
             var c = children[i];
-            if (c.height) h += c.height;
-            else shared++;
+
+            if (c.forcedHeight) {
+                c.height = c.forcedHeight;
+            } else if (c.getOptimalHeight) {
+                c.height = c.getOptimalHeight();
+            }
+
+            if (c.height) {
+                h += c.height;
+            } else {
+                shared++;
+            }
         }
         if (h > rect.h) {
             // Well... fuck.
@@ -32,7 +42,7 @@ function VBox() {
         }
         this.tpos = rect;
 
-        var sharedHeight = ~~((rect.h - h) / shared);
+        var sharedHeight = ~ ~((rect.h - h) / shared);
         var y = rect.y;
         for (var i = 0; i < children.length; i++) {
             var c = children[i];

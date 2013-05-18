@@ -5,6 +5,11 @@ function FlowLayout() {
 
 	var children = [];
 
+	this.clear = function () {
+	    children = [];
+	    this.base.removeAllChildren();
+	}
+
 	this.add = function (ui) {
 		children.push(ui);
 		this.base.addChild(ui);

@@ -13,7 +13,7 @@ function Infobar(pos) {
 
     var allelePoints = new AllelePointSystem();
     var outerVBox = new VBox();
-    var attributeVBox = new VBox();
+    var attributeVBox = new FlowLayout();
 
     var hover = false;
 
@@ -45,6 +45,8 @@ function Infobar(pos) {
         } else {
             self.base.addChild(selectSomethingPrompt);
         }
+
+        if(self.tpos) self.resize(self.tpos);
     }
 
     self.obj = null;
@@ -68,10 +70,10 @@ function Infobar(pos) {
             */
 
             var attrInfos = new AttributeInfos(obj, topAllele);
-            attributeVBox.add(attrInfos, attrInfos.optimalHeight());
+            attributeVBox.add(attrInfos);
 
             var targetStrats = new TargetStrategiesVisual(obj, topAllele);
-            attributeVBox.add(targetStrats, targetStrats.optimalHeight());
+            attributeVBox.add(targetStrats);
             attributeVBox.add(new AttackTypesVisual(obj, topAllele));
 
             attributeVBox.resize(self.tpos);
