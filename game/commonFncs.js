@@ -83,23 +83,56 @@ function sortArrayByProperty(a, prop) {
     }
 }
 
-//Not stable as in crashing (see https://en.wikipedia.org/wiki/Sorting_algorithm#Stability)
+//Needed to do stable sorts
+function mergesort(array, fncLessEqualThan) {
+    var array2 = new Array();
+
+    var curArr = array;
+    var dstArray = array2;
+
+    var chunkSize = 2;
+    while (chunkSize / 2 < array.length) {
+        for (var ix = 0; ix < array.length; ix += chunkSize) {
+            var iOne = ix;
+            var middle = Math.min(ix + chunkSize / 2, array.length);
+            var iTwo = middle;
+            var end = Math.min(ix + chunkSize, array.length);
+
+            var iDest = iOne;
+
+            while (iOne < middle && iTwo < end) {
+                if (fncLessEqualThan(curArr[iOne], curArr[iTwo])) {
+                    dstArray[iDest++] = curArr[iOne++];
+                } else {
+                    dstArray[iDest++] = curArr[iTwo++];
+                }
+            }
+
+            while (iTwo < end) {
+                dstArray[iDest++] = curArr[iTwo++];
+            }
+
+            while (iOne < middle) {
+                dstArray[iDest++] = curArr[iOne++];
+            }
+        }
+
+        chunkSize *= 2;
+        var temp = curArr;
+        curArr = dstArray;
+        dstArray = temp;
+    }
+
+    if (curArr == array) return;
+
+    for (var ix = 0; ix < array.length; ix++) {
+        array[ix] = curArr[ix];
+    }
+}
+
+//Maintains original sort order for equivalent elements (see https://en.wikipedia.org/wiki/Sorting_algorithm#Stability)
 function sortArrayByPropertyStable(a, prop) {
-    var originalOrder = {};
-
-    for (var ix = 0; ix < a.length; ix++) {
-        originalOrder[a[ix]] = ix;
-    }
-
-    a.sort(cmp)
-    function cmp(a, b) {
-        var returnValue = compare(a[prop], b[prop]);
-        if (returnValue != 0) return;
-
-        returnValue = compare(originalOrder[a], originalOrder[b]);
-
-        return returnValue;
-    }
+    mergesort(a, function (one, two) { return one[prop] <= two[prop]; });
 }
 
 function getSortedKeys(array) {

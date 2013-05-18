@@ -99,6 +99,14 @@ canvas {
 
         screenSystem.addScreen("MainGame", new GitDefence(screen));
         screenSystem.setActiveScreen("MainGame");
+
+
+        var arr = [{ v: 3, i:1 }, { v: 4 }, { v: 1 }, { v: 0 }, { v: 9 }, { v: 5 }, { v: 18 }, { v: 3}];
+        mergesort(arr, function (one, two) { return one.v <= two.v; });
+
+        for (var ix = 1; ix < arr.length; ix++) {
+            if (arr[ix].v < arr[ix - 1].v) throw "Out of order";
+        }
     };
 </script>
 </div>

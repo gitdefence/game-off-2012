@@ -227,7 +227,7 @@ function AttackTypesVisual(obj) {
             if (delta.length > 0) {
                 attackTypeTitle = "(" + delta + ") " + attackTypeTitle;
             }
-            if (DFlag.debug) {
+            if (DFlag.attackTypesDebug) {
                 attackTypeTitle += group.substring(group.length - 1, group.length);
             }
             typeTitle.add(new Label(attackTypeTitle));
@@ -347,6 +347,10 @@ function Infobar(pos) {
         }
 
         updateDisplay();
+    }
+
+    self.update = function () {
+        //self.updateAttr(self.obj);
     }
 
     self.mousemove = function () {

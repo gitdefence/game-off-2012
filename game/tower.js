@@ -207,12 +207,13 @@ function Tower() {
     this.generateAllele = function () {
         var genAllGroup = pickRandomKey(AllAlleleGroups);
 
-        genAllGroup = choose(
-        {
-            0.3: "attack1",
-            0.6: "attack2",
-            1: "attack3"
-        });
+        if (DFlag.attackTypesDebug) {
+            genAllGroup = choose({
+                0.3: "attack1",
+                0.6: "attack2",
+                1: "attack3"
+            });
+        }
 
         var alleleGenerated = new Allele(genAllGroup, AllAlleleGroups[genAllGroup]());
         this.allelesGenerated.push(alleleGenerated);
