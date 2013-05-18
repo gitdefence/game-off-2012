@@ -68,10 +68,10 @@ function Infobar(pos) {
             */
 
             var attrInfos = new AttributeInfos(obj, topAllele);
-            attributeVBox.add(attrInfos, attrInfos.getRequestedHeight());
+            attributeVBox.add(attrInfos, attrInfos.optimalHeight());
 
             var targetStrats = new TargetStrategiesVisual(obj, topAllele);
-            attributeVBox.add(targetStrats, targetStrats.getRequestedHeight());
+            attributeVBox.add(targetStrats, targetStrats.optimalHeight());
             attributeVBox.add(new AttackTypesVisual(obj, topAllele));
 
             attributeVBox.resize(self.tpos);

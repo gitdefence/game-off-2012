@@ -111,7 +111,7 @@ function AttributeInfo(attrHolder, attrName, alleleToCompare, height) {
         infoParts.resize(rect);
     }
 
-    self.getRequestedHeight = function () {
+    self.optimalHeight = function () {
         return height;
     }
 }
@@ -145,7 +145,7 @@ function AttributeInfos(obj, topAllele) {
         self.tpos = rect;
     }
 
-    self.getRequestedHeight = function () {
+    self.optimalHeight = function () {
         return height;
     }
 }

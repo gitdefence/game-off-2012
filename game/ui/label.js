@@ -7,7 +7,7 @@ function Label() {
 
     //Allows you to set the internal Text object, changing how the text is drawn.
     self.setTextType = function (newTextObj) {
-        if (!(newText instanceof Text)) {
+        if (!(newTextObj instanceof Text)) {
             fail("You must pass in a type Text");
             return;
         }

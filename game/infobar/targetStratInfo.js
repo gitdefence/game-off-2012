@@ -21,7 +21,7 @@ function TargetStrategiesVisual(obj, alleleToCompare) {
         }
     }
 
-    self.getRequestedHeight = function () {
+    self.optimalHeight = function () {
         return 30 + 20 * targetStrategies.length;
     }
 
