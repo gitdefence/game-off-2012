@@ -33,7 +33,7 @@ function applyAttack(attackTemplate) {
         var newAttTemplate = cloneObject(attackTemplate); //Clone it just incase it has its own attributes
         newAttTemplate.attackType = newAttackType;
         newAttTemplate.attacker = attackTemplate.target;
-        newAttTemplate.currentAtbox = attackKeys[curAttackIndex];
+        newAttTemplate.currentAtbox = attackKeys[curAttackIndex + 1];
         startAttack(newAttTemplate);
     }
 
