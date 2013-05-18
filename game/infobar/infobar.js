@@ -61,14 +61,6 @@ function Infobar(pos) {
                 topAllele = obj.allelesGenerated && obj.allelesGenerated[0];
             }
 
-            /*
-            for (var attr in obj.attr) {
-                if (attr == "targetStrategy" || attr == "attackTypes") continue;
-
-                attributeVBox.add(new AttributeInfo(obj, attr, topAllele), 30);
-            }
-            */
-
             var attrInfos = new AttributeInfos(obj, topAllele);
             attributeVBox.add(attrInfos);
 

@@ -7,7 +7,6 @@ function AttackTypesVisual(obj, alleleToCompare) {
 
     var typesLabel = new Label().setTextType(new Text("Attack Types").maxFontSize(20));
 
-
     var attackTypes = obj.attr.attackTypes;
     var attackKeys = getSortedKeys(attackTypes);
     var newAttack = findAttackTypeDelta(alleleToCompare, attackTypes);

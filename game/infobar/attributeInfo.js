@@ -39,7 +39,7 @@ function AlleleVisual(obj, attrName, alleleToCompare) {
     self.redraw = function (canvas) {
         var pen = canvas.ctx();
 
-        var boxWidth = 1;
+        var boxWidth = 2;
 
         var x = boxWidth;
         var y = boxWidth;
@@ -57,7 +57,9 @@ function AlleleVisual(obj, attrName, alleleToCompare) {
                 color = "blue";
             }
 
-            DRAW.rect(pen, new Rect(x, y, w, h),
+            var heightBuffer = 0;
+
+            DRAW.rect(pen, new Rect(x, y + heightBuffer, w, h - heightBuffer),
                            color,
                            boxWidth,
                            "White");
@@ -91,7 +93,7 @@ function AttributeInfo(attrHolder, attrName, alleleToCompare) {
     var mainLayout = new BufferedControl(
                      infoParts,
                      new Rect(0, 0, 0, 0),
-                     new Rect(0, 1, 0, 0)
+                     new Rect(0, 0.4, 0, 0)
                   );
 
     var attrNameLabel = new Label().setTextType(new Text(formatToDisplay(attrName)).align("left"));
@@ -101,7 +103,12 @@ function AttributeInfo(attrHolder, attrName, alleleToCompare) {
     if (topAlleleDelta != 0) {
         numberToDisplay = "(" + topAlleleDelta + ") " + numberToDisplay;
     }
-    var attrValueLabel = new Label().setTextType(new Text(numberToDisplay).align("right"));
+    var attrValueLabel = new Label().setTextType(
+                                new Text(numberToDisplay).
+                                align("right").
+                                maxFontSize(14).
+                                color("white")
+                            );
 
     self.added = function () {
         infoParts.add(attrNameLabel);
