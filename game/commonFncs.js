@@ -80,6 +80,14 @@ function sortArrayByProperty(a, prop) {
     }
 }
 
+function getSortedKeys(array) {
+    var keys = [];
+    for (var key in array)
+        keys.push(key);
+    keys.sort();
+    return keys;
+}
+
 //If given an object it turns a random key from it
 function pickRandom(array) {
     if(!assertDefined(array.length))

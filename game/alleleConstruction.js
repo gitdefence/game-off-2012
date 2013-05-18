@@ -4,14 +4,14 @@ function Allele(group, delta) {
     this.apply = function (target) {
         for (var key in delta) {
             var curChange = delta[key];
-            if(!assertDefined(curChange))
+            if (!assertDefined(curChange))
                 continue;
 
             if (defined(target.attr[key])) {
                 target.attr[key] += curChange;
             } else if (key == "attack") {
                 //attack type
-                target.attr.attackTypes.push(new curChange());
+                target.attr.attackTypes[group] = new curChange();
             } else if (key == "target") {
                 //target strategy
                 target.attr.targetStrategy = new curChange();

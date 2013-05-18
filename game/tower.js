@@ -159,20 +159,20 @@ function Tower() {
         var prevCurHp = this.attr.hp || this.attr.currentHp;
         if (!prevCurHp) prevCurHp = 0;
         this.attr = {
-            range:          TowerStats.range,
-            damage:         TowerStats.damage,
-            hp:             TowerStats.hp,
-            currentHp:      TowerStats.currentHp,
-            hpRegen:        TowerStats.hpRegen,
-            attSpeed:       TowerStats.attSpeed,
-            upload:         TowerStats.upload,
-            download:       TowerStats.download,
-            hitCount:       TowerStats.hitCount,
-            kills:          0,
-            value:          TowerStats.value
+            range: TowerStats.range,
+            damage: TowerStats.damage,
+            hp: TowerStats.hp,
+            currentHp: TowerStats.currentHp,
+            hpRegen: TowerStats.hpRegen,
+            attSpeed: TowerStats.attSpeed,
+            upload: TowerStats.upload,
+            download: TowerStats.download,
+            hitCount: TowerStats.hitCount,
+            kills: 0,
+            value: TowerStats.value
         };
         this.attr.targetStrategy = new targetStrategies.Closest();
-        this.attr.attackTypes = [];
+        this.attr.attackTypes = {};
     };
     this.setBaseAttrs();
 
@@ -207,7 +207,12 @@ function Tower() {
     this.generateAllele = function () {
         var genAllGroup = pickRandomKey(AllAlleleGroups);
 
-        genAllGroup = "attack1";
+        genAllGroup = choose(
+        {
+            0.3: "attack1",
+            0.6: "attack2",
+            1: "attack3"
+        });
 
         var alleleGenerated = new Allele(genAllGroup, AllAlleleGroups[genAllGroup]());
         this.allelesGenerated.push(alleleGenerated);

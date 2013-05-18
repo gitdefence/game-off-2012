@@ -109,7 +109,7 @@ var AllAlleleGroups = {
 //Bonus attack or damage bonus
     attack2: function () { return choose(
         {
-            0.760: { damage: 10 },
+            //0.760: { damage: 10 },
             0.800: { attack: allAttackTypes.Laser },
             0.840: { attack: allAttackTypes.Bullet },
             0.880: { attack: allAttackTypes.Chain },
@@ -120,7 +120,7 @@ var AllAlleleGroups = {
 //Bonus attack or attack speed bonus
     attack3: function () { return choose(
         {
-            0.800: { attSpeed: 2 },
+            //0.800: { attSpeed: 2 },
             0.840: { attack: allAttackTypes.Bullet },
             0.880: { attack: allAttackTypes.Chain },
             0.920: { attack: allAttackTypes.Pulse },

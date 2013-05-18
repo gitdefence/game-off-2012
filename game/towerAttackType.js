@@ -11,8 +11,9 @@ function applyAttack(attackTemplate) {
     var attacker = attackTemplate.attacker;
     var damage = attackTemplate.damage;
     var baseAttacker = attackTemplate.baseAttacker;
+    var attackTypes = baseAttacker.attr.attackTypes;
 
-    if(!assertDefined(target, attacker, damage, baseAttacker))
+    if(!assertDefined(target, attacker, damage, baseAttacker, attackTypes))
         return;
 
     if(isNaN(target.attr.currentHp)) {
@@ -22,13 +23,17 @@ function applyAttack(attackTemplate) {
     target.attr.currentHp -= damage;
     baseAttacker.attr.hitCount++;
 
-    var newAttackType = baseAttacker.attr.attackTypes[attackTemplate.currentAtbox + 1];
 
-    if(newAttackType) {
+    var attackKeys = getSortedKeys(attackTypes);
+    var curAttackIndex = attackKeys.indexOf(attackTemplate.currentAtbox);
+
+    var newAttackType = attackTypes[curAttackIndex + 1];
+
+    if(curAttackIndex >= 0 && newAttackType) {
         var newAttTemplate = cloneObject(attackTemplate); //Clone it just incase it has its own attributes
         newAttTemplate.attackType = newAttackType;
         newAttTemplate.attacker = attackTemplate.target;
-        newAttTemplate.currentAtbox++;
+        newAttTemplate.currentAtbox = attackKeys[curAttackIndex];
         startAttack(newAttTemplate);
     }
 
@@ -609,7 +614,7 @@ var towerAttackTypes = {
     Pulse: allAttackTypes.Pulse,
     DOT: allAttackTypes.DOT,
     Slow: allAttackTypes.Slow
-}
+};
 
 //Not needed anymore... but if you have a radio option for something this
 //is how you would set up the underlying attack types for it
@@ -626,6 +631,16 @@ function drawAttributes(user, pen) {
         user.tpos.h -= Math.ceil(user.lineWidth * 2);
     }
 
+    //We do this so we can draw the target strategy like
+    //an attackType
+    var glyphArray = [];
+
+    glyphArray.push(user.attr.targetStrategy);
+
+    var attackTypeKeys = getSortedKeys(user.attr.attackTypes);
+    for(var key in attackTypeKeys)
+        glyphArray.push(user.attr.attackTypes[attackTypeKeys[key]]);
+    
     makeTiled(pen,
         function (obj, pen, pos) {
             if (typeof obj == "number")
@@ -643,7 +658,7 @@ function drawAttributes(user, pen) {
             obj.drawGlyph(pen, pos, user);
             return true;
         },
-        user.attr.attackTypes.concat(user.attr.targetStrategy),
+        glyphArray,
         user.tpos.clone(),
         2, 2,
         0.01);

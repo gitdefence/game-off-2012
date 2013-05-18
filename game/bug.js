@@ -10,7 +10,6 @@ function Bug(startPath) {
     }());
 
     self.attr = {};
-    self.targetStrategy = new targetStrategies.Random();
     self.setBaseAttrs = function () {
         //Lol, prevCur...
         var prevCurHp = self.attr.hp || self.attr.currentHp;
@@ -31,7 +30,8 @@ function Bug(startPath) {
             kills:          0,
             value:          5,
         };
-        self.attr.attackTypes = [];
+        self.attr.attackTypes = {}; //Index is allele group
+        self.attr.targetStrategy = new targetStrategies.Random();
     }
     self.setBaseAttrs();
 

@@ -41,8 +41,17 @@ function Genes() {
     //Calls updateInfoBarAttributes when you change the next allele, so
     //you don't have to.
     var topAllele = null;
+
+    var hideTopAlleleVar = false;
+    this.hideTopAllele = function (newValue) {
+        hideTopAlleleVar = newValue;
+
+        this.updateInfoBarAttributes();
+    }
     this.topAllele = function (newTopAllele) {
         if (newTopAllele === undefined) {
+            if (hideTopAlleleVar) return null;
+
             return topAllele;
         }
 
@@ -93,7 +102,7 @@ function Genes() {
     this.replaceAlleles = function (newAlleles) {
         var holder = this.base.parent;
         holder.attr.targetStrategy = null;
-        holder.attr.attackTypes = [];
+        holder.attr.attackTypes = {};
 
         this.startAlleleAdd();
 

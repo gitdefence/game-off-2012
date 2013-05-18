@@ -131,13 +131,6 @@ function Towerbar() {
     var attackCombinations = [];
     var uniqueNum = 1;
 
-    for (var key in towerAttackTypes) {
-        //Obj needed for now, it goes away when added (because we turn it into an   array)
-        attackCombinations.push([
-            towerAttackTypes[key],
-        ]);
-    }
-
     this.resize = function (rect) {
         costIndicator.resize(rect);
         vbox.resize(rect);
@@ -145,7 +138,7 @@ function Towerbar() {
     }
 
     this.added = function () {
-        function makeTowerDragger(obj) {
+        function makeTowerDragger(attackType) {
             function makeTower(forDisplay) {
                 var tower = new Tower();
 
@@ -158,10 +151,7 @@ function Towerbar() {
                     }
                 }
 
-                for (var key in obj) {
-                    var attackType = obj[key];
-                    tower.genes.addAllele(new Allele("attack" + key, { attack: attackType }));
-                }
+                tower.genes.addAllele(new Allele("attack1", { attack: attackType }));
 
                 return tower;
             }
@@ -170,8 +160,8 @@ function Towerbar() {
             return towerDragger;
         }
 
-        for (var key in attackCombinations) {
-            vbox.add(makeTowerDragger(attackCombinations[key]));
+        for (var key in towerAttackTypes) {
+            vbox.add(makeTowerDragger(towerAttackTypes[key]));
         }
     };
 
