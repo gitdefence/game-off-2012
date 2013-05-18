@@ -75,7 +75,7 @@ function AlleleVisual() {
     }
 }
 
-function AttributeInfo(attrHolder, attrName, alleleToCompare) {
+function AttributeInfo() {
     var self = this;
     self.base = new BaseObj(self, 10);
 
@@ -100,12 +100,10 @@ function AttributeInfo(attrHolder, attrName, alleleToCompare) {
         infoParts.add(alleleInfo);
         infoParts.add(attrValueLabel);
 
-        self.updateValue();
-
         self.base.addChild(mainLayout);
     }
 
-    function getAlleleDelta(alleleToCompare) {
+    function getAlleleDelta(attrHolder, attrName, alleleToCompare) {
         var alleleDelta = 0;
         if (alleleToCompare) {
             function addToDelta(allele, factor) {
@@ -119,19 +117,19 @@ function AttributeInfo(attrHolder, attrName, alleleToCompare) {
                 addToDelta(attrHolder.genes.alleles[alleleToCompare.group], -1);
 
             //Indicate we are adding the allele
-            addToDelta(topAllele, 1);
+            addToDelta(alleleToCompare, 1);
         }
 
         return alleleDelta;
     }
 
-    self.updateValue = function () {
+    self.updateValue = function (attrHolder, attrName, alleleToCompare) {
         attrNameLabel.text(formatToDisplay(attrName)).align("left");
         alleleInfo.updateInfo(attrHolder, attrName, alleleToCompare);
 
         var numberToDisplay = round(attrHolder.attr[attrName], 2) + "";
 
-        var prevAlleleDelta = getAlleleDelta(alleleToCompare);
+        var prevAlleleDelta = getAlleleDelta(attrHolder, attrName, alleleToCompare);
         if (prevAlleleDelta != 0) {
             numberToDisplay = "(" + prevAlleleDelta + ") " + numberToDisplay;
         }
@@ -151,11 +149,14 @@ function AttributeInfo(attrHolder, attrName, alleleToCompare) {
     }
 }
 
-function AttributeInfos(obj, topAllele) {
+function AttributeInfos(_obj, _topAllele) {
     var self = this;
     self.base = new BaseObj(self, 14);
 
     self.tpos = new Rect(0, 0, 1, 1);
+
+    var obj = _obj;
+    var topAllele = _topAllele;
 
     var attrBox = new FlowLayout();
     var attrHeader = new Label().text("Attributes").maxFontSize(20);
@@ -173,7 +174,8 @@ function AttributeInfos(obj, topAllele) {
         for (var attr in obj.attr) {
             if (attr == "targetStrategy" || attr == "attackTypes") continue;
 
-            attrInfos[attr] = new AttributeInfo(obj, attr, topAllele);
+            attrInfos[attr] = new AttributeInfo();
+            attrInfos[attr].updateValue(obj, attr, topAllele);
             attrBox.add(attrInfos[attr]);
         }
 
@@ -187,7 +189,7 @@ function AttributeInfos(obj, topAllele) {
 
     self.updateAttribute = function (attrName) {
         if (attrInfos[attrName]) {
-            attrInfos[attrName].updateValue();
+            attrInfos[attrName].updateValue(obj, attrName, topAllele);
         }
     }
 
