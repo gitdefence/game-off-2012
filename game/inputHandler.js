@@ -226,6 +226,20 @@ function InputHandler() {
                     }
                 }
             }
+            for(var key in curMouseOver) {
+                var curMouseObj = curMouseOver[key];
+                var wasMousedOver = false;
+                for(var key in self.prevMouseOver) {
+                    var prevMouseObj = self.prevMouseOver[key];
+                    if(prevMouseObj ==  curMouseObj){
+                        wasMousedOver = true;
+                        break;
+                    }
+                }
+                if(!wasMousedOver) {
+                    curMouseObj.base.callRaise("mouseenter", { x: mouseX, y: mouseY });
+                }
+            }
             self.prevMouseOver = curMouseOver;
 
             if (self.prevMouseDown && self.prevMouseDown.length > 0) {

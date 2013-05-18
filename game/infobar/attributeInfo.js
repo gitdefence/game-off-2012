@@ -1,3 +1,5 @@
+var curAlleleHover = null;
+
 //deltaType is current, remove or add
 function DeltaBar(allele, attrName, deltaType) {
     var self = this;
@@ -18,7 +20,28 @@ function DeltaBar(allele, attrName, deltaType) {
             allele.color = hsla(Math.random() * 360, 70, 80, 1).str();
         }
 
-        DRAW.rect(pen, rect, allele.color);
+        if (curAlleleHover == allele) {
+            DRAW.rect(pen, rect, allele.color, 2, "white");
+        }
+        else {
+            DRAW.rect(pen, rect, allele.color);
+        }
+    }
+
+    function redrawDeltaBars() {
+        //Kindaof hackish, make our grandparent dirty.
+        self.base.parent.base.parent.base.dirty();
+    }
+
+    self.mouseenter = function () {
+        curAlleleHover = allele;
+        redrawDeltaBars();
+    }
+    self.mouseout = function () {
+        if (curAlleleHover == allele) {
+            curAlleleHover = null;
+        }
+        redrawDeltaBars();
     }
 
     self.optimalWidth = function (height) {
@@ -63,6 +86,8 @@ function AlleleVisual(_obj, _attrName) {
                 var replacing = alleleToCompare && alleleToCompare.group == group;
                 deltaBars.add(new DeltaBar(allele, attrName, replacing ? "remove" : "current"));
             }
+
+            deltaBars.add(new Label().text("test"));
         }
 
         self.base.dirty();
