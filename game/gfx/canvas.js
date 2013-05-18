@@ -7,6 +7,11 @@ function Canvas() {
         pos = rect.origin();
         element.width = rect.w;
         element.height = rect.h;
+        if (rect.w <= 0 || rect.h <= 0) {
+            rect.w = 1;
+            rect.h = 1;
+            fail("Attempting to make a canvas with area zero, this is probably a bug. Did you forget to resize it first?");
+        }
         return this;
     }
 
@@ -27,7 +32,7 @@ function Canvas() {
 //     c.setTransform(1, 0, 0, 1, 0.5, 0.5);
 
         if (pos.w == 0 || pos.h == 0) {
-            throw "Attempting to draw a canvas with area zero, this is probably a bug. Did you forget to resize it first?";
+            fail("Attempting to draw a canvas with area zero, this is probably a bug. Did you forget to resize it first?");
         }
         otherCanvas.drawImage(element, pos.x, pos.y);
     }

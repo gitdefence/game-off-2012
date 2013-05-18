@@ -1,45 +1,8 @@
-//Gives a visual representation for how alleles impact various attributes.
-function AlleleVisual(_obj, _attrName) {
+//deltaType is current, remove or add
+function DeltaBar(allele, attrName, deltaType) {
     var self = this;
-
-    var obj = _obj;
-    var attrName = _attrName;
-
     self.base = new BaseObj(self, 11);
     self.tpos = new Rect(0, 0, 0, 0);
-
-    var attrChanges = [];
-    var attrChangeType = []; //current,remove,add
-
-    self.updateInfo = function (alleleToCompare) {
-        attrChanges = [];
-        attrChangeType = []; //current,remove,add
-
-        for (var group in obj.genes.alleles) {
-            var allele = obj.genes.alleles[group];
-            for (var key in allele.delta) {
-                if (key == attrName) {
-                    var impact = allele.delta[key];
-                    attrChanges.push(impact);
-
-                    var replacing = alleleToCompare && alleleToCompare.group == group;
-                    attrChangeType.push(replacing ? "remove" : "current");
-                }
-            }
-        }
-
-        if (alleleToCompare) {
-            for (var key in alleleToCompare.delta) {
-                if (key == attrName) {
-                    var impact = alleleToCompare.delta[key];
-                    attrChanges.push(impact);
-                    attrChangeType.push("add");
-                }
-            }
-        }
-
-        self.base.dirty();
-    }
 
     self.resize = function (rect) {
         self.tpos = rect;
@@ -49,32 +12,74 @@ function AlleleVisual(_obj, _attrName) {
     self.redraw = function (canvas) {
         var pen = canvas.ctx();
 
-        var boxWidth = 2;
+        var rect = self.tpos.origin(new Vector(0, 0));
 
-        var x = boxWidth;
-        var y = boxWidth;
-        var w = 0;
-        var h = this.tpos.h - boxWidth * 2;
-
-        for (var ix = 0; ix < attrChanges.length; ix++) {
-            w = Math.abs(Math.log(Math.abs(attrChanges[ix])) * 5);
-
-            var color = attrChanges[ix] >= 0 ? "Green" : "Red";
-            if (attrChangeType[ix] == "remove") {
-                color = "grey";
-            }
-            if (attrChangeType[ix] == "add") {
-                color = "blue";
-            }
-
-            var heightBuffer = 0;
-
-            DRAW.rect(pen, new Rect(x, y + heightBuffer, w, h - heightBuffer),
-                           color,
-                           boxWidth,
-                           "White");
-            x += w;
+        if (!allele.color) {
+            allele.color = hsla(Math.random() * 360, 70, 80, 1).str();
         }
+
+        DRAW.rect(pen, rect, allele.color);
+    }
+
+    self.optimalWidth = function (height) {
+        return Math.round(
+                Math.abs(Math.log(Math.abs(allele.delta[attrName])) * 5)
+            ) + 1;
+    }
+}
+
+//Gives a visual representation for how alleles impact various attributes.
+function AlleleVisual(_obj, _attrName) {
+    var self = this;
+
+    var obj = _obj;
+    var attrName = _attrName;
+
+    self.base = new BaseObj(self, 11);
+    self.tpos = new Rect(0, 0, 1, 1);
+
+    var attrChanges = [];
+    var attrChangeType = []; //current,remove,add
+    var attrChangeColor = [];
+
+    var deltaBars = new HBoxFixedChildren();
+
+    self.added = function() {
+        self.base.addChild(deltaBars);
+    }
+
+    self.updateInfo = function (alleleToCompare) {
+        attrChanges = [];
+        attrChangeType = []; //current,remove,add
+
+        deltaBars.clear();
+
+        for (var group in obj.genes.alleles) {
+            var allele = obj.genes.alleles[group];
+
+            for (var key in allele.delta) {
+                if (key != attrName) continue;
+
+                var replacing = alleleToCompare && alleleToCompare.group == group;
+                deltaBars.add(new DeltaBar(allele, attrName, replacing ? "remove" : "current"));
+            }
+        }
+
+        self.base.dirty();
+    }
+
+    self.resize = function (rect) {
+        self.tpos = rect;
+        deltaBars.resize(rect);
+        self.base.dirty();
+    }
+
+    self.redraw = function (canvas) {
+        var pen = canvas.ctx();
+    }
+
+    self.optimalHeight = function () {
+        return 20;
     }
 }
 
@@ -183,13 +188,9 @@ function AttributeInfos(_obj, _topAllele) {
             //Temporary screening until we remove them
             if (attr == "upload" || attr == "download" || attr == "hitCount" || attr == "kills" || attr == "value") continue;
 
-            numAttrs++;
             attrInfos[attr] = new AttributeInfo(obj, attr);
-            attrBox.add(attrInfos[attr]);
-        }
-
-        for(var attr in attrInfos) {
             attrInfos[attr].updateValue(topAllele);
+            attrBox.add(attrInfos[attr]);
         }
 
         self.base.addChild(attrBox);

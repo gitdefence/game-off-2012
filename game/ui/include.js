@@ -5,6 +5,7 @@ loadScripts('ui/', [
     'toggleButton',
     'vbox',
     'hbox',
+    'hboxFixed',
     'flowLayout',
     'bufferedControl',
     'fakeDrawObject'

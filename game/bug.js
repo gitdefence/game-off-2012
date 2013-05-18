@@ -18,7 +18,7 @@ function Bug(startPath) {
             range:          0,
             damage:         0,
             maxHp:             0,
-            hp:      0,
+            currentHp:      0,
             hpRegen:        0,
             attSpeed:       0,
             speed:          0,
@@ -67,15 +67,15 @@ function Bug(startPath) {
 
     self.regenTick = function() {
         if (self.attr.hpRegen > 0) {
-            self.attr.hp += self.attr.hpRegen;
+            self.attr.currentHp += self.attr.hpRegen;
         }
-        if (self.attr.hp > self.attr.maxHp) {
-            self.attr.hp = self.attr.maxHp;
+        if (self.attr.currentHp > self.attr.maxHp) {
+            self.attr.currentHp = self.attr.maxHp;
         }
 
         var game = getGame(this);
         if (game && this == game.selection()) {
-            game.infobar.updateAttribute("hp");
+            game.infobar.updateAttribute("currentHp");
         }
     }
 
@@ -124,7 +124,7 @@ function Bug(startPath) {
 
         // We only invalidate when our HP changes, since that covers most
         // cases, and other things don't really change much for bugs.'
-        if (self.attr.hp === previousHp) return;
+        if (self.attr.currentHp === previousHp) return;
 
         canvasDirty = true;
         self.color = getInnerColorFromAttrs(self.attr);
@@ -173,7 +173,7 @@ function Bug(startPath) {
         var pos = self.tpos;
         var cen = pos.center();
 
-        var hpPercent = self.attr.hp / self.attr.maxHp;
+        var hpPercent = self.attr.currentHp / self.attr.maxHp;
         var hue = hpPercent * 135;
 
         DRAW.arc(pen, cen, self.radius + self.lineWidth,
