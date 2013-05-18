@@ -26,7 +26,7 @@ var Rect = (function () {
                     return this._x
                 },
                 set: function (x) {
-                    if (x !== x) throw "Invalid value for x";
+                    if (x !== x || x === undefined) throw "Invalid value for x";
                     this._x = x
                 },
             },
@@ -35,7 +35,7 @@ var Rect = (function () {
                     return this._y;
                 },
                 set: function (y) {
-                    if (y !== y) throw "Invalid value for y";
+                    if (y !== y || y === undefined) throw "Invalid value for y";
                     this._y = y;
                 },
             },
