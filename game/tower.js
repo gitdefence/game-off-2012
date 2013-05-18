@@ -531,7 +531,7 @@ function Tower() {
         tower.hidden = true;
         var e = destination;
 
-        var originalPos = cloneObject(tower.tpos);
+        var originalPos = tower.tpos.clone();
 
         tower.tpos.x = e.x;
         tower.tpos.y = e.y;

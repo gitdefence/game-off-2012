@@ -5,4 +5,5 @@ loadScripts('ui/', [
     'toggleButton',
     'vbox',
     'hbox',
+    'flowLayout',
 ]);

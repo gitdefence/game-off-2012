@@ -1,41 +1,45 @@
-function Label(text) {
-    this.tpos = new Rect(0, 0, 0, 0);
-    this.base = new BaseObj(this);
+function Label() {
+    var self = this;
+    self.tpos = new Rect(0, 0, 0, 0);
+    self.base = new BaseObj(self);
 
-    var textObj = new Text();
+    var text = new Text();
 
     //Allows you to set the internal Text object, changing how the text is drawn.
-    this.setTextType = function (text) {
-        if (!(text instanceof Text)) {
+    self.setTextType = function (newTextObj) {
+        if (!(newText instanceof Text)) {
             fail("You must pass in a type Text");
             return;
         }
 
-        textObj = text;
-        this.base.dirty();
+        text = newTextObj;
+        self.base.dirty();
 
-        return this;
+        return self;
     }
 
-    this.redraw = function (canvas) {
-        textObj.text(text);
-        textObj.resize(new Rect(0, 0, 0, 0).size(this.tpos.size()));
-        canvas.fill(textObj, "green");
+    self.redraw = function (canvas) {
+        canvas.fill(text, "green");
     }
 
-    this.resize = function (rect) {
-        this.tpos = rect;
-        this.base.dirty();
-        return this;
+    self.resize = function (rect) {
+        self.tpos = rect;
+        self.base.dirty();
+        text.resize(new Rect(0, 0, 0, 0).size(rect.size()));
+        return self;
     }
 
-    this.text = function (newText) {
-        if (newText === undefined) {
-            return text;
-        } else {
-            text = newText;
-            this.base.dirty();
-            return this;
+    self.optimalHeight = function (width) {
+        return text.optimalHeight(width);
+    }
+
+    function dirtyMethod(method) {
+        return function () {
+            method.apply(null, arguments);
+            self.base.dirty();
+            return self;
         }
     }
+    self.text = dirtyMethod(text.text);
+    self.align = dirtyMethod(text.align);
 }
