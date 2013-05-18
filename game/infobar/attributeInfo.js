@@ -1,6 +1,9 @@
 //Gives a visual representation for how alleles impact various attributes.
-function AlleleVisual() {
+function AlleleVisual(_obj, _attrName) {
     var self = this;
+
+    var obj = _obj;
+    var attrName = _attrName;
 
     self.base = new BaseObj(self, 11);
     self.tpos = new Rect(0, 0, 0, 0);
@@ -8,7 +11,7 @@ function AlleleVisual() {
     var attrChanges = [];
     var attrChangeType = []; //current,remove,add
 
-    self.updateInfo = function (obj, attrName, alleleToCompare) {
+    self.updateInfo = function (alleleToCompare) {
         attrChanges = [];
         attrChangeType = []; //current,remove,add
 
@@ -75,12 +78,15 @@ function AlleleVisual() {
     }
 }
 
-function AttributeInfo() {
+function AttributeInfo(_attrHolder, _attrName) {
     var self = this;
     self.base = new BaseObj(self, 10);
 
+    var attrHolder = _attrHolder;
+    var attrName = _attrName;
+
     var attrNameLabel = new Label();
-    var alleleInfo = new AlleleVisual();
+    var alleleInfo = new AlleleVisual(attrHolder, attrName);
     var attrValueLabel = new Label()
                             .align("right")
                             .maxFontSize(14)
@@ -93,8 +99,6 @@ function AttributeInfo() {
                      new Rect(0, 0.4, 0, 0)
                   );
 
-    var alleleInfo = new AlleleVisual();
-
     self.added = function () {
         infoParts.add(attrNameLabel);
         infoParts.add(alleleInfo);
@@ -103,7 +107,7 @@ function AttributeInfo() {
         self.base.addChild(ourLayout);
     }
 
-    function getAlleleDelta(attrHolder, attrName, alleleToCompare) {
+    function getAlleleDelta(alleleToCompare) {
         var alleleDelta = 0;
         if (alleleToCompare) {
             function addToDelta(allele, factor) {
@@ -123,13 +127,13 @@ function AttributeInfo() {
         return alleleDelta;
     }
 
-    self.updateValue = function (attrHolder, attrName, alleleToCompare) {
+    self.updateValue = function (alleleToCompare) {
         attrNameLabel.text(formatToDisplay(attrName)).align("left");
-        alleleInfo.updateInfo(attrHolder, attrName, alleleToCompare);
+        alleleInfo.updateInfo(alleleToCompare);
 
         var numberToDisplay = round(attrHolder.attr[attrName], 2) + "";
 
-        var prevAlleleDelta = getAlleleDelta(attrHolder, attrName, alleleToCompare);
+        var prevAlleleDelta = getAlleleDelta(alleleToCompare);
         if (prevAlleleDelta != 0) {
             numberToDisplay = "(" + prevAlleleDelta + ") " + numberToDisplay;
         }
@@ -171,15 +175,21 @@ function AttributeInfos(_obj, _topAllele) {
                     new Rect(0, 0, 0, 0),
                     new Rect(0, 0.5, 0, 0)
                 ));
+
+        var numAttrs = 0;
         for (var attr in obj.attr) {
             if (attr == "targetStrategy" || attr == "attackTypes") continue;
 
             //Temporary screening until we remove them
             if (attr == "upload" || attr == "download" || attr == "hitCount" || attr == "kills" || attr == "value") continue;
 
-            attrInfos[attr] = new AttributeInfo();
-            attrInfos[attr].updateValue(obj, attr, topAllele);
+            numAttrs++;
+            attrInfos[attr] = new AttributeInfo(obj, attr);
             attrBox.add(attrInfos[attr]);
+        }
+
+        for(var attr in attrInfos) {
+            attrInfos[attr].updateValue(topAllele);
         }
 
         self.base.addChild(attrBox);
@@ -192,7 +202,7 @@ function AttributeInfos(_obj, _topAllele) {
 
     self.updateAttribute = function (attrName) {
         if (attrInfos[attrName]) {
-            attrInfos[attrName].updateValue(obj, attrName, topAllele);
+            attrInfos[attrName].updateValue(topAllele);
         }
     }
 
