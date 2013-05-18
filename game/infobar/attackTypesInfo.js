@@ -5,7 +5,7 @@ function AttackTypesVisual(obj, alleleToCompare) {
 
     var vbox = new VBox();
 
-    var typesLabel = new Label("Attack Types").setTextType(new Text().maxFontSize(20));
+    var typesLabel = new Label().setTextType(new Text("Attack Types").maxFontSize(20));
 
     //Array of { attackType: attr.attackTypes[key], delta: "" };
     var attackTypeContainers = [];
@@ -95,16 +95,16 @@ function AttackTypesVisual(obj, alleleToCompare) {
 
                 var typeDivider = new HBox();
 
-                typeDivider.add(new Label(formatToDisplay(type)).setTextType(
-                                    new Text()
+                typeDivider.add(new Label().setTextType(
+                                    new Text(formatToDisplay(type))
                                     .align("left")
                                     .maxFontSize(10)
                                     .color("white")
                                 )
                             );
-                typeDivider.add(new Label(formatToDisplay(value + ""))
-                                .setTextType(
-                                    new Text()
+                typeDivider.add(new Label()
+                                    .setTextType(
+                                    new Text(formatToDisplay(value + ""))
                                     .align("right")
                                     .maxFontSize(10)
                                     .color("white")

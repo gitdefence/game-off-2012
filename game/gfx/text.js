@@ -1,10 +1,10 @@
-function Text() {
+function Text(initialText) {
     var self = this;
     // Will we re-measure and re-fit all of the text on the
     // next call to apply()?
     var dirty = true;
 
-    var text = "[No text]";
+    var text = initialText || "[No text]";
     self.text = function (newText) {
         if (newText === undefined) {
             return text;

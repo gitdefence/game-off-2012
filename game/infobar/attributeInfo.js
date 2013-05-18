@@ -89,14 +89,14 @@ function AttributeInfo(attrHolder, attrName, alleleToCompare, height) {
 
     var infoParts = new HBox();
 
-    var attrNameLabel = new Label(formatToDisplay(attrName)).setTextType(new Text().align("left"));
+    var attrNameLabel = new Label().setTextType(new Text(formatToDisplay(attrName)).align("left"));
     var alleleInfo = new AlleleVisual(attrHolder, attrName, alleleToCompare);
 
     var numberToDisplay = round(attrHolder.attr[attrName], 2) + "";
     if (topAlleleDelta != 0) {
         numberToDisplay = "(" + topAlleleDelta + ") " + numberToDisplay;
     }
-    var attrValueLabel = new Label(numberToDisplay).setTextType(new Text().align("right"));
+    var attrValueLabel = new Label().setTextType(new Text(numberToDisplay).align("right"));
 
     self.added = function () {
         self.base.addChild(infoParts);
@@ -122,30 +122,30 @@ function AttributeInfos(obj, topAllele) {
 
     self.tpos = new Rect(0, 0, 1, 1);
 
-    var attrVBox = new VBox();
-    var attrHeader = new Label("Attributes").setTextType(new Text().maxFontSize(20));
+    var attrBox = new FlowLayout();
+    var attrHeader = new Label().setTextType(new Text("Attributes").maxFontSize(20));
 
     var height = 0;
 
     self.added = function (rect) {
         height += 30;
-        attrVBox.add(attrHeader, 30);
+        attrBox.add(attrHeader);
         for (var attr in obj.attr) {
             if (attr == "targetStrategy" || attr == "attackTypes") continue;
 
             height += 20;
-            attrVBox.add(new AttributeInfo(obj, attr, topAllele, 20), 20);
+            attrBox.add(new AttributeInfo(obj, attr, topAllele, 20));
         }
 
-        self.base.addChild(attrVBox);
+        self.base.addChild(attrBox);
     }
 
     self.resize = function (rect) {
-        attrVBox.resize(rect);
+        attrBox.resize(rect);
         self.tpos = rect;
     }
 
     self.optimalHeight = function () {
-        return height;
+        return attrBox.optimalHeight();
     }
 }

@@ -34,7 +34,7 @@ function GitDefence(pos) {
     hbox.add(this.infobar, 200);
 
     var flowLayout = new FlowLayout();
-    hbox.add(flowLayout, 200);
+    //hbox.add(flowLayout, 200);
     flowLayout.add(new Label().text("Testing"));
     flowLayout.add(new Label().text("The"));
     flowLayout.add(new Label().text("FlowLayout!"));

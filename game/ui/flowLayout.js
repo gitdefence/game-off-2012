@@ -35,5 +35,12 @@ function FlowLayout() {
 			children[i].resize(childRect);
 			curY += height;
 		}
-	}
+    }
+
+    this.optimalHeight = function (width) {
+        var totalHeight = 0;
+        for (var i = 0; i < children.length; i++) {
+            totalHeight += children[i].optimalHeight(width);
+        }
+    }
 }
