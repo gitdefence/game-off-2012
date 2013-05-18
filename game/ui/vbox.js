@@ -1,4 +1,7 @@
 // Pack a bunch of UI elements vertically.
+// We set our children size using our size.
+// So from our children's perspective our size is fixed, and
+// they dynamically resize.
 function VBox() {
     this.base = new BaseObj(this, 15);
     this.tpos = new Rect(0, 0, 0, 0);

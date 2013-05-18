@@ -1,4 +1,11 @@
 // Basically just stack elements, one on top of the other.
+// This is a vbox, except it assumes its children know their size.
+// It also is intended to always have enough room, and will eventually
+// have scrollbars when there is not enough room.
+
+// We set our size from our children's size.
+// So from our children's perspective our size is dynamic, and
+// their's is fixed.
 function FlowLayout() {
 	this.base = new BaseObj(this);
 	this.tpos = new Rect(0, 0, 0, 0);
