@@ -30,7 +30,8 @@ function Bug(startPath) {
             kills:          0,
             value:          5,
         };
-        self.attr.attackTypes = [];
+        self.attr.attackTypes = {}; //Index is allele group
+        self.attr.targetStrategy = new targetStrategies.Random();
     }
     self.setBaseAttrs();
 
@@ -61,8 +62,8 @@ function Bug(startPath) {
     self.added = function() {
         var game = getGame(self);
 
-        self.bugRelPathPos = Math.floor(Math.random() * game.tileSize) +1;
-        self.delay = self.bugRelPathPos + 1;
+        var offset = Math.floor(((Math.random() - 0.5) * 0.5 + 0.5) * game.tileSize);
+        self.pathOffsetVector = new Vector(offset, offset);
 
         self.constantOne = 1;
         self.base.addChild(new UpdateTicker(self, "constantOne", "regenTick"));
@@ -77,48 +78,31 @@ function Bug(startPath) {
         }
     }
 
-    function move(pos, vec, dt) {
-        pos.x += vec.x * dt;
-        pos.y += vec.y * dt;
-    }
-
     var previousHp = -1;
     var canvasDirty = true;
     self.update = function(dt) {
-        move(self.tpos, velocity, dt);
+        //We could also add bugRelPathPos to the path, but there are
+        //multiple paths we have to worry about, so this is simplier.
+        var offsetSelfPos = self.tpos.center().sub(self.pathOffsetVector);
 
         var cur = self.curPath;
-        var next = self.curPath.nextPath;
+        if (cur instanceof Path_End && minVecBetweenRects(self.tpos, cur.tpos).mag() == 0) {
+            self.destroyAtBase();
+        }
 
         //Move towards the next rectangle.
-        var vecToCurrent = minVecBetweenRects(self.tpos, cur.tpos);
-        var vecToNext = minVecFullOverlapRects(self.tpos, next.tpos);
+        var vecToCurrent = cur.tpos.origin().sub(offsetSelfPos);
 
-        var overshot = vecToCurrent.magSq() > 0 && vecToNext.magSq() > 0;
+        var speed = self.attr.speed;
 
-        if (overshot) {
-            move(self.tpos, velocity, -dt);
+        var velocity = vecToCurrent;
+        velocity.setMag(speed);
+        self.tpos.moveOrigin(velocity.clone().mult(dt));
+
+        //If we cross the target, then we will be less than the distance we moved from the target.
+        if (cur.tpos.origin().sub(offsetSelfPos).mag() <= speed * dt) {
+            self.curPath = self.curPath.nextPath;
         }
-
-        if (self.delay > self.bugRelPathPos) {
-            velocity = vecToNext.clone();
-            self.delay = 0;
-        }
-
-        //Once we reach our destination.
-        if (vecToNext.magSq() == 0 || overshot) {
-            self.delay += 50*dt;
-            if (self.delay > self.bugRelPathPos || overshot) {
-                self.curPath = next;
-                self.delay = self.bugRelPathPos + 1;
-            }
-
-            if (next instanceof Path_End) {
-                self.destroyAtBase();
-            }
-        }
-
-        velocity.mag(self.attr.speed);
 
         // We only invalidate when our HP changes, since that covers most
         // cases, and other things don't really change much for bugs.'
@@ -149,20 +133,19 @@ function Bug(startPath) {
             redraw(canvas);
             canvasDirty = false;
         }
-        canvas.moveTo(new Vector(self.tpos.x - self.attr.range + self.tpos.w / 2, 
-                                 self.tpos.y - self.attr.range + self.tpos.h / 2));
+        canvas.moveTo(new Vector(self.tpos.x - self.attr.range, self.tpos.y - self.attr.range));
         canvas.drawTo(pen);
     }
 
     function redraw(canvas) {
         var range = self.attr.range;
-        canvas.resize(new Rect(0, 0, range*2, range*2));
+        canvas.resize(new Rect(0, 0, range*2 + self.tpos.w, range*2 + + self.tpos.h));
 
         var pen = canvas.ctx();
         pen.save();
         pen.translate(
-            range - self.tpos.x - self.tpos.w / 2,
-            range - self.tpos.y - self.tpos.h / 2);
+            range - self.tpos.x,
+            range - self.tpos.y);
         actualRedraw(pen);
         pen.restore();
     }
