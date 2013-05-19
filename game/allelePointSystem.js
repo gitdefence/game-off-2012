@@ -105,6 +105,7 @@ function AllelePointSystem(pos) {
         if (!(selected instanceof Tower)) return;
 
         var anyPositive = false;
+        var numTrashed = 0;
 
         while (!anyPositive && selected.allelesGenerated.length > 0) {
             self.addDeltaDisplay();
@@ -121,8 +122,12 @@ function AllelePointSystem(pos) {
             }
             if (!anyPositive) {
                 selected.allelesGenerated.splice(0, 1);
-                game.infobar.updateDeltaAllele(selected);
+                numTrashed++;
             }
+        }
+
+        if (numTrashed > 0) {
+            game.infobar.updateDeltaAllele(selected);
         }
     }
 
