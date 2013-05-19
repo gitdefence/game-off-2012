@@ -54,7 +54,7 @@ function Infobar(pos) {
                                     new Rect(0, 0, 0, 0)
                                 ));
 
-        targetStrats = new NestedObjsVisual({target: obj.attr.targetStrategy}, "Target Strategy", "target");
+        targetStrats = new NestedObjsVisual({targetBase: obj.attr.targetStrategy}, "Target Strategy", "target");
         attributeVBox.add(new PaddingControl(
                                     targetStrats,
                                     new Rect(0, 10, 0, 10),
@@ -112,7 +112,7 @@ function Infobar(pos) {
             //its up to them to do this fast or slowly...
             attrInfos.updateObject(newObj);
             attackObjsVisual.updateAttackObjs(newObj.attr.attackObjs);
-            targetStrats.updateAttackObjs({ target: newObj.attr.targetStrategy });
+            targetStrats.updateAttackObjs({ targetBase: newObj.attr.targetStrategy });
         } else {
             prevObj = newObj;
             redoObjLayout(newObj);
@@ -134,7 +134,7 @@ function Infobar(pos) {
         //Our attackObjs or targeting strategy may have a different quantity of objects,
         //so we cannot just update them.
         attackObjsVisual.updateAttackObjs(prevObj.attr.attackObjs);
-        targetStrats.updateAttackObjs({ target: prevObj.attr.targetStrategy });
+        targetStrats.updateAttackObjs({ targetBase: prevObj.attr.targetStrategy });
 
         //Our attributes number on the otherhand cannot change, so we can just update them
         attrInfos.updateAllAttributes();
