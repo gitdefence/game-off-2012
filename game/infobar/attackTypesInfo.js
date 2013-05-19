@@ -76,6 +76,8 @@ function AttackVisual(attackObj, delta) {
     }
 }
 
+//Used to be just for attacks, but now shows targeting types too,
+//so a lot of variables still mention attack.
 function NestedObjsVisual(attackObjs, title, deltaName) {
     var self = this;
 
@@ -87,7 +89,6 @@ function NestedObjsVisual(attackObjs, title, deltaName) {
 
     var alleleToCompare = null;
 
-    var prevAlleleAttackType = false;
     function redoAttackObjLayout(curAlleleToCompare) {
         ourLayout.clear();
 
@@ -134,29 +135,27 @@ function NestedObjsVisual(attackObjs, title, deltaName) {
     }
 
     self.updateDeltaAllele = function (newAlleleToCompare) {
+        var prevShowAlleleDelta = alleleToCompare && alleleToCompare.delta[deltaName];
+
         alleleToCompare = newAlleleToCompare;
 
         var showAlleleDelta = newAlleleToCompare && newAlleleToCompare.delta[deltaName];
 
-        if (!showAlleleDelta) {
-            if (prevAlleleAttackType) {
-                prevAlleleAttackType = false;
-                redoAttackObjLayout(alleleToCompare);
-            }
-        } else {
-            //if (!prevAlleleAttackType) {
-                prevAlleleAttackType = true;
-                redoAttackObjLayout(alleleToCompare);
-            //}
-        }
+        //We just continue showing nothing, as there is no delta to change / remove / add
+        if (!prevShowAlleleDelta && !showAlleleDelta) return;
+
+        redoAttackObjLayout(alleleToCompare);
     }
 
     self.updateAttackInfo = function () {
         redoAttackObjLayout(alleleToCompare);
     }
 
-    self.updateAttackObjs = function (newAttackObjs) {
+    //Doesn't update the delta
+    self.updateAttackObjs = function (newAttackObjs, newAlleleToCompare) {
         attackObjs = newAttackObjs;
+
+        self.updateDeltaAllele(newAlleleToCompare);
     }
 
     self.optimalHeight = function (width) {

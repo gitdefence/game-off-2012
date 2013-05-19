@@ -109,12 +109,12 @@ function Infobar(pos) {
         if (prevObj && getRealType(newObj) == getRealType(prevObj)) {
             //If its the same type, we can just update the attributes.
             prevObj = newObj;
-            attrInfos.updateObject(newObj);
 
+            //Tell all our children they need to display different stuff,
+            //its up to them to do this fast or slowly...
+            attrInfos.updateObject(newObj);
             attackObjsVisual.updateAttackObjs(newObj.attr.attackObjs);
             targetStrats.updateAttackObjs({ target: newObj.attr.targetStrategy });
-
-            self.updateDeltaAllele(newObj);
         } else {
             prevObj = newObj;
             redoObjLayout(newObj);
@@ -133,15 +133,13 @@ function Infobar(pos) {
     self.updateAllAttributes = function () {
         if (!attrInfos) return;
 
+        //Our attackObjs or targeting strategy may have a different quantity of objects,
+        //so we cannot just update them.
         attackObjsVisual.updateAttackObjs(prevObj.attr.attackObjs);
         targetStrats.updateAttackObjs({ target: prevObj.attr.targetStrategy });
 
-        self.updateDeltaAllele(prevObj);
-
-        //Possibly should not call of of these.
+        //Our attributes number on the otherhand cannot change, so we can just update them
         attrInfos.updateAllAttributes();
-        attackObjsVisual.updateAttackInfo();
-        targetStrats.updateAttackInfo();
 
         self.resize(self.tpos);
     }
