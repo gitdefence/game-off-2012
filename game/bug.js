@@ -1,13 +1,6 @@
 function Bug(startPath) {
     var self = this;
     var r = 8;
-    var cen = (function() {
-        var p = startPath.tpos;
-        var cen = p.center();
-        cen.x += Math.floor((p.w - 2*r) * (Math.random() - 0.5));
-        cen.y += Math.floor((p.h - 2*r) * (Math.random() - 0.5));
-        return cen;
-    }());
 
     self.attr = {};
     self.setBaseAttrs = function () {
