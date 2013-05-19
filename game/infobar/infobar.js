@@ -54,7 +54,7 @@ function Infobar(pos) {
                                     new Rect(0, 0, 0, 0)
                                 ));
 
-        targetStrats = new NestedObjsVisual({targetStrat: obj.attr.targetStrategy}, "Target Strategy", "target");
+        targetStrats = new NestedObjsVisual({target: obj.attr.targetStrategy}, "Target Strategy", "target");
         attributeVBox.add(new PaddingControl(
                                     targetStrats,
                                     new Rect(0, 10, 0, 10),
@@ -112,7 +112,7 @@ function Infobar(pos) {
             attrInfos.updateObject(newObj);
             self.updateDeltaAllele(newObj);
             attackObjsVisual.updateAttackObjs(newObj.attr.attackObjs);
-            targetStrats.updateAttackObjs({ targetStrat: newObj.attr.targetStrategy });
+            targetStrats.updateAttackObjs({ target: newObj.attr.targetStrategy });
             self.updateAllAttributes();
         } else {
             prevObj = newObj;
@@ -133,7 +133,9 @@ function Infobar(pos) {
         if (!attrInfos) return;
 
         attackObjsVisual.updateAttackObjs(prevObj.attr.attackObjs);
-        targetStrats.updateAttackObjs({ targetStrat: prevObj.attr.targetStrategy });
+        targetStrats.updateAttackObjs({ target: prevObj.attr.targetStrategy });
+
+        self.updateDeltaAllele(prevObj);
 
         //Possibly should not call of of these.
         attrInfos.updateAllAttributes();

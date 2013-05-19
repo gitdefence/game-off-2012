@@ -136,16 +136,18 @@ function NestedObjsVisual(attackObjs, title, deltaName) {
     self.updateDeltaAllele = function (newAlleleToCompare) {
         alleleToCompare = newAlleleToCompare;
 
-        if (!newAlleleToCompare || !newAlleleToCompare.delta[deltaName]) {
+        var showAlleleDelta = newAlleleToCompare && newAlleleToCompare.delta[deltaName];
+
+        if (!showAlleleDelta) {
             if (prevAlleleAttackType) {
                 prevAlleleAttackType = false;
                 redoAttackObjLayout(alleleToCompare);
             }
         } else {
-            if (!prevAlleleAttackType) {
+            //if (!prevAlleleAttackType) {
                 prevAlleleAttackType = true;
                 redoAttackObjLayout(alleleToCompare);
-            }
+            //}
         }
     }
 
