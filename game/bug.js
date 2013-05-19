@@ -27,7 +27,7 @@ function Bug(startPath) {
     }
     self.setBaseAttrs();
 
-    self.tpos = new Rect(cen.x - r, cen.y - r, r * 2, r * 2);
+    self.tpos = new Rect(0, 0, 1, 1);
 
     self.base = new BaseObj(self, 11);
     var velocity = new Vector(1, 0).mag(self.attr.speed);
@@ -39,10 +39,8 @@ function Bug(startPath) {
     self.lineWidth = 1;
     self.radius = r;
 
-
     self.genes = new Genes();
     self.base.addChild(self.genes);
-
 
 
     self.base.addChild(new AttackCycle());
@@ -56,6 +54,9 @@ function Bug(startPath) {
 
         var offset = Math.floor(((Math.random() - 0.5) * 0.5 + 0.5) * game.tileSize);
         self.pathOffsetVector = new Vector(offset, offset);
+        self.tpos.w = r;
+        self.tpos.h = r;
+        self.tpos.center(startPath.tpos.origin().add(self.pathOffsetVector));
 
         self.constantOne = 1;
         self.base.addChild(new UpdateTicker(self, "constantOne", "regenTick"));
