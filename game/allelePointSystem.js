@@ -35,7 +35,7 @@ function AllelePointSystem(pos) {
         spendHBox.add(new Button("Spend Point", spendPoint));
         spendHBox.add(new Button("Trash Point", trashPoint));
 
-        autoTrashButton = new ToggleButton("Auto Trash Worse");
+        autoTrashButton = new ToggleButton("Auto Trash Worse", doAutoTrash);
         vbox.add(autoTrashButton, 28);
     };
 
@@ -59,6 +59,8 @@ function AllelePointSystem(pos) {
 
         if (newTopAllele) {
             game.infobar.updateDeltaAllele(selected);
+
+            doAutoTrash();
         }
     }
 
@@ -68,13 +70,15 @@ function AllelePointSystem(pos) {
 
         if (!(selected instanceof Tower)) return;
 
-        if (selected.allelesGenerated.length > 0) {
-            var allele = selected.allelesGenerated[0];
-            selected.allelesGenerated.splice(0, 1);
-            selected.genes.addAllele(allele);
+        if (selected.allelesGenerated.length <= 0) return;
 
-            game.infobar.updateDeltaAllele(selected);
-        }
+        var allele = selected.allelesGenerated[0];
+        selected.allelesGenerated.splice(0, 1);
+        selected.genes.addAllele(allele);
+
+        game.infobar.updateDeltaAllele(selected);
+
+        doAutoTrash();
     }
 
     function trashPoint() {
@@ -83,14 +87,18 @@ function AllelePointSystem(pos) {
 
         if (!selected instanceof Tower) return;
 
-        if (selected.allelesGenerated.length > 0) {
-            selected.allelesGenerated.splice(0, 1);
+        if (selected.allelesGenerated.length <= 0) return;
 
-            game.infobar.updateDeltaAllele(selected);
-        }
+        selected.allelesGenerated.splice(0, 1);
+
+        game.infobar.updateDeltaAllele(selected);
+
+        doAutoTrash();
     }
 
     function doAutoTrash() {
+        if (!autoTrashButton.toggled()) return;
+
         var game = getGame(self);
         var selected = game.selection();
 
@@ -177,10 +185,6 @@ function AllelePointSystem(pos) {
     }
 
     self.update = function () {
-        if (autoTrashButton.toggled()) {
-            doAutoTrash();
-        }
-
         var selected = self.base.game().selection();
 
         //This section needs to be removed.
