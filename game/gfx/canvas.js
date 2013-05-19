@@ -5,13 +5,13 @@ function Canvas() {
 
     this.resize = function (rect) {
         pos = rect.origin();
-        element.width = rect.w;
-        element.height = rect.h;
         if (rect.w <= 0 || rect.h <= 0) {
             rect.w = 1;
             rect.h = 1;
-            //fail("Attempting to make a canvas with area zero, this is probably a bug. Did you forget to resize it first?");
+            fail("Attempting to make a canvas with area zero, this is probably a bug. Did you forget to resize it first?");
         }
+        element.width = rect.w;
+        element.height = rect.h;
         return this;
     }
 
