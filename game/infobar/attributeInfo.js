@@ -119,7 +119,7 @@ function AlleleVisual(_obj, _attrName) {
             plusBars.add(new FakeDrawObject(
             function (pen, rect) {
                 //A plus sign
-                rect = rect.largestSquare();
+                rect = rect.largestSquare().origin(new Vector(0, 0));
                 var vertLine = new Rect(0.5, 0.1, 0, 0.8).project(rect);
                 DRAW.line(pen, vertLine.origin(),
                                new Vector(vertLine.right(), vertLine.bottom()),
@@ -130,14 +130,14 @@ function AlleleVisual(_obj, _attrName) {
                                new Vector(horiLine.right(), horiLine.bottom()),
                                "Blue",
                                2);
-            }, false, new Rect(0, 0, 20, 20)), 0);
+            }, true, new Rect(0, 0, 20, 20)), 0);
         }
 
         if (addedNeg) {
             negBars.add(new FakeDrawObject(
             function (pen, rect) {
                 //A negative sign
-                rect = rect.largestSquare();
+                rect = rect.largestSquare().origin(new Vector(0, 0));
                 var horiLine = new Rect(0.2, 0.5, 0.6, 0).project(rect);
                 DRAW.line(pen, horiLine.origin(),
                                new Vector(horiLine.right(), horiLine.bottom()),

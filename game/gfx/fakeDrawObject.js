@@ -1,6 +1,8 @@
 //An object which draws, but every time it draws it just calls a predefined draw function.
 //drawFnc should take a pen, a rect.
-//cachable defines if the drawFnc can be cached (we exposed redraw instead of draw)
+//cachable defines if the drawFnc can be cached (you exposed redraw instead of draw),
+//but still calls redraw normally (you must offset the rect you are given, as it
+//is your tpos and you need to draw starting at (0, 0)).
 function FakeDrawObject(drawFnc, cachable, fixedSize) {
     var self = this;
 

@@ -4,21 +4,22 @@
 function FakeDrawObject(drawFnc, cachable, fixedSize) {
     var self = this;
 
-    this.base = new BaseObj(self, 11);
-    this.tpos = new Rect(0, 0, 0, 0);
+    self.base = new BaseObj(self, 11);
+    self.tpos = new Rect(0, 0, 0, 0);
 
     self.resize = function (rect) {
-        this.tpos = rect;
+        self.tpos = rect;
+        self.base.dirty();
     }
 
     if (cachable) {
         self.redraw = function (canvas) {
             var pen = canvas.ctx();
-            drawFnc(pen, this.tpos);
+            drawFnc(pen, self.tpos);
         }
     } else {
         self.draw = function (pen) {
-            drawFnc(pen, this.tpos);
+            drawFnc(pen, self.tpos);
         }
     }
 
