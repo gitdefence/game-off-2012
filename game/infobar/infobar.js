@@ -27,8 +27,6 @@ function Infobar(pos) {
 
         outerVBox.add(attributeVBox);
         outerVBox.add(allelePoints, 220);
-
-        updateDisplay();
     };
 
     self.resize = function (rect) {
