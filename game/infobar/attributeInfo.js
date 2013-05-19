@@ -66,11 +66,8 @@ function DeltaBar(allele, attrName, deltaType) {
 }
 
 //Gives a visual representation for how alleles impact various attributes.
-function AlleleVisual(_obj, _attrName) {
+function AlleleVisual(obj, attrName) {
     var self = this;
-
-    var obj = _obj;
-    var attrName = _attrName;
 
     self.base = new BaseObj(self, 11);
     self.tpos = new Rect(0, 0, 1, 1);
@@ -164,12 +161,9 @@ function AlleleVisual(_obj, _attrName) {
     }
 }
 
-function AttributeInfo(_attrHolder, _attrName) {
+function AttributeInfo(attrHolder, attrName) {
     var self = this;
     self.base = new BaseObj(self, 10);
-
-    var attrHolder = _attrHolder;
-    var attrName = _attrName;
 
     var attrNameLabel = new Label();
     var alleleInfo = new AlleleVisual(attrHolder, attrName);
@@ -250,13 +244,12 @@ function AttributeInfo(_attrHolder, _attrName) {
     }
 }
 
-function AttributeInfos(_obj) {
+function AttributeInfos(obj) {
     var self = this;
     self.base = new BaseObj(self, 14);
 
     self.tpos = new Rect(0, 0, 1, 1);
 
-    var obj = _obj;
     var deltaAllele = null;
 
     var attrBox = new FlowLayout();

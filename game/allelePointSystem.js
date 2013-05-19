@@ -72,6 +72,8 @@ function AllelePointSystem(pos) {
             var allele = selected.allelesGenerated[0];
             selected.allelesGenerated.splice(0, 1);
             selected.genes.addAllele(allele);
+
+            game.infobar.updateDeltaAllele(selected);
         }
     }
 
@@ -84,12 +86,13 @@ function AllelePointSystem(pos) {
         if (selected.allelesGenerated.length > 0) {
             selected.allelesGenerated.splice(0, 1);
 
-            selected.genes.recalculateAttributes();
+            game.infobar.updateDeltaAllele(selected);
         }
     }
 
     function doAutoTrash() {
-        var selected = self.base.game().selection();
+        var game = getGame(self);
+        var selected = game.selection();
 
         if (!(selected instanceof Tower)) return;
 
@@ -110,7 +113,7 @@ function AllelePointSystem(pos) {
             }
             if (!anyPositive) {
                 selected.allelesGenerated.splice(0, 1);
-                selected.genes.recalculateAttributes();
+                game.infobar.updateDeltaAllele(selected);
             }
         }
     }

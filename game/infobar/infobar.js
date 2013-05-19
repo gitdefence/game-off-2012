@@ -15,6 +15,10 @@ function Infobar(pos) {
     var outerVBox = new VBox();
     var attributeVBox = new FlowLayout();
 
+    var attrInfos = null;
+    var obj = null;
+    var attackObjsVisual = null;
+
     var hover = false;
 
     //Add our buttons, should really be done just in the constructor with our given pos information
@@ -28,6 +32,28 @@ function Infobar(pos) {
         outerVBox.add(attributeVBox);
         outerVBox.add(allelePoints, 220);
     };
+
+    //Sets the current obj to obj, and redoes the layout for the object.
+    self.redoObjLayout = function (newObj) {
+        obj = newObj;
+
+        if (obj) {
+            attributeVBox.clear();
+
+            attrInfos = new AttributeInfos(obj, null);
+            attributeVBox.add(attrInfos);
+
+            var targetStrats = new TargetStrategiesVisual(obj, null);
+            attributeVBox.add(targetStrats);
+
+            attackObjsVisual = new AttackObjsVisual(obj, null);
+            attributeVBox.add(attackObjsVisual);
+        }
+
+        updateDisplay();
+
+        self.updateDeltaAllele(obj);
+    }
 
     self.resize = function (rect) {
         outerVBox.resize(rect);
@@ -48,29 +74,6 @@ function Infobar(pos) {
         self.resize(self.tpos);
     }
 
-    var attrInfos = null;
-    var obj = null;
-
-    //Sets the current obj to obj, and redoes the layout for the object.
-    self.redoObjLayout = function (newObj) {
-        obj = newObj;
-
-        if (obj) {
-            attributeVBox.clear();
-
-            attrInfos = new AttributeInfos(obj, null);
-            attributeVBox.add(attrInfos);
-
-            var targetStrats = new TargetStrategiesVisual(obj, null);
-            attributeVBox.add(targetStrats);
-            attributeVBox.add(new AttackObjsVisual(obj, null));
-        }
-
-        updateDisplay();
-
-        self.updateDeltaAllele(obj);
-    }
-
     //This happens a lot, so we don't want to do the expensive layout.
     self.updateAttribute = function (attrName) {
         if (!attrInfos) return;
@@ -82,6 +85,9 @@ function Infobar(pos) {
         if (!attrInfos) return;
 
         attrInfos.updateAllAttributes();
+        attackObjsVisual.updateAttackInfo();
+
+        self.resize(self.tpos);
     }
 
     //Called from allelePointSystem, and from us.
@@ -92,10 +98,13 @@ function Infobar(pos) {
         }
 
         if (!attrInfos) return;
-        
+
         var deltaAllele = newObj && newObj.allelesGenerated && newObj.allelesGenerated[0];
 
         attrInfos.updateDeltaAllele(deltaAllele);
+        attackObjsVisual.updateDeltaAllele(deltaAllele);
+
+        self.resize(self.tpos);
     }
 
     self.mousemove = function () {

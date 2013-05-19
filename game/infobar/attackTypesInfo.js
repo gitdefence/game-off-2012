@@ -1,109 +1,64 @@
-function AttackVisual(obj, attackObj) {
+function AttackVisual(attackObj, delta) {
     var self = this;
 
     self.base = new BaseObj(self, 10);
 
     var ourLayout = new FlowLayout();
 
-    var attackObjs = obj.attr.attackObjs;
-    var attackKeys = getSortedKeys(attackObjs);
-    var newAttack = findAttackObjDelta(alleleToCompare, attackObjs);
+    var typeLabel = new Label();
 
-    function findAttackObjDelta(alleleToCompare, attackObjs) {
-        if (!alleleToCompare || !alleleToCompare.delta.attack) return;
+    delta = delta || "";
 
-        var attackToReplace = attackObjs[alleleToCompare.group];
-
-        var attacksSameKind = attackToReplace &&
-            attackToReplace.AttackNode == alleleToCompare.delta.attack;
-
-        //Check if we are replacing an attack with the same type
-        if (attacksSameKind) {
-            //No need to show our attack, it will be the same anyway
-            attackToReplace.deltaDisplay = "+-";
-
-            return null;
-        } else {
-            //different type
-            if (attackToReplace) {
-                attackToReplace.deltaDisplay = "-";
-            }
-
-            var newAttack = new alleleToCompare.delta.attack();
-            newAttack.deltaDisplay = "+";
-            newAttack.group = alleleToCompare.group;
-
-            return newAttack;
+    function updateAttackTitle() {
+        var attackObjTitle = formatToDisplay(getRealType(attackObj));
+        if (delta.length > 0) {
+            attackObjTitle = "(" + delta + ") " + attackObjTitle;
         }
+        typeLabel.text(attackObjTitle);
     }
 
     self.added = function () {
         self.base.addChild(ourLayout);
 
-        var addedNewAttack = false;
-        for (var iy = 0; iy < attackKeys.length; iy++) {
-            var attackObj = attackObjs[attackKeys[iy]];
-            addAttackInfo(attackObj, attackKeys[iy], ourLayout);
-            if (newAttack && newAttack.group == attackKeys[iy]) {
-                addAttackInfo(newAttack, attackKeys[iy], ourLayout);
-                addedNewAttack = true;
-            }
-        }
+        var typeTitle = new HBox();
+        typeTitle.add(new FakeDrawObject(attackObj.drawGlyph, true, true), 20);
 
-        if (newAttack && !addedNewAttack) {
-            addAttackInfo(newAttack, newAttack.group, ourLayout);
-        }
+        typeLabel.maxFontSize(16);
+        updateAttackTitle();
 
-        function addAttackInfo(attackObj, group, ourLayout) {
-            var delta = attackObj.deltaDisplay || "";
-            //var group = attackObj.group;
+        typeTitle.add(typeLabel);
 
-            var typeTitle = new HBox();
-
-            typeTitle.add(new FakeDrawObject(attackObj.drawGlyph, true, true), 20);
-
-            var attackObjTitle = formatToDisplay(getRealType(attackObj));
-            if (delta.length > 0) {
-                attackObjTitle = "(" + delta + ") " + attackObjTitle;
-            }
-            if (DFlag.attackObjsDebug) {
-                attackObjTitle += group.substring(group.length - 1, group.length);
-            }
-            typeTitle.add(new Label()
-                            .text(attackObjTitle)
-                            .maxFontSize(16));
-
-            ourLayout.add(new PaddingControl(
+        ourLayout.add(new PaddingControl(
                     typeTitle,
                     new Rect(0, 8, 0, 2),
                     new Rect(0, 0.15, 0, 0.05)
                 ));
 
-            for (var type in attackObj) {
-                var value = attackObj[type];
-                if (typeof value != "number") continue;
+        //In the long term this will probably become just a bunch of AlleleVisuals
+        for (var type in attackObj) {
+            var value = attackObj[type];
+            if (typeof value != "number") continue;
 
-                var typeDivider = new HBox();
+            var typeDivider = new HBox();
 
-                typeDivider.add(new Label()
+            typeDivider.add(new Label()
                                     .text(formatToDisplay(type))
                                     .align("left")
                                     .maxFontSize(12)
                                     .color("white")
                                 );
-                typeDivider.add(new Label()
+            typeDivider.add(new Label()
                                     .text(formatToDisplay(value + ""))
                                     .align("right")
                                     .maxFontSize(12)
                                     .color("white")
                                 );
 
-                ourLayout.add(new PaddingControl(
+            ourLayout.add(new PaddingControl(
                         typeDivider,
                         new Rect(0, 0, 0, 0),
                         new Rect(0, 0.4, 0, 0)
                     ));
-            }
         }
     }
 
@@ -112,16 +67,12 @@ function AttackVisual(obj, attackObj) {
         ourLayout.resize(rect);
     }
 
-    self.redraw = function () {
-        return 5;
-    }
-
     self.optimalHeight = function (width) {
         return ourLayout.optimalHeight(width);
     }
 }
 
-function AttackObjsVisual(obj, alleleToCompare) {
+function AttackObjsVisual(obj) {
     var self = this;
 
     self.base = new BaseObj(self, 10);
@@ -130,121 +81,64 @@ function AttackObjsVisual(obj, alleleToCompare) {
 
     var typesLabel = new Label().text("Attack Types").maxFontSize(20);
 
-    var attackObjs = obj.attr.attackObjs;
-    var attackKeys = getSortedKeys(attackObjs);
-    var newAttack = findAttackObjDelta(alleleToCompare, attackObjs);
+    var alleleToCompare = null;
 
-    function findAttackObjDelta(alleleToCompare, attackObjs) {
-        if (!alleleToCompare || !alleleToCompare.delta.attack) return;
+    function redoAttackObjLayout(curAlleleToCompare) {
+        ourLayout.clear();
 
-        var attackToReplace = attackObjs[alleleToCompare.group];
+        ourLayout.add(typesLabel);
 
-        var attacksSameKind = attackToReplace &&
-            attackToReplace.AttackNode == alleleToCompare.delta.attack;
+        var attackObjs = obj.attr.attackObjs;
 
-        //Check if we are replacing an attack with the same type
-        if (attacksSameKind) {
-            //No need to show our attack, it will be the same anyway
-            attackToReplace.deltaDisplay = "+-";
+        var attackKeys = getSortedKeys(attackObjs);
 
-            return null;
-        } else {
-            //different type
-            if (attackToReplace) {
-                attackToReplace.deltaDisplay = "-";
-            }
-
-            var newAttack = new alleleToCompare.delta.attack();
-            newAttack.deltaDisplay = "+";
-            newAttack.group = alleleToCompare.group;
-
-            return newAttack;
+        //Ignore it if it isn't an attack
+        if (curAlleleToCompare && !curAlleleToCompare.delta.attack) {
+            curAlleleToCompare = null;
         }
+
+        for (var iy = 0; iy < attackKeys.length; iy++) {
+            var attackObj = attackObjs[attackKeys[iy]];
+
+            var deltaDisplay = null;
+            if (curAlleleToCompare && curAlleleToCompare.group == attackKeys[iy]) {
+                deltaDisplay = "-";
+            }
+            ourLayout.add(new AttackVisual(attackObj, deltaDisplay));
+            if (deltaDisplay) {
+                ourLayout.add(new AttackVisual(new curAlleleToCompare.delta.attack(), "+"));
+                curAlleleToCompare = null;
+            }
+        }
+
+        //If we haven't added it yet, add it at the end.
+        if (curAlleleToCompare) {
+            ourLayout.add(new AttackVisual(new curAlleleToCompare.delta.attack(), "+"));
+        }
+
+        //self.resize(self.tpos);
+        self.base.dirty();
     }
 
     self.added = function () {
         self.base.addChild(ourLayout);
 
-        ourLayout.add(new PaddingControl(
-                typesLabel,
-                new Rect(0, 0, 0, 0),
-                new Rect(0, 1, 0, 0)
-            ));
-
-        var addedNewAttack = false;
-        for(var iy = 0; iy < attackKeys.length; iy++) {
-            var attackObj = attackObjs[attackKeys[iy]];
-            addAttackInfo(attackObj, attackKeys[iy], ourLayout);
-            if (newAttack && newAttack.group == attackKeys[iy]) {
-                addAttackInfo(newAttack, attackKeys[iy], ourLayout);
-                addedNewAttack = true;
-            }
-        }
-
-        if (newAttack && !addedNewAttack) {
-            addAttackInfo(newAttack, newAttack.group, ourLayout);
-        }
-
-        function addAttackInfo(attackObj, group, ourLayout) {
-            var delta = attackObj.deltaDisplay || "";
-            //var group = attackObj.group;
-
-            var typeTitle = new HBox();
-
-            typeTitle.add(new FakeDrawObject(attackObj.drawGlyph, true, true), 20);
-
-            var attackObjTitle = formatToDisplay(getRealType(attackObj));
-            if (delta.length > 0) {
-                attackObjTitle = "(" + delta + ") " + attackObjTitle;
-            }
-            if (DFlag.attackObjsDebug) {
-                attackObjTitle += group.substring(group.length - 1, group.length);
-            }
-            typeTitle.add(new Label()
-                            .text(attackObjTitle)
-                            .maxFontSize(16));
-
-            ourLayout.add(new PaddingControl(
-                    typeTitle,
-                    new Rect(0, 8, 0, 2),
-                    new Rect(0, 0.15, 0, 0.05)
-                ));
-
-            for (var type in attackObj) {
-                var value = attackObj[type];
-                if (typeof value != "number") continue;
-
-                var typeDivider = new HBox();
-
-                typeDivider.add(new Label()
-                                    .text(formatToDisplay(type))
-                                    .align("left")
-                                    .maxFontSize(12)
-                                    .color("white")
-                                );
-                typeDivider.add(new Label()
-                                    .text(formatToDisplay(value + ""))
-                                    .align("right")
-                                    .maxFontSize(12)
-                                    .color("white")
-                                );
-
-                ourLayout.add(new PaddingControl(
-                        typeDivider,
-                        new Rect(0, 0, 0, 0),
-                        new Rect(0, 0.4, 0, 0)
-                    ));
-            }
-        }
+        redoAttackObjLayout(null);
     }
 
     self.resize = function (rect) {
-        this.tpos = rect;
+        self.tpos = rect;
         ourLayout.resize(rect);
     }
 
-    self.redraw = function () {
-        return 5;
+    self.updateDeltaAllele = function (newAlleleToCompare) {
+        alleleToCompare = newAlleleToCompare;
+        //We could probably do this more efficiently...
+        redoAttackObjLayout(alleleToCompare);
+    }
+
+    self.updateAttackInfo = function () {
+        redoAttackObjLayout(alleleToCompare);
     }
 
     self.optimalHeight = function (width) {
