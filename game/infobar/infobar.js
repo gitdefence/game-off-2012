@@ -63,7 +63,7 @@ function Infobar(pos) {
 
             var targetStrats = new TargetStrategiesVisual(obj, null);
             attributeVBox.add(targetStrats);
-            attributeVBox.add(new AttackTypesVisual(obj, null));
+            attributeVBox.add(new AttackObjsVisual(obj, null));
         }
 
         updateDisplay();

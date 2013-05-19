@@ -11,9 +11,9 @@ function applyAttack(attackTemplate) {
     var attacker = attackTemplate.attacker;
     var damage = attackTemplate.damage;
     var baseAttacker = attackTemplate.baseAttacker;
-    var attackTypes = baseAttacker.attr.attackTypes;
+    var attackObjs = baseAttacker.attr.attackObjs;
 
-    if(!assertDefined(target, attacker, damage, baseAttacker, attackTypes))
+    if(!assertDefined(target, attacker, damage, baseAttacker, attackObjs))
         return;
 
     if(isNaN(target.attr.hp)) {
@@ -33,14 +33,14 @@ function applyAttack(attackTemplate) {
         game.infobar.updateAttribute("hitCount");
     }
 
-    var attackKeys = getSortedKeys(attackTypes);
+    var attackKeys = getSortedKeys(attackObjs);
     var curAttackIndex = attackKeys.indexOf(attackTemplate.currentAtbox);
 
-    var newAttackType = attackTypes[attackKeys[curAttackIndex + 1]];
+    var newattackObj = attackObjs[attackKeys[curAttackIndex + 1]];
 
-    if(curAttackIndex >= 0 && newAttackType) {
+    if(curAttackIndex >= 0 && newattackObj) {
         var newAttTemplate = cloneObject(attackTemplate); //Clone it just incase it has its own attributes
-        newAttTemplate.attackType = newAttackType;
+        newAttTemplate.attackObj = newattackObj;
         newAttTemplate.attacker = attackTemplate.target;
         newAttTemplate.currentAtbox = attackKeys[curAttackIndex + 1];
         startAttack(newAttTemplate);
@@ -67,7 +67,7 @@ function startAttack(attackTemplate) {
         return;
 
     var eng = attackTemplate.attacker.base.rootNode;
-    var attackType = attackTemplate.attackType;
+    var attackObj = attackTemplate.attackObj;
 
     var realAttacker = attackTemplate.baseAttacker;
     var attacker = attackTemplate.attacker;
@@ -80,15 +80,15 @@ function startAttack(attackTemplate) {
     }
 
     if (attackTemplate.target) {
-        var attackNode = new attackType.AttackNode(attackTemplate);
+        var attackNode = new attackObj.AttackNode(attackTemplate);
 
         eng.base.addChild(attackNode);
     }
 }
 
-function AttackTemplate(attackType, attacker, target, damage, baseAttacker, currentAtbox)
+function AttackTemplate(attackObj, attacker, target, damage, baseAttacker, currentAtbox)
 {
-    this.attackType = attackType;
+    this.attackObj = attackObj;
 
     this.attacker = attacker;
     this.target = target;
@@ -160,7 +160,7 @@ var allAttackTypes = {
             this.base = new BaseObj(this, 15);
             this.attackTemplate = attackTemplate;
 
-            var ourStats = attackTemplate.attackType;
+            var ourStats = attackTemplate.attackObj;
             attackTemplate.damage *= ourStats.damagePercent / 100;
 
             var attacker = attackTemplate.attacker;
@@ -204,7 +204,7 @@ var allAttackTypes = {
             this.base = new BaseObj(this, 15);
             this.attackTemplate = attackTemplate;
 
-            var ourStats = attackTemplate.attackType;
+            var ourStats = attackTemplate.attackObj;
             attackTemplate.damage *= ourStats.damagePercent / 100;
 
             var realAttacker = attackTemplate.baseAttacker;
@@ -214,7 +214,7 @@ var allAttackTypes = {
 
             this.color = "Orange";
 
-            var bulletSpeed = attackTemplate.attackType.bulletSpeed;
+            var bulletSpeed = attackTemplate.attackObj.bulletSpeed;
 
             var dis = attacker.tpos.center();
             dis.sub(target.tpos.center());
@@ -298,8 +298,8 @@ var allAttackTypes = {
             var target = attackTemplate.target;
             var damage = attackTemplate.damage;
 
-            this.chainChance = attackTemplate.attackType.chainChance;
-            this.repeatDelay = attackTemplate.attackType.repeatDelay;
+            this.chainChance = attackTemplate.attackObj.chainChance;
+            this.repeatDelay = attackTemplate.attackObj.repeatDelay;
 
             this.color = globalColorPalette.chainLightning;
 
@@ -350,7 +350,7 @@ var allAttackTypes = {
 
                     var eng = this.attackTemplate.attacker.base.rootNode;
                     //Resurrect ourself
-                    eng.base.addChild(new attackTemplate.attackType.AttackNode(this.attackTemplate));
+                    eng.base.addChild(new attackTemplate.attackObj.AttackNode(this.attackTemplate));
                 }
             };
         };
@@ -388,7 +388,7 @@ var allAttackTypes = {
 
             this.attackTemplate = attackTemplate ;
 
-            var ourStats = attackTemplate.attackType;
+            var ourStats = attackTemplate.attackObj;
             attackTemplate.damage *= ourStats.damagePercent / 100;
 
             var attacker = attackTemplate.attacker;
@@ -396,8 +396,8 @@ var allAttackTypes = {
             var target = attackTemplate.target;
             var prevTarget = this.attackTemplate.target;
 
-            var effectRange = attackTemplate.attackType.effectRange;
-            var chargeTime = attackTemplate.attackType.chargeTime;
+            var effectRange = attackTemplate.attackObj.effectRange;
+            var chargeTime = attackTemplate.attackObj.chargeTime;
 
             this.color = getRealType(realAttacker) == "Bug" ? "rgba(255,0,0,0)" : "rgba(0,0,255,0)";
 
@@ -427,10 +427,10 @@ var allAttackTypes = {
                 var attacker = attackTemplate.attacker;
                 var realAttacker = attackTemplate.baseAttacker;
                 var target = attackTemplate.target;
-                attackTemplate.damage *= attackTemplate.attackType.damagePercent / 100;
+                attackTemplate.damage *= attackTemplate.attackObj.damagePercent / 100;
                 var prevTarget = this.attackTemplate.target;
 
-                var chargeTime = attackTemplate.attackType.chargeTime;
+                var chargeTime = attackTemplate.attackObj.chargeTime;
                 //We do our own targeting (we hit everything around the attacker)
 
                 //This is basically just a custom targeting strategy
@@ -482,7 +482,7 @@ var allAttackTypes = {
             this.base = new BaseObj(this, 15);
             this.attackTemplate = attackTemplate;
 
-            var ourStats = attackTemplate.attackType;
+            var ourStats = attackTemplate.attackObj;
             attackTemplate.damage *= ourStats.damagePercent / 100;
 
             var attacker = attackTemplate.attacker;
@@ -490,8 +490,8 @@ var allAttackTypes = {
             var target = attackTemplate.target;
             var damage = attackTemplate.damage;
 
-            this.repeatChance = attackTemplate.attackType.repeatChance;
-            this.repeatDelay = attackTemplate.attackType.repeatDelay;
+            this.repeatChance = attackTemplate.attackObj.repeatChance;
+            this.repeatDelay = attackTemplate.attackObj.repeatDelay;
 
             this.color = globalColorPalette.poison;
 
@@ -590,8 +590,8 @@ var allAttackTypes = {
             var target = attackTemplate.target;
             var damage = attackTemplate.damage;
 
-            var slow = attackTemplate.attackType.slowPercent / 100;
-            var slowTime = attackTemplate.attackType.slowTime;
+            var slow = attackTemplate.attackObj.slowPercent / 100;
+            var slowTime = attackTemplate.attackObj.slowTime;
 
             this.color = globalColorPalette.slow;
 
@@ -638,15 +638,14 @@ function drawAttributes(user, pen) {
         user.tpos.h -= Math.ceil(user.lineWidth * 2);
     }
 
-    //We do this so we can draw the target strategy like
-    //an attackType
+    //We do this so we can draw the target strategy like an attackObj
     var glyphArray = [];
 
     glyphArray.push(user.attr.targetStrategy);
 
-    var attackTypeKeys = getSortedKeys(user.attr.attackTypes);
-    for(var key in attackTypeKeys)
-        glyphArray.push(user.attr.attackTypes[attackTypeKeys[key]]);
+    var attackObjKeys = getSortedKeys(user.attr.attackObjs);
+    for(var key in attackObjKeys)
+        glyphArray.push(user.attr.attackObjs[attackObjKeys[key]]);
     
     makeTiled(pen,
         function (obj, pen, pos) {
