@@ -64,11 +64,11 @@ function Infobar(pos) {
             var targetStrats = new TargetStrategiesVisual(obj, null);
             attributeVBox.add(targetStrats);
             attributeVBox.add(new AttackTypesVisual(obj, null));
-
-            self.updateDeltaAllele(obj);
         }
 
         updateDisplay();
+
+        self.updateDeltaAllele(obj);
     }
 
     //This happens a lot, so we don't want to do the expensive layout.

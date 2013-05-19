@@ -45,11 +45,12 @@ function GitDefence(pos) {
         flowLayout.add(hbox2);
     }
 
+    hbox.resize(pos);
+
     engine.globalResize = function (ev) {
         console.log("gitDefence globalResize", ev);
         hbox.resize(new Rect(0, 0, ev.width, ev.height));
     }
-
 
     this.globalSelectionChanged = {};
 

@@ -118,8 +118,8 @@ function AlleleVisual(_obj, _attrName) {
         if (addedPlus) {
             plusBars.add(new FakeDrawObject(
             function (pen, rect) {
-            //A plus sign
-                rect = rect.largestSquare().origin(new Vector(0, 0));
+                //A plus sign
+                //rect = rect.largestSquare().origin(new Vector(0, 0));
                 var vertLine = new Rect(0.5, 0.1, 0, 0.8).project(rect);
                 DRAW.line(pen, vertLine.origin(),
                                new Vector(vertLine.right(), vertLine.bottom()),
@@ -130,13 +130,13 @@ function AlleleVisual(_obj, _attrName) {
                                new Vector(horiLine.right(), horiLine.bottom()),
                                "Blue",
                                2);
-            }, true, new Rect(0, 0, 20, 20)), 0);
+            }, false, new Rect(0, 0, 20, 20)), 0);
         }
 
         if (addedNeg) {
             negBars.add(new FakeDrawObject(
             function (pen, rect) {
-            //A negative sign
+                //A negative sign
                 rect = rect.largestSquare().origin(new Vector(0, 0));
                 var horiLine = new Rect(0.2, 0.5, 0.6, 0).project(rect);
                 DRAW.line(pen, horiLine.origin(),
@@ -149,6 +149,7 @@ function AlleleVisual(_obj, _attrName) {
         deltaBars.add(plusBars);
         deltaBars.add(negBars);
 
+        self.resize(self.tpos);
         self.base.dirty();
     }
 
@@ -314,6 +315,8 @@ function AttributeInfos(_obj) {
         for (var attrName in attrInfos) {
             attrInfos[attrName].updateValue(deltaAllele);
         }
+
+        self.resize(self.tpos);
 
         self.base.dirty();
     }
