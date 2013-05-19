@@ -153,7 +153,7 @@ var AllAlleleGroups = {
             //Fatty
             0.95: { hpRegen: -50, maxHp: 1000},
             //Super-charge (not sure if this will work?)
-            1.00: { currentHp: 1000},
+            1.00: { hp: 1000},
         }); },
 //ATTRIBUTE SPECIALIZATIONS
 
