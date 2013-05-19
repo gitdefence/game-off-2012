@@ -500,7 +500,7 @@ function Tower() {
         this.tryToMove(vector, eng);
     }
 
-    this.mouseup = function(e){
+    this.mouseup = function (e) {
         var eng = this.base.rootNode;
         var game = eng.game;
 
@@ -509,22 +509,28 @@ function Tower() {
         delete getGame(this).input.globalMouseMove[this.base.id];
         delete getGame(this).input.globalMouseUp[this.base.id];
 
-        if(!this.ctrlDrag && this.tempNetworkIndicator) {
+        if (!this.ctrlDrag && this.tempNetworkIndicator) {
             this.base.parent.base.removeChild(this.tempNetworkIndicator);
             this.tempNetworkIndicator = null;
 
             var towerSelected = findClosestToPoint(eng, "Tower", e, 0);
-            if(towerSelected && towerSelected != this)
-            {
+            if (towerSelected && towerSelected != this) {
                 for (var i = 0; i < this.connections.length; i++)
-                    if(this.connections[i].t2 == towerSelected)
+                    if (this.connections[i].t2 == towerSelected)
                         return;
 
                 var conn = new Tower_Connection(this, towerSelected);
 
-                this.base.addChild(conn);
-                this.connections.push(conn);
-                towerSelected.connections.push(conn);
+                var parent = this.base.parent;
+                if (parent) {
+                //Have to add it to our parent, so it can draw above us.
+                    parent.base.addChild(conn);
+                    this.connections.push(conn);
+                    towerSelected.connections.push(conn);
+                } else {
+                    //Probably just means we have been destroyed
+                    fail("Crap, no parent in tower.");
+                }
 
                 game.select(this);
                 getAnElement(this.base.children.Selectable).ignoreNext = true;
