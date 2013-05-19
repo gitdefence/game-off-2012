@@ -121,6 +121,7 @@ function NestedObjsVisual(attackObjs, title, deltaName) {
         }
 
         self.base.dirty();
+        self.base.dirtyLayout();
     }
 
     self.added = function () {

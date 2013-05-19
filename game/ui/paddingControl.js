@@ -39,6 +39,13 @@ function PaddingControl(initialControl, rectConstantBuffer, rectPercentBuffer) {
            rect.h - (childHeight * rectPercentBuffer.bottom() + rectConstantBuffer.bottom()));
 
 	    uiControlRect.round();
+	    if (uiControlRect.w < 1) {
+	        uiControlRect.w = 1;
+	    }
+
+	    if (uiControlRect.h < 1) {
+	        uiControlRect.h = 1;
+	    }
 
 	    uiControl.resize(uiControlRect);
 	    this.tpos = rect;
