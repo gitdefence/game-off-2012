@@ -178,6 +178,9 @@ function Text() {
         return rect.h;
     }
 
+    //The width of the entire line, but squishes the
+    //font if the height is too small. Should
+    //probably calculate wrapping.
     self.optimalWidth = function (height) {
         var measuredRect = null;
         var fontSize = curFontSize + 1;

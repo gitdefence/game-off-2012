@@ -16,8 +16,12 @@ function HBoxFixedChildren() {
         this.base.removeAllChildren();
     }
 
-    this.add = function (ui) {
-        children.push(ui);
+    this.add = function (ui, index) {
+        if (defined(index)) {
+            children.splice(index, 0, ui);
+        } else {
+            children.push(ui);
+        }
         this.base.addChild(ui);
     }
 

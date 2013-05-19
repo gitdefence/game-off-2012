@@ -8,7 +8,7 @@ function HBox() {
     // width is optional, if not given,
     // all children will have same width.
     this.add = function (ui, width) {
-        children.push({ui: ui, width: width});
+        children.push({ui: ui, forcedWidth: width, width: width});
         this.base.addChild(ui);
     }
 
@@ -22,6 +22,13 @@ function HBox() {
         var numSharing = 0;
         for (var i = 0; i < children.length; i++) {
             var c = children[i];
+
+            if (c.forcedWidth) {
+                c.width = c.forcedWidth;
+            } else if (c.getOptimalWidth) {
+                c.width = c.getOptimalWidth();
+            }
+
             if (c.width) fixedWidth += c.width;
             else numSharing++;
         }
@@ -38,6 +45,7 @@ function HBox() {
     }
 
     this.resize = function (rect) {
+        rect = rect.clone();
         calculateWidths(rect.w);
         this.tpos = rect;
 

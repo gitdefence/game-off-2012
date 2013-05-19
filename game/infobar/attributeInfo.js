@@ -5,6 +5,8 @@ var curAlleleHover = null;
 //to call dirty on DeltaBars, and to reset it.
 var deltaBarGroups = {};
 
+var curAlleleHue = 0;
+
 //deltaType is current, remove or add
 function DeltaBar(allele, attrName, deltaType) {
     var self = this;
@@ -25,7 +27,7 @@ function DeltaBar(allele, attrName, deltaType) {
         var rect = self.tpos.clone().origin(new Vector(0, 0));
 
         if (!allele.color) {
-            allele.color = "transparent";// hsla(Math.random() * 360, 70, 80, 1).str();
+            allele.color = hsla(curAlleleHue += 40, 70, 80, 1).str();
         }
 
         if (curAlleleHover == allele) {
@@ -45,14 +47,6 @@ function DeltaBar(allele, attrName, deltaType) {
         self.base.dirty();
     }
 
-    self.mousemove = function () {
-        hover = true;
-        self.base.dirty();
-    };
-    self.mouseup = function () {
-        down = false;
-    };
-
     self.mouseenter = function () {
         curAlleleHover = allele;
         redrawDeltaBars();
@@ -67,7 +61,7 @@ function DeltaBar(allele, attrName, deltaType) {
     self.optimalWidth = function (height) {
         return Math.round(
                 Math.abs(Math.log(Math.abs(allele.delta[attrName])) * 5)
-            ) + 1;
+            ) + 3;
     }
 }
 
@@ -85,7 +79,7 @@ function AlleleVisual(_obj, _attrName) {
     var attrChangeType = []; //current,remove,add
     var attrChangeColor = [];
 
-    var deltaBars = new HBoxFixedChildren();
+    var deltaBars = new VBox();
 
     self.added = function() {
         self.base.addChild(deltaBars);
@@ -97,6 +91,11 @@ function AlleleVisual(_obj, _attrName) {
 
         deltaBars.clear();
 
+        var plusBars = new HBoxFixedChildren();
+        var negBars = new HBoxFixedChildren();
+
+        var addedPlus = false;
+        var addedNeg = false;
         for (var group in obj.genes.alleles) {
             var allele = obj.genes.alleles[group];
 
@@ -104,11 +103,49 @@ function AlleleVisual(_obj, _attrName) {
                 if (key != attrName) continue;
 
                 var replacing = alleleToCompare && alleleToCompare.group == group;
-                deltaBars.add(new DeltaBar(allele, attrName, replacing ? "remove" : "current"));
+                var deltaType = replacing ? "remove" : "current";
+
+                if (allele.delta[attrName] > 0) {
+                    plusBars.add(new DeltaBar(allele, attrName, deltaType));
+                    addedPlus = true;
+                } else {
+                    negBars.add(new DeltaBar(allele, attrName, deltaType));
+                    addedNeg = true;
+                }
             }
         }
 
-        deltaBars.add(new Button("t"));
+        if (addedPlus) {
+            plusBars.add(new FakeDrawObject(
+            function (pen, rect) {
+                rect = rect.largestSquare().origin(new Vector(0, 0));
+                var vertLine = new Rect(0.5, 0.1, 0, 0.8).project(rect);
+                DRAW.line(pen, vertLine.origin(),
+                               new Vector(vertLine.right(), vertLine.bottom()),
+                               "Blue",
+                               2);
+                var horiLine = new Rect(0.1, 0.5, 0.8, 0).project(rect);
+                DRAW.line(pen, horiLine.origin(),
+                               new Vector(horiLine.right(), horiLine.bottom()),
+                               "Blue",
+                               2);
+            }, true, new Rect(0, 0, 20, 20)), 0);
+        }
+
+        if (addedNeg) {
+            negBars.add(new FakeDrawObject(
+            function (pen, rect) {
+                rect = rect.largestSquare().origin(new Vector(0, 0));
+                var horiLine = new Rect(0.2, 0.5, 0.6, 0).project(rect);
+                DRAW.line(pen, horiLine.origin(),
+                               new Vector(horiLine.right(), horiLine.bottom()),
+                               "Blue",
+                               2);
+            }, true, new Rect(0, 0, 20, 20)), 0);
+        }
+
+        deltaBars.add(plusBars);
+        deltaBars.add(negBars);
 
         self.base.dirty();
     }
@@ -119,12 +156,8 @@ function AlleleVisual(_obj, _attrName) {
         self.base.dirty();
     }
 
-    self.redraw = function (canvas) {
-        var pen = canvas.ctx();
-    }
-
     self.optimalHeight = function () {
-        return 20;
+        return deltaBars.optimalHeight();
     }
 }
 
@@ -145,14 +178,14 @@ function AttributeInfo(_attrHolder, _attrName) {
     var infoParts = new HBox();
     var ourLayout = new PaddingControl(
                      infoParts,
-                     new Rect(0, 0, 0, 0),
-                     new Rect(0, 0.4, 0, 0)
+                     new Rect(0, 10, 0, 0),
+                     new Rect(0, 0, 0, 0)
                   );
 
     self.added = function () {
         infoParts.add(attrNameLabel);
         infoParts.add(alleleInfo);
-        infoParts.add(attrValueLabel);
+        infoParts.add(attrValueLabel, 30);
 
         self.base.addChild(ourLayout);
     }
@@ -199,7 +232,7 @@ function AttributeInfo(_attrHolder, _attrName) {
     }
 
     self.optimalHeight = function (width) {
-        return ourLayout.optimalHeight(width);
+        return 40; //ourLayout.optimalHeight(width);
     }
 }
 
