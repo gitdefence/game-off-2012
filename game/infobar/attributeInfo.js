@@ -137,7 +137,7 @@ function AlleleVisual(_obj, _attrName) {
             negBars.add(new FakeDrawObject(
             function (pen, rect) {
                 //A negative sign
-                rect = rect.largestSquare().origin(new Vector(0, 0));
+                rect = rect.largestSquare();
                 var horiLine = new Rect(0.2, 0.5, 0.6, 0).project(rect);
                 DRAW.line(pen, horiLine.origin(),
                                new Vector(horiLine.right(), horiLine.bottom()),
