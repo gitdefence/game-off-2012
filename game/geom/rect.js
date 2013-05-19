@@ -1,6 +1,6 @@
 var Rect = (function () {
     function Rect(x, y, w, h) {
-        if (!assertDefined("Rect", x, y, w, h)) {
+        if (!assertValid("Rect", x, y, w, h)) {
             x = 0;
             y = 0;
             w = 1;

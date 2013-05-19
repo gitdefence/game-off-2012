@@ -41,7 +41,7 @@ function Infobar(pos) {
     function redoObjLayout(obj) {
         //Don't set the obj to null, set noDisplayObject and then call updateDisplay.
         //This is much more efficient.
-        if (!assertDefined(obj)) {
+        if (!assertValid(obj)) {
             return;
         }
 

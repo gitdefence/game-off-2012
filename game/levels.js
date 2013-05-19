@@ -107,3 +107,18 @@ var baseLevel = {
         },
     ],
 };
+
+if(DFlag.lateGameSpeedTest) {
+
+baseLevel = {
+            waves: [
+            {
+                //The array should really be a object with the names the allele names
+                50: baseBugAlleles,
+                waveTime: 10,
+                spawnDelay: 0.2,
+                attributeModifier: 2
+            }
+        ]
+    };
+}

@@ -47,7 +47,7 @@ function Tower_Connection(t1, t2) {
         delta.sub(t1.tpos.center());
         delta.mult(1/2);
 
-        if (!assertDefined(width, height)) {
+        if (!assertValid(width, height)) {
             width = 1;
             height = 1;
         }
@@ -263,7 +263,7 @@ function Tower() {
             this.tpos.h = totalWidth * 2;
         }
 
-        assertDefined(this.tpos.x, this.tpos.y, this.tpos.w, this.tpos.h);
+        assertValid(this.tpos.x, this.tpos.y, this.tpos.w, this.tpos.h);
 
         this.lineWidth = outerWidth;
     }

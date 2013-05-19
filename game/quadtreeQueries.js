@@ -4,7 +4,7 @@ function findAllWithinDistanceToRect(engine, type, targetRect, maxDistance) {
         return null;
     }
 
-    if (!assertDefined("findAllWithinDistanceToRect", engine, type, targetRect)) {
+    if (!assertValid("findAllWithinDistanceToRect", engine, type, targetRect)) {
         return null;
     }
 
@@ -46,7 +46,7 @@ function findClosestToRect(engine, type, targetRect, maxDistance) {
         return null;
     }
 
-    if (!assertDefined("findClosestToPoint", engine, type, targetRect)) {
+    if (!assertValid("findClosestToPoint", engine, type, targetRect)) {
         return null;
     }
 
@@ -91,7 +91,7 @@ function findClosestToPoint(engine, type, target, maxDistance) {
         return null;
     }
 
-    if (!assertDefined("findClosestToPoint", engine, type, target)) {
+    if (!assertValid("findClosestToPoint", engine, type, target)) {
         return null;
     }
 
@@ -156,7 +156,7 @@ function findAllWithin(engine, type, target, maxDistance) {
         return null;
     }
 
-    if (!assertDefined("findAllWithin", engine, type, target)) {
+    if (!assertValid("findAllWithin", engine, type, target)) {
         return null;
     }
 

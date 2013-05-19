@@ -152,7 +152,7 @@ function getSortedKeys(array) {
 
 //If given an object it turns a random key from it
 function pickRandom(array) {
-    if(!assertDefined(array.length))
+    if(!assertValid(array.length))
         return;
 
     return array[Math.floor(Math.random() * array.length)];
@@ -170,7 +170,7 @@ function pickRandomKey(object) {
 //an answer from stack overlow...
 //http://stackoverflow.com/questions/8177964/in-javascript-how-can-i-set-rgba-without-specifying-the-rgb
 function setAlpha(color, newAlpha) {
-    if (!assertDefined(color, newAlpha))
+    if (!assertValid(color, newAlpha))
         return;
     return color.replace(/[^,]+(?=\))/, newAlpha);
 }

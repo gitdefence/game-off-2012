@@ -73,7 +73,7 @@ function AlphaDecay(lifetime, startAlpha, endAlpha) {
 
     this.currentTime = 0;
 
-    if (!assertDefined(lifetime) || lifetime == 0) {
+    if (!assertValid(lifetime) || lifetime == 0) {
         lifetime = 1;
     }
     

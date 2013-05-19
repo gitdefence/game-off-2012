@@ -13,7 +13,7 @@ function applyAttack(attackTemplate) {
     var baseAttacker = attackTemplate.baseAttacker;
     var attackObjs = baseAttacker.attr.attackObjs;
 
-    if(!assertDefined(target, attacker, damage, baseAttacker, attackObjs))
+    if(!assertValid(target, attacker, damage, baseAttacker, attackObjs))
         return;
 
     if(isNaN(target.attr.hp)) {
@@ -57,10 +57,10 @@ function applyAttack(attackTemplate) {
 }
 
 function startAttack(attackTemplate) {
-    if(!assertDefined(attackTemplate))
+    if(!assertValid(attackTemplate))
         return;
 
-    if(!assertDefined(attackTemplate.attacker))
+    if(!assertValid(attackTemplate.attacker))
         return;
 
     if(attackTemplate.damage < 0)
@@ -73,7 +73,7 @@ function startAttack(attackTemplate) {
     var attacker = attackTemplate.attacker;
     var prevTarget = attackTemplate.target;
 
-    if (!assertDefined(realAttacker.attr.targetStrategy)) {
+    if (!assertValid(realAttacker.attr.targetStrategy)) {
         attackTemplate.target = realAttacker.attr.targetStrategy.run(attacker, prevTarget);
     } else {
         attackTemplate.target = new targetStrategies.Random().run(attacker, prevTarget);

@@ -31,15 +31,15 @@ function Genes() {
     }
 
     self.addAllele = function (allele) {
-        if (!assertDefined(allele))
+        if (!assertValid(allele))
             return;
 
         var holder = self.base.parent;
 
-        if (!assertDefined(holder))
+        if (!assertValid(holder))
             return;
 
-        if (!assertDefined(allele.delta, allele.group))
+        if (!assertValid(allele.delta, allele.group))
             return;
 
         var group = allele.group;

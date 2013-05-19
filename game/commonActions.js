@@ -162,6 +162,11 @@ function SlowEffect(magnitude) {
 function MotionDelay(start, end, time, callback) {
     this.base = new BaseObj(this);
 
+    if (!assertVector(start) || !assertVector(end)) {
+        //Stop right away, so never set the tpos
+        time = -1;
+    }
+
     this.start = start;
     this.end = end;
     this.time = time;

@@ -6,7 +6,7 @@
 function FakeDrawObject(drawFnc, cachable, offsetRect, reqSize) {
     var self = this;
 
-    if (!assertDefined(drawFnc)) {
+    if (!assertValid(drawFnc)) {
         drawFnc = function () { };
     }
 

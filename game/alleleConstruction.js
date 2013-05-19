@@ -4,7 +4,7 @@ function Allele(group, delta) {
     this.apply = function (target) {
         for (var key in delta) {
             var curChange = delta[key];
-            if (!assertDefined(curChange))
+            if (!assertValid(curChange))
                 continue;
 
             if (defined(target.attr[key])) {

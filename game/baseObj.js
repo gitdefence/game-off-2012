@@ -1,7 +1,7 @@
 BaseObj.nextUniqueId = 1;
 function BaseObj(holder, zindex, dynamicZIndex) {
     var self = this;
-    if (!assertDefined("BaseObj", holder))
+    if (!assertValid("BaseObj", holder))
         return;
 
     //Strange... but needed
@@ -57,7 +57,7 @@ function BaseObj(holder, zindex, dynamicZIndex) {
     //This just makes easier to maintain our arrays. It doesn't really create them,
     //so array and arrayLengths must still be members initialized in our constructor
     function addToArray(BaseObj, obj, array, arrayLengths) {
-        if (!assertDefined("addToArray", BaseObj, BaseObj[array], BaseObj[arrayLengths], obj, obj.base))
+        if (!assertValid("addToArray", BaseObj, BaseObj[array], BaseObj[arrayLengths], obj, obj.base))
             return;
 
         if (!BaseObj[array][obj.base.type]) {
@@ -72,7 +72,7 @@ function BaseObj(holder, zindex, dynamicZIndex) {
     };
 
     self.addChild = function (obj) {
-        if (!assertDefined("addChild", obj) || !assertDefined("addChild", obj.base))
+        if (!assertValid("addChild", obj) || !assertValid("addChild", obj.base))
             return;
 
         obj.base.parent = self.holder;
@@ -85,8 +85,8 @@ function BaseObj(holder, zindex, dynamicZIndex) {
     };
 
     function removeFromArray(BaseObj, obj, array, arrayLengths) {
-        if (!assertDefined(BaseObj) ||
-            !assertDefined("removeFromArray", BaseObj, BaseObj[array], BaseObj[arrayLengths], obj, obj.base))
+        if (!assertValid(BaseObj) ||
+            !assertValid("removeFromArray", BaseObj, BaseObj[array], BaseObj[arrayLengths], obj, obj.base))
             return;
 
         if (!BaseObj[array][obj.base.type])
@@ -109,7 +109,7 @@ function BaseObj(holder, zindex, dynamicZIndex) {
     };
 
     self.removeChild = function (obj) {
-        if (!assertDefined("removeChild", obj, obj.base))
+        if (!assertValid("removeChild", obj, obj.base))
             return;
 
         //Set its root node to itself to let it know we are no longer its parent
@@ -147,7 +147,7 @@ function BaseObj(holder, zindex, dynamicZIndex) {
     };
 
     self.setRootNode = function (rootNode) {
-        if (!assertDefined("setRootNode", rootNode))
+        if (!assertValid("setRootNode", rootNode))
             return;
 
         //Remove stuff from old rootNode

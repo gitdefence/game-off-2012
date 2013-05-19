@@ -87,7 +87,8 @@ var AllAlleleGroups = {
             1: { attSpeed: 0.5 },
         }); },
 
-    attack1: function () { return choose(
+    attack1: function () { if(DFlag.lateGameSpeedTest) return {attack: allAttackTypes.DOT};
+        return choose(
         {
             0.166: { attack: allAttackTypes.Laser },
             0.333: { attack: allAttackTypes.Bullet },
@@ -97,7 +98,8 @@ var AllAlleleGroups = {
             1.0: { attack: allAttackTypes.Slow },
         }); },
 
-    targetBase: function () { return choose(
+    targetBase: function () { if(DFlag.lateGameSpeedTest) {target: targetStrategies.Random};
+        return choose(
         {
             0.333: { target: targetStrategies.Closest },
             0.666: { target: targetStrategies.Random },
@@ -107,7 +109,8 @@ var AllAlleleGroups = {
 
 //BONUS ATTACKS
 //Bonus attack or damage bonus
-    attack2: function () { return choose(
+    attack2: function () { if(DFlag.lateGameSpeedTest) return {attack: allAttackTypes.DOT};
+        return choose(
         {
             //0.760: { damage: 10 },
             0.800: { attack: allAttackTypes.Laser },
@@ -118,7 +121,8 @@ var AllAlleleGroups = {
             1.000: { attack: allAttackTypes.Slow },
         }); },
 //Bonus attack or attack speed bonus
-    attack3: function () { return choose(
+    attack3: function () { if(DFlag.lateGameSpeedTest) return {attack: allAttackTypes.DOT};
+        return choose(
         {
             //0.800: { attSpeed: 2 },
             0.840: { attack: allAttackTypes.Bullet },

@@ -1,6 +1,6 @@
 ink = {
     circ: function (x, y, r, pen) {
-        if (!assertDefined(x, y, r, pen))
+        if (!assertValid(x, y, r, pen))
             return;
         
         pen.beginPath();
@@ -10,7 +10,7 @@ ink = {
         pen.stroke();
     },
     outlineCirc: function (x, y, r, pen) {
-        if (!assertDefined(x, y, r, pen))
+        if (!assertValid(x, y, r, pen))
             return;
         
         pen.beginPath();
@@ -19,7 +19,7 @@ ink = {
         pen.stroke();
     },
     tri: function (x, y, width, height, pen) {
-        if (!assertDefined(x, y, width, height, pen))
+        if (!assertValid(x, y, width, height, pen))
             return;
         
         pen.beginPath();
@@ -32,7 +32,7 @@ ink = {
         pen.stroke();
     },
     rect: function (x, y, width, height, pen) {
-        if (!assertDefined(x, y, width, height, pen))
+        if (!assertValid(x, y, width, height, pen))
             return;
         
         pen.beginPath();
@@ -43,7 +43,7 @@ ink = {
         pen.stroke();
     },
     outlineRect: function (x, y, width, height, pen) {
-        if (!assertDefined(x, y, width, height, pen))
+        if (!assertValid(x, y, width, height, pen))
             return;
         
         pen.beginPath();
@@ -58,7 +58,7 @@ ink = {
         pen.stroke();
     },
     line: function (x1, y1, x2, y2, pen) {
-        if (!assertDefined(x1, y1, x2, y2, pen, pen.strokeStyle))
+        if (!assertValid(x1, y1, x2, y2, pen, pen.strokeStyle))
             return;
         
         pen.beginPath();
@@ -68,7 +68,7 @@ ink = {
         pen.stroke();
     },
     arrow: function (x1, y1, x2, y2, pen) {
-        if (!assertDefined(x1, y1, x2, y2, pen, pen.strokeStyle))
+        if (!assertValid(x1, y1, x2, y2, pen, pen.strokeStyle))
             return;
         
         //http://stackoverflow.com/questions/808826/draw-arrow-on-canvas-tag
@@ -87,7 +87,7 @@ ink = {
             pen.stroke();
     },
     arrowHead: function (x1, y1, x2, y2, pen) {
-        if (!assertDefined(x1, y1, x2, y2, pen, pen.strokeStyle))
+        if (!assertValid(x1, y1, x2, y2, pen, pen.strokeStyle))
             return;
         
         //http://stackoverflow.com/questions/808826/draw-arrow-on-canvas-tag
@@ -106,7 +106,7 @@ ink = {
             pen.stroke();
     },
     text: function (x, y, text, pen) {
-        if (!assertDefined(x, y, text, pen))
+        if (!assertValid(x, y, text, pen))
             return;
         
         pen.beginPath();
@@ -116,7 +116,7 @@ ink = {
         pen.fill();
     },
     cenText: function (x, y, text, pen) {
-        if (!assertDefined(x, y, text, pen))
+        if (!assertValid(x, y, text, pen))
             return;
         
         this.text(x - pen.measureText(text).width / 2, y, text, pen);

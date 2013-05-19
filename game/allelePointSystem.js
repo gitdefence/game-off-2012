@@ -189,6 +189,8 @@ function AllelePointSystem(pos) {
         addToExtraInfo(allele, 1);
     }
 
+    var testFreePoints = DFlag.lateGameSpeedTest ? 1000 : 0;
+
     //Kind of hackish, but there is no selection changed system right now.
     var towerSelected = true;
     self.update = function () {
@@ -205,6 +207,18 @@ function AllelePointSystem(pos) {
         if (!towerSelected) {
             self.base.addChild(vbox);
             towerSelected = true;
+        }
+
+        if (DFlag.lateGameSpeedTest) {
+            if (testFreePoints > 0) {
+                buyPoints(testFreePoints, 0);
+                testFreePoints = 0;
+            }
+
+            if (selected.allelesGenerated.length > 0) {
+                doAutoTrash();
+                spendPoint();
+            }
         }
 
         pointIndicator.text("Allele Points: " + selected.allelesGenerated.length);

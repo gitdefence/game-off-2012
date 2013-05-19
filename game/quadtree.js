@@ -38,7 +38,7 @@ function QuadTree(arrObjs, splitThreshold) {
     //This will cause undefined behaviour is given object is not in
     //our quadtree, or never has been removed from a quadtree.
     this.removeFromTree = function (obj) {
-        if (!assertDefined("removeFromTree", obj, obj.base))
+        if (!assertValid("removeFromTree", obj, obj.base))
             return;
 
         if (!obj.tpos || !obj.base.quadNode)
@@ -48,7 +48,7 @@ function QuadTree(arrObjs, splitThreshold) {
     };
 
     this.addToTree = function (obj) {
-        if (!assertDefined("addToTree", obj, obj.base))
+        if (!assertValid("addToTree", obj, obj.base))
             return;
 
         if (!obj.tpos)
