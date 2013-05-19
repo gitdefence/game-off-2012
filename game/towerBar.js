@@ -143,7 +143,7 @@ function Towerbar() {
                 var tower = new Tower();
 
                 if (forDisplay) {
-                    tower.attr.attackTypes = [];
+                    tower.attr.attackObjs = [];
                     for (var alleleGroup in tower.genes.alleles) {
                         if (tower.genes.alleles[alleleGroup].delta.attack) {
                             delete tower.genes.alleles[alleleGroup];

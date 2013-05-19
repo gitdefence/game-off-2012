@@ -75,7 +75,7 @@ function Genes() {
     self.replaceAlleles = function (newAlleles) {
         var holder = self.base.parent;
         holder.attr.targetStrategy = null;
-        holder.attr.attackTypes = {};
+        holder.attr.attackObjs = {};
 
         self.startAlleleAdd();
 

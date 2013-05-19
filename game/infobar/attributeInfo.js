@@ -277,7 +277,7 @@ function AttributeInfos(_obj) {
 
         var numAttrs = 0;
         for (var attr in obj.attr) {
-            if (attr == "targetStrategy" || attr == "attackTypes") continue;
+            if (attr == "targetStrategy" || attr == "attackObjs") continue;
 
             //Temporary screening until we remove them
             if (attr == "upload" || attr == "download" || attr == "hitCount" || attr == "kills" || attr == "value") continue;

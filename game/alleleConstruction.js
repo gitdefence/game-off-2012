@@ -11,7 +11,7 @@ function Allele(group, delta) {
                 target.attr[key] += curChange;
             } else if (key == "attack") {
                 //attack type
-                target.attr.attackTypes[group] = new curChange();
+                target.attr.attackObjs[group] = new curChange();
             } else if (key == "target") {
                 //target strategy
                 target.attr.targetStrategy = new curChange();

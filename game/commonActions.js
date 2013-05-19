@@ -25,11 +25,11 @@ function AttackCycle() {
             this.attackCounter = 0;
 
             var attacker = this.base.parent;
-            var attackTypes = attacker.attr.attackTypes;
+            var attackObjs = attacker.attr.attackObjs;
 
-            var attackKeys = getSortedKeys(attackTypes);
+            var attackKeys = getSortedKeys(attackObjs);
             if (attackKeys.length > 0) {
-                startAttack(new AttackTemplate(attackTypes[attackKeys[0]], attacker, null, attacker.attr.damage, attacker, attackKeys[0]));
+                startAttack(new AttackTemplate(attackObjs[attackKeys[0]], attacker, null, attacker.attr.damage, attacker, attackKeys[0]));
             }
         }
     };

@@ -169,7 +169,7 @@ function Tower() {
             value: TowerStats.value
         };
         this.attr.targetStrategy = new targetStrategies.Closest();
-        this.attr.attackTypes = {};
+        this.attr.attackObjs = {};
     };
     this.setBaseAttrs();
 
@@ -204,7 +204,7 @@ function Tower() {
     this.generateAllele = function () {
         var genAllGroup = pickRandomKey(AllAlleleGroups);
 
-        if (DFlag.attackTypesDebug) {
+        if (DFlag.attackObjsDebug) {
             genAllGroup = choose({
                 0.3: "attack1",
                 0.6: "attack2",
