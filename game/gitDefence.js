@@ -119,7 +119,7 @@ function GitDefence(pos) {
     this.select = function (object) {
         if (object && object.attr) {
             selection = object;
-            this.infobar.updateAttr(object);
+            this.infobar.redoObjLayout(selection);
         } else {
             this.unselect(selection);
         }
@@ -129,6 +129,6 @@ function GitDefence(pos) {
         if (object !== selection) return;
         selection = null;
 
-        this.infobar.updateAttr(selection);
+        this.infobar.redoObjLayout(selection);
     }
 }

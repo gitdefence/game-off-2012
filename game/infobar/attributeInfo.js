@@ -118,6 +118,7 @@ function AlleleVisual(_obj, _attrName) {
         if (addedPlus) {
             plusBars.add(new FakeDrawObject(
             function (pen, rect) {
+            //A plus sign
                 rect = rect.largestSquare().origin(new Vector(0, 0));
                 var vertLine = new Rect(0.5, 0.1, 0, 0.8).project(rect);
                 DRAW.line(pen, vertLine.origin(),
@@ -135,6 +136,7 @@ function AlleleVisual(_obj, _attrName) {
         if (addedNeg) {
             negBars.add(new FakeDrawObject(
             function (pen, rect) {
+            //A negative sign
                 rect = rect.largestSquare().origin(new Vector(0, 0));
                 var horiLine = new Rect(0.2, 0.5, 0.6, 0).project(rect);
                 DRAW.line(pen, horiLine.origin(),
@@ -183,29 +185,30 @@ function AttributeInfo(_attrHolder, _attrName) {
                   );
 
     self.added = function () {
-        infoParts.add(attrNameLabel);
+        infoParts.add(attrNameLabel, 50);
         infoParts.add(alleleInfo);
-        infoParts.add(attrValueLabel, 30);
+        infoParts.add(attrValueLabel, 40);
 
         self.base.addChild(ourLayout);
     }
 
     function getAlleleDelta(alleleToCompare) {
+        if (!alleleToCompare) return 0;
+
         var alleleDelta = 0;
-        if (alleleToCompare) {
-            function addToDelta(allele, factor) {
-                var change = allele.delta[attrName] || 0;
 
-                alleleDelta += change * factor;
-            }
+        function addToDelta(allele, factor) {
+            var change = allele.delta[attrName] || 0;
 
-            //If we had it added, indicate that it is being replaced
-            if (attrHolder.genes.alleles[alleleToCompare.group])
-                addToDelta(attrHolder.genes.alleles[alleleToCompare.group], -1);
-
-            //Indicate we are adding the allele
-            addToDelta(alleleToCompare, 1);
+            alleleDelta += change * factor;
         }
+
+        //If we had it added, indicate that it is being replaced
+        if (attrHolder.genes.alleles[alleleToCompare.group])
+            addToDelta(attrHolder.genes.alleles[alleleToCompare.group], -1);
+
+        //Indicate we are adding the allele
+        addToDelta(alleleToCompare, 1);
 
         return alleleDelta;
     }
@@ -214,10 +217,20 @@ function AttributeInfo(_attrHolder, _attrName) {
         attrNameLabel.text(formatToDisplay(attrName)).align("left");
         alleleInfo.updateInfo(alleleToCompare);
 
-        var numberToDisplay = round(attrHolder.attr[attrName], 2) + "";
+        var value = attrHolder.attr[attrName];
+
+        //Don't show a decimal point, unless the |number| is < 10.
+        var numberToDisplay = Math.abs(value) < 10 ?
+                                round(value, 1) + "" :
+                                round(value, 0) + "";
 
         var prevAlleleDelta = getAlleleDelta(alleleToCompare);
+        
         if (prevAlleleDelta != 0) {
+            var prevAlleleDelta = Math.abs(prevAlleleDelta) < 10 ?
+                                    round(prevAlleleDelta, 1) + "" :
+                                    round(prevAlleleDelta, 0) + "";
+
             numberToDisplay = "(" + prevAlleleDelta + ") " + numberToDisplay;
         }
 
@@ -236,14 +249,14 @@ function AttributeInfo(_attrHolder, _attrName) {
     }
 }
 
-function AttributeInfos(_obj, _topAllele) {
+function AttributeInfos(_obj) {
     var self = this;
     self.base = new BaseObj(self, 14);
 
     self.tpos = new Rect(0, 0, 1, 1);
 
     var obj = _obj;
-    var topAllele = _topAllele;
+    var deltaAllele = null;
 
     var attrBox = new FlowLayout();
     var attrHeader = new Label().text("Attributes").maxFontSize(20);
@@ -269,7 +282,7 @@ function AttributeInfos(_obj, _topAllele) {
             if (attr == "upload" || attr == "download" || attr == "hitCount" || attr == "kills" || attr == "value") continue;
 
             attrInfos[attr] = new AttributeInfo(obj, attr);
-            attrInfos[attr].updateValue(topAllele);
+            attrInfos[attr].updateValue(deltaAllele);
             attrBox.add(attrInfos[attr]);
         }
 
@@ -283,10 +296,26 @@ function AttributeInfos(_obj, _topAllele) {
 
     self.updateAttribute = function (attrName) {
         if (attrInfos[attrName]) {
-            attrInfos[attrName].updateValue(topAllele);
+            attrInfos[attrName].updateValue(deltaAllele);
         }
 
-        attrBox.resize(self.tpos);
+        self.base.dirty();
+    }
+
+    self.updateAllAttributes = function () {
+        for (var attrName in attrInfos) {
+            attrInfos[attrName].updateValue(deltaAllele);
+        }
+
+        self.base.dirty();
+    }
+
+    self.updateDeltaAllele = function (deltaAllele) {
+        for (var attrName in attrInfos) {
+            attrInfos[attrName].updateValue(deltaAllele);
+        }
+
+        self.base.dirty();
     }
 
     self.optimalHeight = function (width) {

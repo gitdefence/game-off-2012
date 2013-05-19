@@ -4,6 +4,8 @@ function AllelePointSystem(pos) {
     self.base = new BaseObj(self, 15);
     self.tpos = pos;
 
+    var obj = null;
+
     var vbox;
     var autoTrashButton;
     var pointIndicator;
@@ -56,10 +58,8 @@ function AllelePointSystem(pos) {
         }
 
         if (newTopAllele) {
-            selected.genes.topAllele(selected.allelesGenerated[0] || null);
+            game.infobar.updateDeltaAllele(selected);
         }
-
-        game.infobar.updateAttr(selected);
     }
 
     function spendPoint() {
@@ -112,6 +112,24 @@ function AllelePointSystem(pos) {
                 selected.allelesGenerated.splice(0, 1);
                 selected.genes.recalculateAttributes();
             }
+        }
+    }
+
+    var hover = false;
+    self.mouseenter = function () {
+        hover = true;
+        updateDeltaAlleleDisplay(obj);
+    }
+    self.mouseout = function () {
+        hover = false;
+        updateDeltaAlleleDisplay(obj);
+    }
+
+    self.updateDeltaAlleleDisplay = function (obj) {
+        obj = obj;
+
+        if (getGame(this)) {
+            getGame(this).infobar.updateDeltaAllele(obj);
         }
     }
 

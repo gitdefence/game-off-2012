@@ -46,30 +46,27 @@ function Infobar(pos) {
             self.base.addChild(selectSomethingPrompt);
         }
 
-        if(self.tpos) self.resize(self.tpos);
+        self.base.dirty();
     }
 
     var attrInfos = null;
     self.obj = null;
-    self.updateAttr = function (obj) {
+
+    //Sets the current obj to obj, and redoes the layout for the object.
+    self.redoObjLayout = function (obj) {
         self.obj = obj;
 
         if (self.obj) {
             attributeVBox.clear();
 
-            var topAllele = null;
-            if (hover) {
-                topAllele = obj.allelesGenerated && obj.allelesGenerated[0];
-            }
-
-            attrInfos = new AttributeInfos(obj, topAllele);
+            attrInfos = new AttributeInfos(obj, null);
             attributeVBox.add(attrInfos);
 
-            var targetStrats = new TargetStrategiesVisual(obj, topAllele);
+            var targetStrats = new TargetStrategiesVisual(obj, null);
             attributeVBox.add(targetStrats);
-            attributeVBox.add(new AttackTypesVisual(obj, topAllele));
+            attributeVBox.add(new AttackTypesVisual(obj, null));
 
-            attributeVBox.resize(self.tpos);
+            allelePoints.updateDeltaAllele(obj);
         }
 
         updateDisplay();
@@ -77,27 +74,43 @@ function Infobar(pos) {
 
     //This happens a lot, so we don't want to do the expensive layout.
     self.updateAttribute = function (attrName) {
-        if (attrInfos) {
-            attrInfos.updateAttribute(attrName);
-        }
+        if (!attrInfos) 
+
+        attrInfos.updateAttribute(attrName);
     }
 
-    self.update = function () {
-        //self.updateAttr(self.obj);
+    self.updateAllAttributes = function () {
+        if (!attrInfos) return;
+
+        attrInfos.updateAllAttributes();
+    }
+
+    //Called from allelePointSystem, and from us.
+    self.updateDeltaAllele = function (newObj) {
+        //If newObj == null then it means we are clearing the delta display.
+        if (!(obj == newObj || newObj == null)) {
+            fail("Call redoObjLayout if you want to redo the layout!");
+        }
+
+        if (!attrInfos) return;
+        
+        var deltaAllele = newObj && newObj.allelesGenerated && newObj.allelesGenerated[0];
+
+        attrInfos.updateDeltaAllele(deltaAllele);
     }
 
     self.mousemove = function () {
-        if (!hover) {
-            hover = true;
-            self.updateAttr(self.obj);
-        }
+        if (!hover) return;
+
+        hover = true;
+        self.updateDeltaAllele(self.obj);
     }
 
     self.mouseout = function () {
-        if (hover) {
-            hover = false;
-            self.updateAttr(self.obj);
-        }
+        if (!hover) return;
+
+        hover = false;
+        self.updateDeltaAllele(self.obj);
     }
 
     self.sellTower = function() {

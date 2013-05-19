@@ -1,70 +1,40 @@
 function Genes() {
-    this.base = new BaseObj(this);
-    this.tpos = new Rect(0, 0, 0, 0);
+    var self = this;
+    self.base = new BaseObj(self);
+    self.tpos = new Rect(0, 0, 0, 0);
 
-    this.alleles = {};
+    self.alleles = {};
 
 
     var addingAlleles = false;
-    this.startAlleleAdd = function() {
+    self.startAlleleAdd = function() {
         addingAlleles = true;
     }
-    this.endAlleleAdd = function() {
+    self.endAlleleAdd = function() {
         addingAlleles = false;
-        this.recalculateAttributes();
+        self.recalculateAttributes();
     }
 
-    //Can't think of the best place to have this logic.
-    //This place kind of makes sense, the genes kinda know
-    //they are being displayed, so they try to inform who
-    //is displaying them when they changed.
-    this.updateInfoBarAttributes = function () {
-        var game = getGame(this);
+    //If we are selected, causes
+    function updateInfoBarAttributes () {
+        var game = getGame(self);
 
-        var parent = this.base.parent;
+        var parent = self.base.parent;
 
         if (!parent || !game) return;
 
         //If our parent is selected, we are probably
         //being displayed
         if (game.selection() == parent) {
-            game.infobar.updateAttr(parent);
+            game.infobar.updateAllAttributes();
         }
     }
 
-    //Get/setter for the next allele the user can use on this tower.
-    //They can trash the allele or use it, but they won't know what to
-    //do until we show them what the allele is. We do this by displaying
-    //information on top of the tower's statistics, so we need to expose
-    //a way for the infobar to get at the allele is should be displaying.
-    //This can of course return null if there is no next allele.
-    //Calls updateInfoBarAttributes when you change the next allele, so
-    //you don't have to.
-    var topAllele = null;
-
-    var hideTopAlleleVar = false;
-    this.hideTopAllele = function (newValue) {
-        hideTopAlleleVar = newValue;
-
-        this.updateInfoBarAttributes();
-    }
-    this.topAllele = function (newTopAllele) {
-        if (newTopAllele === undefined) {
-            if (hideTopAlleleVar) return null;
-
-            return topAllele;
-        }
-
-        topAllele = newTopAllele;
-
-        this.updateInfoBarAttributes();
-    }
-
-    this.addAllele = function (allele) {
+    self.addAllele = function (allele) {
         if (!assertDefined(allele))
             return;
 
-        var holder = this.base.parent;
+        var holder = self.base.parent;
 
         if (!assertDefined(holder))
             return;
@@ -74,20 +44,20 @@ function Genes() {
 
         var group = allele.group;
 
-        this.alleles[group] = allele;
+        self.alleles[group] = allele;
         if(!addingAlleles)
-            this.recalculateAttributes();
+            self.recalculateAttributes();
     };
 
     //This function is required, in case (which we really should for attack types) we
     //want to have alleles which apply a percentage change. If we do this, we also need
     //to make the alleles always applied in the same order.
-    this.recalculateAttributes = function () {
-        var holder = this.base.parent;
+    self.recalculateAttributes = function () {
+        var holder = self.base.parent;
         holder.setBaseAttrs();
 
-        for (var key in this.alleles) {
-            this.alleles[key].apply(holder);
+        for (var key in self.alleles) {
+            self.alleles[key].apply(holder);
         }
         holder.attr.hp = holder.attr.maxHp;
 
@@ -98,21 +68,21 @@ function Genes() {
             holder.attr.range = 1; 
         }
 
-        this.updateInfoBarAttributes();
+        updateInfoBarAttributes();
     }
 
     //Should only be called if you are fully replacing the targeting strategy and attack types
-    this.replaceAlleles = function (newAlleles) {
-        var holder = this.base.parent;
+    self.replaceAlleles = function (newAlleles) {
+        var holder = self.base.parent;
         holder.attr.targetStrategy = null;
         holder.attr.attackTypes = {};
 
-        this.startAlleleAdd();
+        self.startAlleleAdd();
 
         for (var group in newAlleles) {
-            this.addAllele(newAlleles[group]);
+            self.addAllele(newAlleles[group]);
         }
 
-        this.endAlleleAdd();
+        self.endAlleleAdd();
     };
 }
