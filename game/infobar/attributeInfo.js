@@ -1,10 +1,18 @@
 var curAlleleHover = null;
 
+//Indexed by allele, inside is an array of DeltaBars.
+//Maintained by DeltaBar, and should only be modifed
+//to call dirty on DeltaBars, and to reset it.
+var deltaBarGroups = {};
+
 //deltaType is current, remove or add
 function DeltaBar(allele, attrName, deltaType) {
     var self = this;
     self.base = new BaseObj(self, 11);
     self.tpos = new Rect(0, 0, 0, 0);
+
+    deltaBarGroups[allele] = deltaBarGroups[allele] || [];
+    deltaBarGroups[allele].push(self);
 
     self.resize = function (rect) {
         self.tpos = rect;
@@ -14,10 +22,10 @@ function DeltaBar(allele, attrName, deltaType) {
     self.redraw = function (canvas) {
         var pen = canvas.ctx();
 
-        var rect = self.tpos.origin(new Vector(0, 0));
+        var rect = self.tpos.clone().origin(new Vector(0, 0));
 
         if (!allele.color) {
-            allele.color = hsla(Math.random() * 360, 70, 80, 1).str();
+            allele.color = "transparent";// hsla(Math.random() * 360, 70, 80, 1).str();
         }
 
         if (curAlleleHover == allele) {
@@ -30,8 +38,20 @@ function DeltaBar(allele, attrName, deltaType) {
 
     function redrawDeltaBars() {
         //Kindaof hackish, make our grandparent dirty.
-        self.base.parent.base.parent.base.dirty();
+        var ourGroups = deltaBarGroups[allele];
+        for (var ix = 0; ix < ourGroups.length; ix++) {
+            ourGroups[ix].base.dirty();
+        }
+        self.base.dirty();
     }
+
+    self.mousemove = function () {
+        hover = true;
+        self.base.dirty();
+    };
+    self.mouseup = function () {
+        down = false;
+    };
 
     self.mouseenter = function () {
         curAlleleHover = allele;
@@ -200,6 +220,8 @@ function AttributeInfos(_obj, _topAllele) {
     var attrInfos = {};
 
     self.added = function (rect) {
+        deltaBarGroups = {};
+
         attrBox.add(new PaddingControl(
                     attrHeader,
                     new Rect(0, 0, 0, 0),

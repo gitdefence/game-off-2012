@@ -91,6 +91,25 @@ function GitDefence(pos) {
                 hue += 20;
             }
         }
+
+        var hue = 0;
+        function shadeBoxesRecursive(boxes, alpha) {
+            for (var childKey in boxes) {
+                var child = boxes[childKey];
+                if (child.tpos) {
+                    DRAW.rect(pen, child.tpos, hsla(hue, 50, 50, alpha).str());
+                    hue += 20;
+                }
+                for (var type in child.base.children) {
+                    shadeBoxesRecursive(child.base.children[type], alpha * 1.2);
+                }
+            }
+        }
+        if (DFlag.quadtree.shadeBoxes) {
+            for (var type in engine.base.children) {
+                shadeBoxesRecursive(engine.base.children[type], 0.05);
+            }
+        }
     }
 
     this.selection = function () {

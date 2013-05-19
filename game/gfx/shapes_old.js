@@ -70,8 +70,12 @@ function AlphaDecay(lifetime, startAlpha, endAlpha) {
     this.lifetime = lifetime;
     this.startAlpha = startAlpha;
     this.endAlpha = endAlpha;
-    
+
     this.currentTime = 0;
+
+    if (!assertDefined(lifetime) || lifetime == 0) {
+        lifetime = 1;
+    }
     
     this.update = function (dt) {
         this.currentTime += dt;

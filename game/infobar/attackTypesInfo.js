@@ -42,7 +42,7 @@ function AttackTypesVisual(obj, alleleToCompare) {
     self.added = function () {
         self.base.addChild(ourLayout);
 
-        ourLayout.add(new BufferedControl(
+        ourLayout.add(new PaddingControl(
                 typesLabel,
                 new Rect(0, 0, 0, 0),
                 new Rect(0, 1, 0, 0)
@@ -81,7 +81,7 @@ function AttackTypesVisual(obj, alleleToCompare) {
                             .text(attackTypeTitle)
                             .maxFontSize(16));
 
-            ourLayout.add(new BufferedControl(
+            ourLayout.add(new PaddingControl(
                     typeTitle,
                     new Rect(0, 8, 0, 2),
                     new Rect(0, 0.15, 0, 0.05)
@@ -106,7 +106,7 @@ function AttackTypesVisual(obj, alleleToCompare) {
                                     .color("white")
                                 );
 
-                ourLayout.add(new BufferedControl(
+                ourLayout.add(new PaddingControl(
                         typeDivider,
                         new Rect(0, 0, 0, 0),
                         new Rect(0, 0.4, 0, 0)
