@@ -72,7 +72,7 @@ function AttackVisual(attackObj, delta) {
     }
 }
 
-function AttackObjsVisual(obj) {
+function AttackObjsVisual(attackObjs, title) {
     var self = this;
 
     self.base = new BaseObj(self, 10);
@@ -87,8 +87,6 @@ function AttackObjsVisual(obj) {
         ourLayout.clear();
 
         ourLayout.add(typesLabel);
-
-        var attackObjs = obj.attr.attackObjs;
 
         var attackKeys = getSortedKeys(attackObjs);
 
@@ -116,7 +114,6 @@ function AttackObjsVisual(obj) {
             ourLayout.add(new AttackVisual(new curAlleleToCompare.delta.attack(), "+"));
         }
 
-        //self.resize(self.tpos);
         self.base.dirty();
     }
 
@@ -139,6 +136,10 @@ function AttackObjsVisual(obj) {
 
     self.updateAttackInfo = function () {
         redoAttackObjLayout(alleleToCompare);
+    }
+
+    self.updateAttackObjs = function (newAttackObjs) {
+        attackObjs = newAttackObjs;
     }
 
     self.optimalHeight = function (width) {

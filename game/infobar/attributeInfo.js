@@ -150,6 +150,11 @@ function AlleleVisual(obj, attrName) {
         self.base.dirty();
     }
 
+    self.updateObj = function (newObj) {
+        obj = newObj;
+        self.updateInfo(null);
+    }
+
     self.resize = function (rect) {
         self.tpos = rect;
         deltaBars.resize(rect);
@@ -239,6 +244,11 @@ function AttributeInfo(attrHolder, attrName) {
         ourLayout.resize(rect);
     }
 
+    self.updateObj = function (obj) {
+        attrHolder = obj;
+        alleleInfo.updateObj(obj);
+    }
+
     self.optimalHeight = function (width) {
         return 40; //ourLayout.optimalHeight(width);
     }
@@ -312,6 +322,16 @@ function AttributeInfos(obj) {
         self.resize(self.tpos);
 
         self.base.dirty();
+    }
+
+    self.updateObject = function (newObj) {
+        obj = newObj;
+
+        for (var attrName in attrInfos) {
+            attrInfos[attrName].updateObj(newObj);
+        }
+
+        self.updateAllAttributes();
     }
 
     self.optimalHeight = function (width) {

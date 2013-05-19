@@ -16,7 +16,7 @@ function Infobar(pos) {
     var attributeVBox = new FlowLayout();
 
     var attrInfos = null;
-    var obj = null;
+    var prevObj = null;
     var attackObjsVisual = null;
 
     var hover = false;
@@ -31,26 +31,31 @@ function Infobar(pos) {
 
         outerVBox.add(attributeVBox);
         outerVBox.add(allelePoints, 220);
-    };
-
-    //Sets the current obj to obj, and redoes the layout for the object.
-    self.redoObjLayout = function (newObj) {
-        obj = newObj;
-
-        if (obj) {
-            attributeVBox.clear();
-
-            attrInfos = new AttributeInfos(obj, null);
-            attributeVBox.add(attrInfos);
-
-            var targetStrats = new TargetStrategiesVisual(obj, null);
-            attributeVBox.add(targetStrats);
-
-            attackObjsVisual = new AttackObjsVisual(obj, null);
-            attributeVBox.add(attackObjsVisual);
-        }
 
         updateDisplay();
+    };
+
+    //This takes an object so we can do the layout once for an object, and then
+    //not have to do it again when displaying the same object.
+    function redoObjLayout(obj) {
+        //Don't set the obj to null, set noDisplayObject and then call updateDisplay.
+        //This is much more efficient.
+        if (!assertDefined(obj)) {
+            return;
+        }
+
+        attributeVBox.clear();
+
+        attrInfos = new AttributeInfos(obj, null);
+        attributeVBox.add(attrInfos);
+
+        var targetStrats = new TargetStrategiesVisual(obj, null);
+        attributeVBox.add(targetStrats);
+
+        attackObjsVisual = new AttackObjsVisual(obj.attr.attackObjs, null);
+        attributeVBox.add(attackObjsVisual);
+
+        self.resize(self.tpos);
 
         self.updateDeltaAllele(obj);
     }
@@ -61,17 +66,46 @@ function Infobar(pos) {
         self.tpos = rect;
     }
 
+    var noDisplayObject = true;
     function updateDisplay() {
         self.base.removeAllChildren();
 
-        if (obj) {
+        if (!noDisplayObject) {
             self.base.addChild(outerVBox);
         } else {
             self.base.addChild(selectSomethingPrompt);
         }
 
         //Causes the underlying layout to be redone.
-        self.resize(self.tpos);
+        if (self.tpos) {
+            self.resize(self.tpos);
+        }
+    }
+
+    self.updateDisplayObj = function (newObj) {
+        if (newObj == null) {
+            //This is an optimization, it allows us to almost never have to
+            //actually redo our layout.
+            noDisplayObject = true;
+            updateDisplay();
+            return;
+        }
+
+        noDisplayObject = false;
+
+        if (prevObj && getRealType(newObj) == getRealType(prevObj)) {
+            //If its the same type, we can just update the attributes.
+            prevObj = newObj;
+            attrInfos.updateObject(newObj);
+            self.updateDeltaAllele(newObj);
+            attackObjsVisual.updateAttackObjs(newObj.attr.attackObjs);
+            self.updateAllAttributes();
+        } else {
+            prevObj = newObj;
+            redoObjLayout(newObj);
+        }
+
+        updateDisplay();
     }
 
     //This happens a lot, so we don't want to do the expensive layout.
@@ -93,7 +127,7 @@ function Infobar(pos) {
     //Called from allelePointSystem, and from us.
     self.updateDeltaAllele = function (newObj) {
         //If newObj == null then it means we are clearing the delta display.
-        if (!(obj == newObj || newObj == null)) {
+        if (!(prevObj == newObj || newObj == null)) {
             fail("Call redoObjLayout if you want to redo the layout!");
         }
 
@@ -105,23 +139,5 @@ function Infobar(pos) {
         attackObjsVisual.updateDeltaAllele(deltaAllele);
 
         self.resize(self.tpos);
-    }
-
-    self.mousemove = function () {
-        if (!hover) return;
-
-        hover = true;
-        self.updateDeltaAllele(obj);
-    }
-
-    self.mouseout = function () {
-        if (!hover) return;
-
-        hover = false;
-        self.updateDeltaAllele(obj);
-    }
-
-    self.sellTower = function() {
-        obj.base.destroySelf();
     }
 }
