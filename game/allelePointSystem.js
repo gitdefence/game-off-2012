@@ -189,10 +189,23 @@ function AllelePointSystem(pos) {
         addToExtraInfo(allele, 1);
     }
 
+    //Kind of hackish, but there is no selection changed system right now.
+    var towerSelected = true;
     self.update = function () {
         var selected = self.base.game().selection();
 
-        if (!selected || !selected.allelesGenerated) return;
+        if (!selected || !selected.allelesGenerated) {
+            if (towerSelected) {
+                self.base.removeChild(vbox);
+            }
+            towerSelected = false;
+            return;
+        }
+
+        if (!towerSelected) {
+            self.base.addChild(vbox);
+            towerSelected = true;
+        }
 
         pointIndicator.text("Allele Points: " + selected.allelesGenerated.length);
 
