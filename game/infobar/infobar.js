@@ -68,9 +68,9 @@ function Infobar(pos) {
                                     new Rect(0, 0, 0, 0)
                                 ));
 
-        self.resize(self.tpos);
-
         self.updateDeltaAllele(obj);
+
+        self.base.dirtyLayout();
     }
 
     self.resize = function (rect) {
@@ -79,32 +79,30 @@ function Infobar(pos) {
         self.tpos = rect;
     }
 
-    var noDisplayObject = true;
+    var selectedObject = null;
     function updateDisplay() {
         self.base.removeAllChildren();
 
-        if (!noDisplayObject) {
+        if (selectedObject) {
             self.base.addChild(outerVBox);
         } else {
             self.base.addChild(selectSomethingPrompt);
         }
 
         //Causes the underlying layout to be redone.
-        if (self.tpos) {
-            self.resize(self.tpos);
-        }
+        self.base.dirtyLayout();
     }
 
     self.updateDisplayObj = function (newObj) {
         if (newObj == null) {
             //This is an optimization, it allows us to almost never have to
             //actually redo our layout.
-            noDisplayObject = true;
+            selectedObject = null;
             updateDisplay();
             return;
         }
 
-        noDisplayObject = false;
+        selectedObject = newObj;
 
         if (prevObj && getRealType(newObj) == getRealType(prevObj)) {
             //If its the same type, we can just update the attributes.
@@ -141,7 +139,9 @@ function Infobar(pos) {
         //Our attributes number on the otherhand cannot change, so we can just update them
         attrInfos.updateAllAttributes();
 
-        self.resize(self.tpos);
+        //This is unfortunate, it would be nice if we didn't need to relayout attrInfos,
+        //but its size may depend on attackObjsVisual targetStrats 
+        self.base.dirtyLayout();
     }
 
     //Called from allelePointSystem, and from us.
@@ -159,6 +159,8 @@ function Infobar(pos) {
         attackObjsVisual.updateDeltaAllele(deltaAllele);
         targetStrats.updateDeltaAllele(deltaAllele);
 
-        self.resize(self.tpos);
+        //This is unfortunate, it would be nice if we didn't need to relayout attrInfos,
+        //but its size may depend on attackObjsVisual targetStrats 
+        self.base.dirtyLayout();
     }
 }

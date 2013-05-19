@@ -146,7 +146,7 @@ function AlleleVisual(obj, attrName) {
         deltaBars.add(plusBars);
         deltaBars.add(negBars);
 
-        self.resize(self.tpos);
+        self.base.dirtyLayout();
         self.base.dirty();
     }
 
@@ -319,7 +319,7 @@ function AttributeInfos(obj) {
             attrInfos[attrName].updateValue(deltaAllele);
         }
 
-        self.resize(self.tpos);
+        //self.resize(self.tpos);
 
         self.base.dirty();
     }

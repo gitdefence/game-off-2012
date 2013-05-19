@@ -252,9 +252,20 @@ function BaseObj(holder, zindex, dynamicZIndex) {
         drawDirty = true;
     }
 
+    //If the layout is dirty we call resize(tpos) before draw is called next
+    var layoutDirty = false;
+    self.dirtyLayout = function () {
+        layoutDirty = true;
+    }
+
     var canvas = new Canvas();
     function draw(pen) {
         if (holder.hidden) return;
+
+        if(layoutDirty) {
+            holder.resize(holder.tpos);
+            layoutDirty = false;
+        }
 
         if (holder.draw) {
             // Provide the old API for compatability.
