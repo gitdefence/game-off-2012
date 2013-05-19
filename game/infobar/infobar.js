@@ -40,23 +40,24 @@ function Infobar(pos) {
     function updateDisplay() {
         self.base.removeAllChildren();
 
-        if (self.obj) {
+        if (obj) {
             self.base.addChild(outerVBox);
         } else {
             self.base.addChild(selectSomethingPrompt);
         }
 
-        self.base.dirty();
+        //Causes the underlying layout to be redone.
+        self.resize(self.tpos);
     }
 
     var attrInfos = null;
-    self.obj = null;
+    var obj = null;
 
     //Sets the current obj to obj, and redoes the layout for the object.
-    self.redoObjLayout = function (obj) {
-        self.obj = obj;
+    self.redoObjLayout = function (newObj) {
+        obj = newObj;
 
-        if (self.obj) {
+        if (obj) {
             attributeVBox.clear();
 
             attrInfos = new AttributeInfos(obj, null);
@@ -66,7 +67,7 @@ function Infobar(pos) {
             attributeVBox.add(targetStrats);
             attributeVBox.add(new AttackTypesVisual(obj, null));
 
-            allelePoints.updateDeltaAllele(obj);
+            self.updateDeltaAllele(obj);
         }
 
         updateDisplay();
@@ -103,17 +104,17 @@ function Infobar(pos) {
         if (!hover) return;
 
         hover = true;
-        self.updateDeltaAllele(self.obj);
+        self.updateDeltaAllele(obj);
     }
 
     self.mouseout = function () {
         if (!hover) return;
 
         hover = false;
-        self.updateDeltaAllele(self.obj);
+        self.updateDeltaAllele(obj);
     }
 
     self.sellTower = function() {
-        self.obj.base.destroySelf();
+        obj.base.destroySelf();
     }
 }
