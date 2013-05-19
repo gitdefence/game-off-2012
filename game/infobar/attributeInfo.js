@@ -119,7 +119,7 @@ function AlleleVisual(_obj, _attrName) {
             plusBars.add(new FakeDrawObject(
             function (pen, rect) {
                 //A plus sign
-                //rect = rect.largestSquare().origin(new Vector(0, 0));
+                rect = rect.largestSquare();
                 var vertLine = new Rect(0.5, 0.1, 0, 0.8).project(rect);
                 DRAW.line(pen, vertLine.origin(),
                                new Vector(vertLine.right(), vertLine.bottom()),
