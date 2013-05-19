@@ -521,6 +521,7 @@ function Tower() {
                         return;
 
                 var conn = new Tower_Connection(this, towerSelected);
+
                 this.base.addChild(conn);
                 this.connections.push(conn);
                 towerSelected.connections.push(conn);

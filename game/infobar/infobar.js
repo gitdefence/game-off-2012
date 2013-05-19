@@ -110,10 +110,11 @@ function Infobar(pos) {
             //If its the same type, we can just update the attributes.
             prevObj = newObj;
             attrInfos.updateObject(newObj);
-            self.updateDeltaAllele(newObj);
+
             attackObjsVisual.updateAttackObjs(newObj.attr.attackObjs);
             targetStrats.updateAttackObjs({ target: newObj.attr.targetStrategy });
-            self.updateAllAttributes();
+
+            self.updateDeltaAllele(newObj);
         } else {
             prevObj = newObj;
             redoObjLayout(newObj);
