@@ -207,7 +207,7 @@ function Tower() {
         if (DFlag.attackObjsDebug) {
             genAllGroup = choose({
                 0.3: "attack1",
-                0.6: "attack2"
+                0.6: "attack2",
                 1: "attack3"
             });
         } else if (DFlag.targetObjsDebug) {
