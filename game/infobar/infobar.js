@@ -73,7 +73,7 @@ function Infobar(pos) {
 
     //This happens a lot, so we don't want to do the expensive layout.
     self.updateAttribute = function (attrName) {
-        if (!attrInfos) 
+        if (!attrInfos) return;
 
         attrInfos.updateAttribute(attrName);
     }
