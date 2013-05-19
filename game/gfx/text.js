@@ -151,6 +151,8 @@ function Text() {
     var rect;
     var usedHeight = 0;
     self.resize = function (newRect) {
+        if (!assertRectangle(newRect)) return;
+
         rect = newRect;
         curFontSize = fontSize;
 

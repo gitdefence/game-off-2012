@@ -88,7 +88,7 @@ function AlleleVisual(_obj, _attrName) {
             }
         }
 
-        deltaBars.add(new Button().text("t"));
+        deltaBars.add(new Button("t"));
 
         self.base.dirty();
     }
@@ -230,6 +230,8 @@ function AttributeInfos(_obj, _topAllele) {
         if (attrInfos[attrName]) {
             attrInfos[attrName].updateValue(topAllele);
         }
+
+        attrBox.resize(self.tpos);
     }
 
     self.optimalHeight = function (width) {
