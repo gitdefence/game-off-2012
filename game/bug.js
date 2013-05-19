@@ -77,7 +77,7 @@ function Bug(startPath) {
 
         var game = getGame(this);
         if (game && this == game.selection()) {
-            game.infobar.updateAttribute("currentHp");
+            game.infobar.updateAttribute("hp");
         }
     }
 

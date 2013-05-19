@@ -7,6 +7,6 @@ loadScripts('ui/', [
     'hbox',
     'hboxFixed',
     'flowLayout',
-    'bufferedControl',
+    'paddingControl',
     'fakeDrawObject'
 ]);

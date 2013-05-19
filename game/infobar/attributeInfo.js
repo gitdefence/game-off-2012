@@ -123,7 +123,7 @@ function AttributeInfo(_attrHolder, _attrName) {
                             .color("white");
 
     var infoParts = new HBox();
-    var ourLayout = new BufferedControl(
+    var ourLayout = new PaddingControl(
                      infoParts,
                      new Rect(0, 0, 0, 0),
                      new Rect(0, 0.4, 0, 0)
@@ -200,7 +200,7 @@ function AttributeInfos(_obj, _topAllele) {
     var attrInfos = {};
 
     self.added = function (rect) {
-        attrBox.add(new BufferedControl(
+        attrBox.add(new PaddingControl(
                     attrHeader,
                     new Rect(0, 0, 0, 0),
                     new Rect(0, 0.5, 0, 0)

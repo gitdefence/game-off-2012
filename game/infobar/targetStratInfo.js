@@ -29,7 +29,7 @@ function TargetStrategiesVisual(obj, alleleToCompare) {
         self.base.addChild(ourLayout);
 
         var strategyLabel = new Label().text("Target Strategy").maxFontSize(20);
-        ourLayout.add(new BufferedControl(
+        ourLayout.add(new PaddingControl(
                 strategyLabel,
                 new Rect(0, 0, 0, 0),
                 new Rect(0, 1, 0, 0)
@@ -48,7 +48,7 @@ function TargetStrategiesVisual(obj, alleleToCompare) {
 
             typeTitle.add(new Label().text(textToDisplay).maxFontSize(16));
 
-            ourLayout.add(new BufferedControl(
+            ourLayout.add(new PaddingControl(
                     typeTitle,
                     new Rect(0, 8, 0, 2),
                     new Rect(0, 0.15, 0, 0.05)
