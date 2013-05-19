@@ -39,7 +39,7 @@ function TargetStrategiesVisual(obj, alleleToCompare) {
             var targetObj = targetStrategies[ix];
 
             var typeTitle = new HBox();
-            typeTitle.add(new FakeDrawObject(targetObj.strat.drawGlyph, false), 20);
+            typeTitle.add(new FakeDrawObject(targetObj.strat.drawGlyph, true, true), 20);
 
             var textToDisplay = formatToDisplay(getRealType(targetObj.strat));
             if (targetObj.delta.length > 0) {

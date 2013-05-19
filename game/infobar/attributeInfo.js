@@ -130,7 +130,7 @@ function AlleleVisual(_obj, _attrName) {
                                new Vector(horiLine.right(), horiLine.bottom()),
                                "Blue",
                                2);
-            }, true, new Rect(0, 0, 20, 20)), 0);
+            }, true, true, new Rect(0, 0, 20, 20)), 0);
         }
 
         if (addedNeg) {
@@ -143,7 +143,7 @@ function AlleleVisual(_obj, _attrName) {
                                new Vector(horiLine.right(), horiLine.bottom()),
                                "Blue",
                                2);
-            }, true, new Rect(0, 0, 20, 20)), 0);
+            }, true, true, new Rect(0, 0, 20, 20)), 0);
         }
 
         deltaBars.add(plusBars);

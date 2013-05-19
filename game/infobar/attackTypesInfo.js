@@ -68,7 +68,7 @@ function AttackTypesVisual(obj, alleleToCompare) {
 
             var typeTitle = new HBox();
 
-            typeTitle.add(new FakeDrawObject(attackType.drawGlyph, false), 20);
+            typeTitle.add(new FakeDrawObject(attackType.drawGlyph, true, true), 20);
 
             var attackTypeTitle = formatToDisplay(getRealType(attackType));
             if (delta.length > 0) {
