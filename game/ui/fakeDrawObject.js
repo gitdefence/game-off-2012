@@ -6,6 +6,10 @@
 function FakeDrawObject(drawFnc, cachable, offsetRect, reqSize) {
     var self = this;
 
+    if (!assertDefined(drawFnc)) {
+        drawFnc = function () { };
+    }
+
     self.base = new BaseObj(self, 11);
     self.tpos = new Rect(0, 0, 0, 0);
 

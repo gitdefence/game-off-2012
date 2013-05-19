@@ -18,6 +18,7 @@ function Infobar(pos) {
     var attrInfos = null;
     var prevObj = null;
     var attackObjsVisual = null;
+    var targetStrats = null;
 
     var hover = false;
 
@@ -47,13 +48,25 @@ function Infobar(pos) {
         attributeVBox.clear();
 
         attrInfos = new AttributeInfos(obj, null);
-        attributeVBox.add(attrInfos);
+        attributeVBox.add(new PaddingControl(
+                                    attrInfos,
+                                    new Rect(0, 0, 0, 10),
+                                    new Rect(0, 0, 0, 0)
+                                ));
 
-        var targetStrats = new TargetStrategiesVisual(obj, null);
-        attributeVBox.add(targetStrats);
+        targetStrats = new NestedObjsVisual({targetStrat: obj.attr.targetStrategy}, "Target Strategy", "target");
+        attributeVBox.add(new PaddingControl(
+                                    targetStrats,
+                                    new Rect(0, 10, 0, 10),
+                                    new Rect(0, 0, 0, 0)
+                                ));
 
-        attackObjsVisual = new AttackObjsVisual(obj.attr.attackObjs, null);
-        attributeVBox.add(attackObjsVisual);
+        attackObjsVisual = new NestedObjsVisual(obj.attr.attackObjs, "Attack Types", "attack");
+        attributeVBox.add(new PaddingControl(
+                                    attackObjsVisual,
+                                    new Rect(0, 10, 0, 10),
+                                    new Rect(0, 0, 0, 0)
+                                ));
 
         self.resize(self.tpos);
 
@@ -99,6 +112,7 @@ function Infobar(pos) {
             attrInfos.updateObject(newObj);
             self.updateDeltaAllele(newObj);
             attackObjsVisual.updateAttackObjs(newObj.attr.attackObjs);
+            targetStrats.updateAttackObjs({ targetStrat: newObj.attr.targetStrategy });
             self.updateAllAttributes();
         } else {
             prevObj = newObj;
@@ -118,8 +132,13 @@ function Infobar(pos) {
     self.updateAllAttributes = function () {
         if (!attrInfos) return;
 
+        attackObjsVisual.updateAttackObjs(prevObj.attr.attackObjs);
+        targetStrats.updateAttackObjs({ targetStrat: prevObj.attr.targetStrategy });
+
+        //Possibly should not call of of these.
         attrInfos.updateAllAttributes();
         attackObjsVisual.updateAttackInfo();
+        targetStrats.updateAttackInfo();
 
         self.resize(self.tpos);
     }
@@ -137,6 +156,7 @@ function Infobar(pos) {
 
         attrInfos.updateDeltaAllele(deltaAllele);
         attackObjsVisual.updateDeltaAllele(deltaAllele);
+        targetStrats.updateDeltaAllele(deltaAllele);
 
         self.resize(self.tpos);
     }

@@ -1,6 +1,10 @@
 function AttackVisual(attackObj, delta) {
     var self = this;
 
+    if (jQuery.isFunction(attackObj)) {
+        fail("No, pass in an instance of an attackType, not the attackType.");
+    }
+
     self.base = new BaseObj(self, 10);
 
     var ourLayout = new FlowLayout();
@@ -72,17 +76,18 @@ function AttackVisual(attackObj, delta) {
     }
 }
 
-function AttackObjsVisual(attackObjs, title) {
+function NestedObjsVisual(attackObjs, title, deltaName) {
     var self = this;
 
     self.base = new BaseObj(self, 10);
 
     var ourLayout = new FlowLayout();
 
-    var typesLabel = new Label().text("Attack Types").maxFontSize(20);
+    var typesLabel = new Label().text(title).maxFontSize(20);
 
     var alleleToCompare = null;
 
+    var prevAlleleAttackType = false;
     function redoAttackObjLayout(curAlleleToCompare) {
         ourLayout.clear();
 
@@ -91,7 +96,7 @@ function AttackObjsVisual(attackObjs, title) {
         var attackKeys = getSortedKeys(attackObjs);
 
         //Ignore it if it isn't an attack
-        if (curAlleleToCompare && !curAlleleToCompare.delta.attack) {
+        if (curAlleleToCompare && !curAlleleToCompare.delta[deltaName]) {
             curAlleleToCompare = null;
         }
 
@@ -104,14 +109,14 @@ function AttackObjsVisual(attackObjs, title) {
             }
             ourLayout.add(new AttackVisual(attackObj, deltaDisplay));
             if (deltaDisplay) {
-                ourLayout.add(new AttackVisual(new curAlleleToCompare.delta.attack(), "+"));
+                ourLayout.add(new AttackVisual(new curAlleleToCompare.delta[deltaName](), "+"));
                 curAlleleToCompare = null;
             }
         }
 
         //If we haven't added it yet, add it at the end.
         if (curAlleleToCompare) {
-            ourLayout.add(new AttackVisual(new curAlleleToCompare.delta.attack(), "+"));
+            ourLayout.add(new AttackVisual(new curAlleleToCompare.delta[deltaName](), "+"));
         }
 
         self.base.dirty();
@@ -130,8 +135,18 @@ function AttackObjsVisual(attackObjs, title) {
 
     self.updateDeltaAllele = function (newAlleleToCompare) {
         alleleToCompare = newAlleleToCompare;
-        //We could probably do this more efficiently...
-        redoAttackObjLayout(alleleToCompare);
+
+        if (!newAlleleToCompare || !newAlleleToCompare.delta[deltaName]) {
+            if (prevAlleleAttackType) {
+                prevAlleleAttackType = false;
+                redoAttackObjLayout(alleleToCompare);
+            }
+        } else {
+            if (!prevAlleleAttackType) {
+                prevAlleleAttackType = true;
+                redoAttackObjLayout(alleleToCompare);
+            }
+        }
     }
 
     self.updateAttackInfo = function () {

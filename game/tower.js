@@ -210,7 +210,10 @@ function Tower() {
                 0.6: "attack2",
                 1: "attack3"
             });
+        } else if (DFlag.targetObjsDebug) {
+            genAllGroup = "targetBase";
         }
+
 
         var alleleGenerated = new Allele(genAllGroup, AllAlleleGroups[genAllGroup]());
         this.allelesGenerated.push(alleleGenerated);
