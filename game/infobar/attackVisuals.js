@@ -7,9 +7,9 @@ Infobar.AttackObjVisual = function AttackObjVisual(attackObj, delta) {
 
     self.base = new BaseObj(self, 10);
 
-    var ourLayout = new FlowLayout();
+    var ourLayout = new ui.FlowLayout();
 
-    var typeLabel = new Label();
+    var typeLabel = new ui.Label();
 
     function attackTitle() {
         var attackObjTitle = formatToDisplay(getRealType(attackObj));
@@ -22,14 +22,14 @@ Infobar.AttackObjVisual = function AttackObjVisual(attackObj, delta) {
     self.added = function () {
         self.base.addChild(ourLayout);
 
-        var typeTitle = new HBox();
+        var typeTitle = new ui.HBox();
         typeTitle.add(new FakeDrawObject(attackObj.drawGlyph, true, true), 20);
 
         typeLabel.maxFontSize(16).text(attackTitle());
 
         typeTitle.add(typeLabel);
 
-        ourLayout.add(new PaddingControl(typeTitle)
+        ourLayout.add(new ui.PaddingControl(typeTitle)
                         .constantBuffer(new Rect(0, 8, 0, 2))
                         .percentBuffer(new Rect(0, 0.15, 0, 0.05)));
 
@@ -38,22 +38,22 @@ Infobar.AttackObjVisual = function AttackObjVisual(attackObj, delta) {
             var value = attackObj[type];
             if (typeof value != "number") continue;
 
-            var typeDivider = new HBox();
+            var typeDivider = new ui.HBox();
 
-            typeDivider.add(new Label()
+            typeDivider.add(new ui.Label()
                                     .text(formatToDisplay(type))
                                     .align("left")
                                     .maxFontSize(12)
                                     .color("white")
                                 );
-            typeDivider.add(new Label()
+            typeDivider.add(new ui.Label()
                                     .text(formatToDisplay(value + ""))
                                     .align("right")
                                     .maxFontSize(12)
                                     .color("white")
                                 );
 
-            ourLayout.add(new PaddingControl(typeDivider)
+            ourLayout.add(new ui.PaddingControl(typeDivider)
                             .percentBuffer(new Rect(0, 0.4, 0, 0)));
         }
     }
@@ -73,9 +73,9 @@ Infobar.NestedObjsVisual = function NestedObjsVisual(attackObjs, title, deltaNam
 
     self.base = new BaseObj(self, 10);
 
-    var ourLayout = new FlowLayout();
+    var ourLayout = new ui.FlowLayout();
 
-    var typesLabel = new Label().text(title).maxFontSize(20);
+    var typesLabel = new ui.Label().text(title).maxFontSize(20);
 
     var alleleToCompare = null;
 

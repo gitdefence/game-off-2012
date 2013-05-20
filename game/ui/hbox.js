@@ -1,5 +1,5 @@
 // Pack a bunch of UI elements vertically.
-function HBox() {
+ui.HBox = function HBox() {
     this.base = new BaseObj(this, 15);
     this.tpos = new Rect(0, 0, 0, 0);
 
@@ -16,7 +16,7 @@ function HBox() {
         children = [];
         this.base.removeAllChildren();
     }
-    
+
     function calculateWidths(width) {
         var fixedWidth = 0;
         var numSharing = 0;

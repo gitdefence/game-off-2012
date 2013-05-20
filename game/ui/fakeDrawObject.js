@@ -3,7 +3,7 @@
 //cachable defines if the drawFnc can be cached (we exposed redraw instead of draw)
 //If offsetRect is true, we offset the rect given to the drawFnc so its origin is (0, 0).
 //If reqWidth/reqHeight are defined and non-zero then we implement optimalWidth/optimalHeight with each respectively
-function FakeDrawObject(drawFnc, cachable, offsetRect, reqWidth, reqHeight) {
+ui.FakeDrawObject = function FakeDrawObject(drawFnc, cachable, offsetRect, reqWidth, reqHeight) {
     var self = this;
 
     if (!assertValid(drawFnc)) {

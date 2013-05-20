@@ -3,11 +3,11 @@ Infobar.InfobarClass = function InfobarClass() {
     self.base = new BaseObj(self, 14);
     self.tpos = new Rect(0, 0, 1, 1);
 
-    var selectSomethingPrompt = new Label();
+    var selectSomethingPrompt = new ui.Label();
 
     var allelePoints = new AllelePointSystem();
-    var ourLayout = new VBox();
-    var attributeVBox = new FlowLayout();
+    var ourLayout = new ui.VBox();
+    var attributeVBox = new ui.FlowLayout();
 
     var attrInfos = null;
     var prevObj = null;
@@ -40,15 +40,15 @@ Infobar.InfobarClass = function InfobarClass() {
         attributeVBox.clear();
 
         attrInfos = new Infobar.AttributeInfos(obj, null);
-        attributeVBox.add(new PaddingControl(attrInfos)
+        attributeVBox.add(new ui.PaddingControl(attrInfos)
                                     .constantBuffer(new Rect(0, 0, 0, 10)));
 
         targetStrats = new Infobar.NestedObjsVisual({ targetBase: obj.attr.targetStrategy }, "Target Strategy", "target");
-        attributeVBox.add(new PaddingControl(targetStrats)
+        attributeVBox.add(new ui.PaddingControl(targetStrats)
                                     .constantBuffer(new Rect(0, 10, 0, 10)));
 
         attackObjsVisual = new Infobar.NestedObjsVisual(obj.attr.attackObjs, "Attack Types", "attack");
-        attributeVBox.add(new PaddingControl(attackObjsVisual)
+        attributeVBox.add(new ui.PaddingControl(attackObjsVisual)
                                     .constantBuffer(new Rect(0, 10, 0, 10)));
 
         self.updateDeltaAllele(obj);

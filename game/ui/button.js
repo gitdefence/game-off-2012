@@ -1,4 +1,4 @@
-function Button(text, callback) {
+ui.Button = function Button(text, callback) {
     this.tpos = new Rect(0, 0, 0, 0);
     this.base = new BaseObj(this);
 

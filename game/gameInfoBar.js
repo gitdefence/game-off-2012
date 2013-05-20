@@ -4,27 +4,27 @@ function GameInfoBar() {
 
     var oldmoney = 0;
 
-    var hbox = new HBox();
+    var hbox = new ui.HBox();
 
-    var healthIndi = new Label("");
+    var healthIndi = new ui.Label();
     hbox.add(healthIndi);
 
-    var moneyIndi = new Label("");
+    var moneyIndi = new ui.Label();
     hbox.add(moneyIndi);
 
-    var FPSIndi = new Label("");
+    var FPSIndi = new ui.Label();
     hbox.add(FPSIndi);
 
-    var bugIndi = new Label("");
+    var bugIndi = new ui.Label();
     hbox.add(bugIndi);
 
-    var curWaveIndi = new Label("");
+    var curWaveIndi = new ui.Label();
     hbox.add(curWaveIndi);
 
-    var nextLevelTimeIndi = new Label("");
+    var nextLevelTimeIndi = new ui.Label();
     hbox.add(nextLevelTimeIndi);
 
-    gotoNextLevel = new Button("Send Next Wave Now", bind(this, "skipNextLevel"));
+    gotoNextLevel = new ui.Button("Send Next Wave Now", bind(this, "skipNextLevel"));
     hbox.add(gotoNextLevel);
 
     this.base.addChild(hbox);

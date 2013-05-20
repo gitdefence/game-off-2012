@@ -16,7 +16,7 @@ function GameOver() {
         self.base.addChild(new AttributeTween(0, 0.8, 3, null, "alpha"));
     }
 
-    var restartButton = new Button("Restart", bind(window.location, "reload"));
+    var restartButton = new ui.Button("Restart", bind(window.location, "reload"));
     self.addButton = function() {
         restartButton.resize(new Rect(360, 300, 100, 30));
         self.base.addChild(restartButton);

@@ -74,7 +74,7 @@ Infobar.AlleleVisual = function AlleleVisual(obj, attrName) {
     var attrChangeType = []; //current,remove,add
     var attrChangeColor = [];
 
-    var deltaBars = new VBox();
+    var deltaBars = new ui.VBox();
 
     self.added = function () {
         self.base.addChild(deltaBars);
@@ -86,8 +86,8 @@ Infobar.AlleleVisual = function AlleleVisual(obj, attrName) {
 
         deltaBars.clear();
 
-        var plusBars = new HFlowLayout();
-        var negBars = new HFlowLayout();
+        var plusBars = new ui.HFlowLayout();
+        var negBars = new ui.HFlowLayout();
 
         var addedPlus = false;
         var addedNeg = false;
@@ -119,11 +119,11 @@ Infobar.AlleleVisual = function AlleleVisual(obj, attrName) {
         }
 
         //Needed to insure the +/- sign is always the same size.
-        var plusBarWithSymbol = new HBox();
-        var negBarWithSymbol = new HBox();
+        var plusBarWithSymbol = new ui.HBox();
+        var negBarWithSymbol = new ui.HBox();
 
         if (addedPlus) {
-            plusBarWithSymbol.add(new PaddingControl(new Label().text("+"))
+            plusBarWithSymbol.add(new ui.PaddingControl(new ui.Label().text("+"))
                                     .percentBuffer(new Rect(0.1, 0, 0.5, 0)), 14);
         } else {
             plusBarWithSymbol.add(new FakeDrawObject(function () { }, false, false, 14, 14));
@@ -131,7 +131,7 @@ Infobar.AlleleVisual = function AlleleVisual(obj, attrName) {
         plusBarWithSymbol.add(plusBars);
 
         if (addedNeg) {
-            negBarWithSymbol.add(new PaddingControl(new Label().text("-"))
+            negBarWithSymbol.add(new ui.PaddingControl(new ui.Label().text("-"))
                                     .percentBuffer(new Rect(0.1, 0, 0.5, 0)), 14);
         } else {
             negBarWithSymbol.add(new FakeDrawObject(function () { }, false, false, 14, 14));
@@ -163,16 +163,16 @@ Infobar.AttributeInfo = function AttributeInfo(attrHolder, attrName) {
     var self = this;
     self.base = new BaseObj(self, 10);
 
-    var attrNameLabel = new Label()
+    var attrNameLabel = new ui.Label()
                             .maxFontSize(12);
     var alleleInfo = new Infobar.AlleleVisual(attrHolder, attrName);
-    var attrValueLabel = new Label()
+    var attrValueLabel = new ui.Label()
                             .align("right")
                             .maxFontSize(14)
                             .color("white");
 
-    var infoParts = new HBox();
-    var ourLayout = new PaddingControl(infoParts).constantBuffer(new Rect(0, 10, 0, 0));
+    var infoParts = new ui.HBox();
+    var ourLayout = new ui.PaddingControl(infoParts).constantBuffer(new Rect(0, 10, 0, 0));
 
     self.added = function () {
         infoParts.add(attrNameLabel, 70);
@@ -254,8 +254,8 @@ Infobar.AttributeInfos = function AttributeInfos(obj) {
 
     var deltaAllele = null;
 
-    var attrBox = new FlowLayout();
-    var attrHeader = new Label().text("Attributes").maxFontSize(25);
+    var attrBox = new ui.FlowLayout();
+    var attrHeader = new ui.Label().text("Attributes").maxFontSize(25);
 
     var height = 0;
 
@@ -264,7 +264,7 @@ Infobar.AttributeInfos = function AttributeInfos(obj) {
     self.added = function (rect) {
         Infobar.DeltaBar.deltaBarGroups = {};
 
-        attrBox.add(new PaddingControl(attrHeader)
+        attrBox.add(new ui.PaddingControl(attrHeader)
                         .percentBuffer(new Rect(0, 0.3, 0, 0)));
 
         var numAttrs = 0;

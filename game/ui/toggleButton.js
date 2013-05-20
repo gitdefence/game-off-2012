@@ -1,4 +1,4 @@
-function ToggleButton(text, cb) {
+ui.ToggleButton = function ToggleButton(text, cb) {
     this.tpos = new Rect(0, 0, 0, 0);
     this.base = new BaseObj(this, 15);
 

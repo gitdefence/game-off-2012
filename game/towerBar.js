@@ -121,11 +121,11 @@ function Towerbar() {
     this.base = new BaseObj(this, 14);
     this.tpos = new Rect(0, 0, 0, 0);
 
-    var vbox = new VBox();
+    var vbox = new ui.VBox();
     this.base.addChild(vbox);
 
     var towerCost = 50;
-    var costIndicator = new Label("...");
+    var costIndicator = new ui.Label();
     vbox.add(costIndicator);
 
     var attackCombinations = [];

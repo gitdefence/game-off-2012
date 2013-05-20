@@ -1,4 +1,4 @@
-function Label() {
+ui.Label = function Label() {
     var self = this;
     self.tpos = new Rect(0, 0, 0, 0);
     self.base = new BaseObj(self);

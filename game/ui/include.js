@@ -1,4 +1,5 @@
 // Should load all the scripts in this folder
+var ui = {};
 loadScripts('ui/', [
     'button',
     'label',

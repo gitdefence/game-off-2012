@@ -16,31 +16,31 @@ function AllelePointSystem(pos) {
             function cb() {
                 buyPoints(num, totalCost);
             }
-            return new Button(text, cb);
+            return new ui.Button(text, cb);
         }
-        ourLayout = new VBox();
+        ourLayout = new ui.VBox();
         //Don't add it, we wait until something is select to show.
         //self.base.addChild(ourLayout);
 
-        pointIndicator = new Label("");
+        pointIndicator = new ui.Label();
         ourLayout.add(pointIndicator, 28);
 
-        var buyHBox = new HBox();
+        var buyHBox = new ui.HBox();
         ourLayout.add(buyHBox);
         buyHBox.add(pointButton(1, 50));
         buyHBox.add(pointButton(10, 350));
         buyHBox.add(pointButton(100, 2500));
 
-        var spendHBox = new HBox();
+        var spendHBox = new ui.HBox();
         ourLayout.add(spendHBox);
-        spendHBox.add(new Button("Spend Point", spendPoint));
-        spendHBox.add(new Button("Trash Point", trashPoint));
+        spendHBox.add(new ui.Button("Spend Point", spendPoint));
+        spendHBox.add(new ui.Button("Trash Point", trashPoint));
 
         spendHBox.mouseenter = self.mouseenter;
         spendHBox.mouseout = self.mouseout;
 
 
-        autoTrashButton = new ToggleButton("Auto Trash Worse", doAutoTrash);
+        autoTrashButton = new ui.ToggleButton("Auto Trash Worse", doAutoTrash);
         ourLayout.add(autoTrashButton, 28);
     };
 

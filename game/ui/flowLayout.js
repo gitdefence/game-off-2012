@@ -6,7 +6,7 @@
 // We set our size from our children's size.
 // So from our children's perspective our size is dynamic, and
 // their's is fixed.
-function FlowLayout() {
+ui.FlowLayout = function FlowLayout() {
 	this.base = new BaseObj(this);
 	this.tpos = new Rect(0, 0, 0, 0);
 

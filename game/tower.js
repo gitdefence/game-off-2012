@@ -61,7 +61,7 @@ function Tower_Connection(t1, t2) {
     }
 
     this.added = function() {
-        deleteButton = new Button("-", bind(that, "deleteSelf"), 50);
+        deleteButton = new ui.Button("-", bind(that, "deleteSelf"), 50);
 
         this.base.addChild(deleteButton);
         deleteButton.resize(getDeleteButtonPos());

@@ -17,13 +17,13 @@ function GitDefence(pos) {
     this.lastTowerHover = null;
 
 
-    var hbox = new HBox();
+    var hbox = new ui.HBox();
     engine.base.addChild(hbox);
 
     this.towerbar = new Towerbar();
     hbox.add(this.towerbar, 64);
 
-    var vbox = new VBox();
+    var vbox = new ui.VBox();
     hbox.add(vbox);
     this.gameInfoBar = new GameInfoBar();
     vbox.add(this.gameInfoBar, 32);
