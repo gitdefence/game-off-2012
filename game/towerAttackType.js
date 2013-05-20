@@ -33,7 +33,7 @@ function applyAttack(attackTemplate) {
         game.infobar.updateAttribute("hitCount");
     }
 
-    var attackKeys = getSortedKeys(attackObjs);
+    var attackKeys = Object.keys(attackObjs).sort();
     var curAttackIndex = attackKeys.indexOf(attackTemplate.currentAtbox);
 
     var newattackObj = attackObjs[attackKeys[curAttackIndex + 1]];
@@ -643,7 +643,7 @@ function drawAttributes(user, pen) {
 
     glyphArray.push(user.attr.targetStrategy);
 
-    var attackObjKeys = getSortedKeys(user.attr.attackObjs);
+    var attackObjKeys = Object.keys(user.attr.attackObjs).sort();
     for(var key in attackObjKeys)
         glyphArray.push(user.attr.attackObjs[attackObjKeys[key]]);
     

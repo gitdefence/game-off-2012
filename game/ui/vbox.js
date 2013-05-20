@@ -30,8 +30,6 @@ function VBox() {
 
             if (c.forcedHeight) {
                 c.height = c.forcedHeight;
-            } else if (c.getOptimalHeight) {
-                c.height = c.getOptimalHeight();
             }
 
             if (c.height) {
@@ -47,7 +45,7 @@ function VBox() {
         }
         this.tpos = rect;
 
-        var sharedHeight = ~ ~((rect.h - h) / shared);
+        var sharedHeight = ~~((rect.h - h) / shared);
         var y = rect.y;
         for (var i = 0; i < children.length; i++) {
             var c = children[i];

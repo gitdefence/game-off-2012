@@ -25,8 +25,6 @@ function HBox() {
 
             if (c.forcedWidth) {
                 c.width = c.forcedWidth;
-            } else if (c.getOptimalWidth) {
-                c.width = c.getOptimalWidth();
             }
 
             if (c.width) fixedWidth += c.width;

@@ -15,7 +15,7 @@ function Genes() {
         self.recalculateAttributes();
     }
 
-    //If we are selected, causes
+    //If we are selected, causes the infobar to be updated.
     function updateInfoBarAttributes () {
         var game = getGame(self);
 

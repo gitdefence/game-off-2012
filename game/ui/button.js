@@ -7,8 +7,6 @@ function Button(text, callback) {
     var textWrapper = new Text();
     textWrapper.text(text);
 
-    this.optimalWidth = textWrapper.optimalWidth;
-
     this.redraw = function (canvas) {
         var p = new Path();
         var r = this.tpos.clone().origin(new Vector(0, 0)).shrink(1.5);

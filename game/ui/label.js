@@ -16,10 +16,6 @@ function Label() {
         return self;
     }
 
-    self.optimalHeight = function (width) {
-        return textObj.optimalHeight(width);
-    }
-
     function dirtyMethod(method) {
         return function () {
             method.apply(null, arguments);

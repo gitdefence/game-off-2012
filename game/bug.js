@@ -70,14 +70,14 @@ function Bug(startPath) {
 
         if (self.attr.hpRegen > 0) {
             self.attr.hp += self.attr.hpRegen;
-        }
-        if (self.attr.hp > self.attr.maxHp) {
-            self.attr.hp = self.attr.maxHp;
-        }
+            if (self.attr.hp > self.attr.maxHp) {
+                self.attr.hp = self.attr.maxHp;
+            }
 
-        var game = getGame(this);
-        if (game && this == game.selection()) {
-            game.infobar.updateAttribute("hp");
+            var game = getGame(self);
+            if (game && self == game.selection()) {
+                game.infobar.updateAttribute("hp");
+            }
         }
     }
 

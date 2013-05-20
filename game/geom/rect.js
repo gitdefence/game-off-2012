@@ -120,7 +120,7 @@ var Rect = (function () {
         return "Rectangle at (" + this.x + ", " + this.y + ")" + "with size (" + this.w + ", " + this.h + ")";
     }
 
-    //Functions to allow our rectangle to exist in the left, right, top, bottom
+    //Functions to allow our rectangle to exist in the left, top, right, bottom
     //paradigm. Very useful for UI code.
     p.left = function (newLeft) {
         if(newLeft === undefined) {

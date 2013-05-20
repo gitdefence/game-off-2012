@@ -1,17 +1,14 @@
 var curAlleleHover = null;
 
-//Indexed by allele, inside is an array of DeltaBars.
-//Maintained by DeltaBar, and should only be modifed
-//to call dirty on DeltaBars, and to reset it.
-var deltaBarGroups = {};
-
 var curAlleleHue = 0;
 
 //deltaType is current, remove or add
-function DeltaBar(allele, attrName, deltaType) {
+Infobar.DeltaBar = function DeltaBar(allele, attrName, deltaType) {
     var self = this;
     self.base = new BaseObj(self, 11);
     self.tpos = new Rect(0, 0, 0, 0);
+
+    var deltaBarGroups = Infobar.DeltaBar.deltaBarGroups;
 
     deltaBarGroups[allele] = deltaBarGroups[allele] || [];
     deltaBarGroups[allele].push(self);
@@ -32,19 +29,16 @@ function DeltaBar(allele, attrName, deltaType) {
 
         if (curAlleleHover == allele) {
             DRAW.rect(pen, rect, allele.color, 2, "white");
-        }
-        else {
+        } else {
             DRAW.rect(pen, rect, allele.color);
         }
     }
 
     function redrawDeltaBars() {
-        //Kindaof hackish, make our grandparent dirty.
         var ourGroups = deltaBarGroups[allele];
         for (var ix = 0; ix < ourGroups.length; ix++) {
             ourGroups[ix].base.dirty();
         }
-        self.base.dirty();
     }
 
     self.mouseenter = function () {
@@ -64,9 +58,13 @@ function DeltaBar(allele, attrName, deltaType) {
             ) + 3;
     }
 }
+//Indexed by allele, inside is an array of DeltaBars.
+//Maintained by DeltaBar, and should only be modifed
+//to call dirty on DeltaBars, and to reset it.
+Infobar.DeltaBar.deltaBarGroups = {};
 
 //Gives a visual representation for how alleles impact various attributes.
-function AlleleVisual(obj, attrName) {
+Infobar.AlleleVisual = function AlleleVisual(obj, attrName) {
     var self = this;
 
     self.base = new BaseObj(self, 11);
@@ -78,7 +76,7 @@ function AlleleVisual(obj, attrName) {
 
     var deltaBars = new VBox();
 
-    self.added = function() {
+    self.added = function () {
         self.base.addChild(deltaBars);
     }
 
@@ -93,9 +91,10 @@ function AlleleVisual(obj, attrName) {
 
         var addedPlus = false;
         var addedNeg = false;
-        for (var group in obj.genes.alleles) {
-            var allele = obj.genes.alleles[group];
 
+        plusBars.add(new Label().text("+ "));
+
+        function addAlleleDelta(allele) {
             for (var key in allele.delta) {
                 if (key != attrName) continue;
 
@@ -103,17 +102,29 @@ function AlleleVisual(obj, attrName) {
                 var deltaType = replacing ? "remove" : "current";
 
                 if (allele.delta[attrName] > 0) {
-                    plusBars.add(new DeltaBar(allele, attrName, deltaType));
+                    plusBars.add(new Infobar.DeltaBar(allele, attrName, deltaType));
                     addedPlus = true;
                 } else {
-                    negBars.add(new DeltaBar(allele, attrName, deltaType));
+                    negBars.add(new Infobar.DeltaBar(allele, attrName, deltaType));
                     addedNeg = true;
                 }
             }
         }
 
+        for (var group in obj.genes.alleles) {
+            var allele = obj.genes.alleles[group];
+            addAlleleDelta(allele);
+        }
+
+        if (alleleToCompare) {
+            addAlleleDelta(alleleToCompare);
+        }
+
+        /*
         if (addedPlus) {
-            plusBars.add(new FakeDrawObject(
+            
+            
+            plusBars.insert(0, new FakeDrawObject(
             function (pen, rect) {
                 //A plus sign
                 rect = rect.largestSquare().origin(new Vector(0, 0));
@@ -127,11 +138,13 @@ function AlleleVisual(obj, attrName) {
                                new Vector(horiLine.right(), horiLine.bottom()),
                                "Blue",
                                2);
-            }, true, true, new Rect(0, 0, 20, 20)), 0);
+            }, true, true, new Rect(0, 0, 20, 20)));
+            
         }
 
         if (addedNeg) {
-            negBars.add(new FakeDrawObject(
+        
+            negBars.insert(0, new FakeDrawObject(
             function (pen, rect) {
                 //A negative sign
                 rect = rect.largestSquare().origin(new Vector(0, 0));
@@ -140,8 +153,10 @@ function AlleleVisual(obj, attrName) {
                                new Vector(horiLine.right(), horiLine.bottom()),
                                "Blue",
                                2);
-            }, true, true, new Rect(0, 0, 20, 20)), 0);
+            }, true, true, new Rect(0, 0, 20, 20)));
+
         }
+        */
 
         deltaBars.add(plusBars);
         deltaBars.add(negBars);
@@ -161,17 +176,15 @@ function AlleleVisual(obj, attrName) {
         self.base.dirty();
     }
 
-    self.optimalHeight = function () {
-        return deltaBars.optimalHeight();
-    }
+    self.optimalHeight = deltaBars.optimalHeight;
 }
 
-function AttributeInfo(attrHolder, attrName) {
+Infobar.AttributeInfo = function AttributeInfo(attrHolder, attrName) {
     var self = this;
     self.base = new BaseObj(self, 10);
 
     var attrNameLabel = new Label();
-    var alleleInfo = new AlleleVisual(attrHolder, attrName);
+    var alleleInfo = new Infobar.AlleleVisual(attrHolder, attrName);
     var attrValueLabel = new Label()
                             .align("right")
                             .maxFontSize(14)
@@ -226,7 +239,7 @@ function AttributeInfo(attrHolder, attrName) {
 
         var prevAlleleDelta = getAlleleDelta(alleleToCompare);
         
-        if (prevAlleleDelta != 0) {
+        if (prevAlleleDelta) {
             var prevAlleleDelta = Math.abs(prevAlleleDelta) < 10 ?
                                     round(prevAlleleDelta, 1) + "" :
                                     round(prevAlleleDelta, 0) + "";
@@ -254,7 +267,7 @@ function AttributeInfo(attrHolder, attrName) {
     }
 }
 
-function AttributeInfos(obj) {
+Infobar.AttributeInfos = function AttributeInfos(obj) {
     var self = this;
     self.base = new BaseObj(self, 14);
 
@@ -270,7 +283,7 @@ function AttributeInfos(obj) {
     var attrInfos = {};
 
     self.added = function (rect) {
-        deltaBarGroups = {};
+        Infobar.DeltaBar.deltaBarGroups = {};
 
         attrBox.add(new PaddingControl(
                     attrHeader,
@@ -285,7 +298,7 @@ function AttributeInfos(obj) {
             //Temporary screening until we remove them
             if (attr == "upload" || attr == "download" || attr == "hitCount" || attr == "kills" || attr == "value") continue;
 
-            attrInfos[attr] = new AttributeInfo(obj, attr);
+            attrInfos[attr] = new Infobar.AttributeInfo(obj, attr);
             attrInfos[attr].updateValue(deltaAllele);
             attrBox.add(attrInfos[attr]);
         }
@@ -334,7 +347,5 @@ function AttributeInfos(obj) {
         self.updateAllAttributes();
     }
 
-    self.optimalHeight = function (width) {
-        return attrBox.optimalHeight(width);
-    }
+    self.optimalHeight = attrBox.optimalHeight;
 }

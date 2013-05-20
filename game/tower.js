@@ -224,14 +224,15 @@ function Tower() {
 
         if (this.attr.hpRegen > 0) {
             this.attr.hp += this.attr.hpRegen;
-        }
-        if (this.attr.hp > this.attr.maxHp) {
-            this.attr.hp = this.attr.maxHp;
-        }
 
-        var game = getGame(this);
-        if (game && this == game.selection()) {
-            game.infobar.updateAttribute("hp");
+            if (this.attr.hp > this.attr.maxHp) {
+                this.attr.hp = this.attr.maxHp;
+            }
+
+            var game = getGame(this);
+            if (game && this == game.selection()) {
+                game.infobar.updateAttribute("hp");
+            }
         }
     }
 

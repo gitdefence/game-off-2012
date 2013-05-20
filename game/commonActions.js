@@ -27,7 +27,7 @@ function AttackCycle() {
             var attacker = this.base.parent;
             var attackObjs = attacker.attr.attackObjs;
 
-            var attackKeys = getSortedKeys(attackObjs);
+            var attackKeys = Object.keys(attackObjs).sort();
             if (attackKeys.length > 0) {
                 startAttack(new AttackTemplate(attackObjs[attackKeys[0]], attacker, null, attacker.attr.damage, attacker, attackKeys[0]));
             }

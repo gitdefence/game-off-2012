@@ -1,5 +1,7 @@
+var Infobar = {};
+
 loadScripts('infobar/', [
    'infobar',
-   'attackTypesInfo',
+   'attackVisuals',
    'attributeInfo',
 ]);

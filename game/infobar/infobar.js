@@ -1,4 +1,4 @@
-function Infobar(pos) {
+Infobar.InfobarClass = function InfobarClass(pos) {
     var self = this;
     self.base = new BaseObj(self, 14);
 
@@ -36,8 +36,6 @@ function Infobar(pos) {
         updateDisplay();
     };
 
-    //This takes an object so we can do the layout once for an object, and then
-    //not have to do it again when displaying the same object.
     function redoObjLayout(obj) {
         //Don't set the obj to null, set noDisplayObject and then call updateDisplay.
         //This is much more efficient.
@@ -47,21 +45,21 @@ function Infobar(pos) {
 
         attributeVBox.clear();
 
-        attrInfos = new AttributeInfos(obj, null);
+        attrInfos = new Infobar.AttributeInfos(obj, null);
         attributeVBox.add(new PaddingControl(
                                     attrInfos,
                                     new Rect(0, 0, 0, 10),
                                     new Rect(0, 0, 0, 0)
                                 ));
 
-        targetStrats = new NestedObjsVisual({targetBase: obj.attr.targetStrategy}, "Target Strategy", "target");
+        targetStrats = new Infobar.NestedObjsVisual({ targetBase: obj.attr.targetStrategy }, "Target Strategy", "target");
         attributeVBox.add(new PaddingControl(
                                     targetStrats,
                                     new Rect(0, 10, 0, 10),
                                     new Rect(0, 0, 0, 0)
                                 ));
 
-        attackObjsVisual = new NestedObjsVisual(obj.attr.attackObjs, "Attack Types", "attack");
+        attackObjsVisual = new Infobar.NestedObjsVisual(obj.attr.attackObjs, "Attack Types", "attack");
         attributeVBox.add(new PaddingControl(
                                     attackObjsVisual,
                                     new Rect(0, 10, 0, 10),
@@ -113,6 +111,8 @@ function Infobar(pos) {
             attrInfos.updateObject(newObj);
             attackObjsVisual.updateAttackObjs(newObj.attr.attackObjs);
             targetStrats.updateAttackObjs({ targetBase: newObj.attr.targetStrategy });
+
+            self.updateDeltaAllele(newObj);
         } else {
             prevObj = newObj;
             redoObjLayout(newObj);

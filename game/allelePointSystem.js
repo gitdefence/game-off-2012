@@ -6,7 +6,7 @@ function AllelePointSystem(pos) {
 
     var obj = null;
 
-    var vbox;
+    var ourLayout;
     var autoTrashButton;
     var pointIndicator;
     self.added = function () {
@@ -18,29 +18,34 @@ function AllelePointSystem(pos) {
             }
             return new Button(text, cb);
         }
-        vbox = new VBox();
-        self.base.addChild(vbox);
+        ourLayout = new VBox();
+        //Don't add it, we wait until something is select to show.
+        //self.base.addChild(ourLayout);
 
         pointIndicator = new Label("");
-        vbox.add(pointIndicator, 28);
+        ourLayout.add(pointIndicator, 28);
 
         var buyHBox = new HBox();
-        vbox.add(buyHBox);
+        ourLayout.add(buyHBox);
         buyHBox.add(pointButton(1, 50));
         buyHBox.add(pointButton(10, 350));
         buyHBox.add(pointButton(100, 2500));
 
         var spendHBox = new HBox();
-        vbox.add(spendHBox);
+        ourLayout.add(spendHBox);
         spendHBox.add(new Button("Spend Point", spendPoint));
         spendHBox.add(new Button("Trash Point", trashPoint));
 
+        spendHBox.mouseenter = self.mouseenter;
+        spendHBox.mouseout = self.mouseout;
+
+
         autoTrashButton = new ToggleButton("Auto Trash Worse", doAutoTrash);
-        vbox.add(autoTrashButton, 28);
+        ourLayout.add(autoTrashButton, 28);
     };
 
     self.resize = function (rect) {
-        vbox.resize(rect);
+        ourLayout.resize(rect);
     }
 
     function buyPoints(num, totalCost) {
@@ -131,22 +136,18 @@ function AllelePointSystem(pos) {
         }
     }
 
-    var hover = false;
     self.mouseenter = function () {
-        hover = true;
-        updateDeltaAlleleDisplay(obj);
+        var game = getGame(this);
+        if (!game) return;
+
+        self.updateDeltaAlleleDisplay(game.selection());
     }
     self.mouseout = function () {
-        hover = false;
-        updateDeltaAlleleDisplay(obj);
+        self.updateDeltaAlleleDisplay(null);
     }
 
     self.updateDeltaAlleleDisplay = function (obj) {
-        obj = obj;
-
-        if (getGame(this)) {
-            getGame(this).infobar.updateDeltaAllele(obj);
-        }
+        getGame(this).infobar.updateDeltaAllele(obj);
     }
 
     self.addDeltaDisplay = function () {
@@ -192,20 +193,21 @@ function AllelePointSystem(pos) {
     var testFreePoints = DFlag.lateGameSpeedTest ? 1000 : 0;
 
     //Kind of hackish, but there is no selection changed system right now.
-    var towerSelected = true;
+    //(We need assume not selected in case a bug is selected right away).
+    var towerSelected = false;
     self.update = function () {
         var selected = self.base.game().selection();
 
         if (!selected || !selected.allelesGenerated) {
             if (towerSelected) {
-                self.base.removeChild(vbox);
+                self.base.removeChild(ourLayout);
             }
             towerSelected = false;
             return;
         }
 
         if (!towerSelected) {
-            self.base.addChild(vbox);
+            self.base.addChild(ourLayout);
             towerSelected = true;
         }
 
@@ -223,7 +225,7 @@ function AllelePointSystem(pos) {
 
         pointIndicator.text("Allele Points: " + selected.allelesGenerated.length);
 
-        //This call needs to be removed.
+        //This call it needed for the old autoTrash system. It should be removed in the future.
         self.addDeltaDisplay();
     }
 }

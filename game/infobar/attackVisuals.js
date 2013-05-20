@@ -1,4 +1,4 @@
-function AttackVisual(attackObj, delta) {
+Infobar.AttackObjVisual = function AttackObjVisual(attackObj, delta) {
     var self = this;
 
     if (jQuery.isFunction(attackObj)) {
@@ -11,14 +11,12 @@ function AttackVisual(attackObj, delta) {
 
     var typeLabel = new Label();
 
-    delta = delta || "";
-
-    function updateAttackTitle() {
+    function attackTitle() {
         var attackObjTitle = formatToDisplay(getRealType(attackObj));
         if (delta.length > 0) {
             attackObjTitle = "(" + delta + ") " + attackObjTitle;
         }
-        typeLabel.text(attackObjTitle);
+        return attackObjTitle;
     }
 
     self.added = function () {
@@ -27,8 +25,7 @@ function AttackVisual(attackObj, delta) {
         var typeTitle = new HBox();
         typeTitle.add(new FakeDrawObject(attackObj.drawGlyph, true, true), 20);
 
-        typeLabel.maxFontSize(16);
-        updateAttackTitle();
+        typeLabel.maxFontSize(16).text(attackTitle());
 
         typeTitle.add(typeLabel);
 
@@ -71,14 +68,12 @@ function AttackVisual(attackObj, delta) {
         ourLayout.resize(rect);
     }
 
-    self.optimalHeight = function (width) {
-        return ourLayout.optimalHeight(width);
-    }
+    self.optimalHeight = ourLayout.optimalHeight;
 }
 
 //Used to be just for attacks, but now shows targeting types too,
 //so a lot of variables still mention attack.
-function NestedObjsVisual(attackObjs, title, deltaName) {
+Infobar.NestedObjsVisual = function NestedObjsVisual(attackObjs, title, deltaName) {
     var self = this;
 
     self.base = new BaseObj(self, 10);
@@ -94,30 +89,29 @@ function NestedObjsVisual(attackObjs, title, deltaName) {
 
         ourLayout.add(typesLabel);
 
-        var attackKeys = getSortedKeys(attackObjs);
-
         //Ignore it if it isn't an attack
         if (curAlleleToCompare && !curAlleleToCompare.delta[deltaName]) {
             curAlleleToCompare = null;
         }
 
-        for (var iy = 0; iy < attackKeys.length; iy++) {
-            var attackObj = attackObjs[attackKeys[iy]];
+        var attackKeys = Object.keys(attackObjs).sort();
 
-            var deltaDisplay = null;
-            if (curAlleleToCompare && curAlleleToCompare.group == attackKeys[iy]) {
-                deltaDisplay = "-";
-            }
-            ourLayout.add(new AttackVisual(attackObj, deltaDisplay));
-            if (deltaDisplay) {
-                ourLayout.add(new AttackVisual(new curAlleleToCompare.delta[deltaName](), "+"));
+        for (var iy = 0; iy < attackKeys.length; iy++) {
+            var attackGroup = attackKeys[iy];
+            var attackObj = attackObjs[attackGroup];
+
+            if (curAlleleToCompare && curAlleleToCompare.group == attackGroup) {
+                ourLayout.add(new Infobar.AttackObjVisual(attackObj, "-"));
+                ourLayout.add(new Infobar.AttackObjVisual(new curAlleleToCompare.delta[deltaName](), "+"));
                 curAlleleToCompare = null;
+            } else {
+                ourLayout.add(new Infobar.AttackObjVisual(attackObj, ""));
             }
         }
 
         //If we haven't added it yet, add it at the end.
         if (curAlleleToCompare) {
-            ourLayout.add(new AttackVisual(new curAlleleToCompare.delta[deltaName](), "+"));
+            ourLayout.add(new Infobar.AttackObjVisual(new curAlleleToCompare.delta[deltaName](), "+"));
         }
 
         self.base.dirty();
@@ -136,30 +130,24 @@ function NestedObjsVisual(attackObjs, title, deltaName) {
     }
 
     self.updateDeltaAllele = function (newAlleleToCompare) {
-        var prevShowAlleleDelta = alleleToCompare && alleleToCompare.delta[deltaName];
+        var showingDelta = alleleToCompare && alleleToCompare.delta[deltaName];
 
         alleleToCompare = newAlleleToCompare;
 
-        var showAlleleDelta = newAlleleToCompare && newAlleleToCompare.delta[deltaName];
+        var newDelta = newAlleleToCompare && newAlleleToCompare.delta[deltaName];
 
         //We just continue showing nothing, as there is no delta to change / remove / add
-        if (!prevShowAlleleDelta && !showAlleleDelta) return;
+        if (!showingDelta && !newDelta) return;
 
         redoAttackObjLayout(alleleToCompare);
     }
 
-    self.updateAttackInfo = function () {
-        redoAttackObjLayout(alleleToCompare);
-    }
-
-    //Doesn't update the delta
-    self.updateAttackObjs = function (newAttackObjs, newAlleleToCompare) {
+    //Doesn't update the delta, so call updateDeltaAllele seperately.
+    self.updateAttackObjs = function (newAttackObjs) {
         attackObjs = newAttackObjs;
 
-        self.updateDeltaAllele(newAlleleToCompare);
+        redoAttackObjLayout(null);
     }
 
-    self.optimalHeight = function (width) {
-        return ourLayout.optimalHeight(width);
-    }
+    self.optimalHeight = ourLayout.optimalHeight;
 }

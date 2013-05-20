@@ -52,23 +52,23 @@ function Text() {
 
     // We cannot neccessarily set the fontSize, but we can set the maximum font
     // size which may be decreased in size to fit the bounding rectangle.
-    this.maxFontSize = function (newFontSize) {
+    self.maxFontSize = function (newFontSize) {
         if (newFontSize === undefined) {
             return newFontSize;
         }
         fontSize = newFontSize;
         dirty = true;
-        return this;
+        return self;
     }
 
     var color = "green";
-    this.color = function (newColor) {
+    self.color = function (newColor) {
         if (newColor === undefined) {
             return color;
         }
         color = newColor;
         dirty = true;
-        return this;
+        return self;
     }
 
     // The amount of space allocated for each line, as a function
@@ -178,17 +178,21 @@ function Text() {
         return rect.h;
     }
 
-    //The width of the entire line, but squishes the
-    //font if the height is too small. Should
-    //probably calculate wrapping.
+    //If implementing self.optimalWidth, make sure to handle:
+    //Shrink set/not set. If shrink is not set, it should probably just return the measured length at the current font size.
+    //Wrap set/not set. If wrap is set, it should figure out how many lines it can display without shrinking the text, and return that.
+    //                  If not, shrink the single line if needed, and then return the width.
     self.optimalWidth = function (height) {
+        if (!shrink) {
+            
+        }
         var measuredRect = null;
         var fontSize = curFontSize + 1;
         do {
             c.font = font(--fontSize);
             measuredRect = c.measureText(text);
         } while (measuredRect.height > height);
-        return measuredRect.width;
+        return measuredRect.width + 1;
     }
 
     function fitText (rect) {

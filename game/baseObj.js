@@ -262,7 +262,7 @@ function BaseObj(holder, zindex, dynamicZIndex) {
     function draw(pen) {
         if (holder.hidden) return;
 
-        if(layoutDirty) {
+        if (layoutDirty) {
             holder.resize(holder.tpos);
             layoutDirty = false;
         }

@@ -1,5 +1,5 @@
 var prefixes = ["", "k", "M", "G", "T", "P", "E", "Z", "Y"];
-// Adds an SI prefix to the given number. Usefull for displaying
+// Adds an SI prefix to the given number. Useful for displaying
 // numbers over a large possible range of values.
 function prefixNumber(num, places) {
     if (num < 0) return "-" + prefixNumber(-num, places);

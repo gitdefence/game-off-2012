@@ -34,7 +34,6 @@ function mergeToArray(value, array) {
     return array;
 }
 
-
 //Gets an element from object, or returns null if there are no objects
 function getAnElement(object) {
     for (var key in object)
@@ -81,13 +80,6 @@ function sortArrayByProperty(a, prop) {
         //sorting the zorder sort for drawing, which could be made faster in other ways.
         return compare(a[prop], b[prop]);
     }
-}
-
-function findElementByProperty(obj, prop, value) {
-    for (var key in obj) {
-        if (obj[prop] == value) return obj[key];
-    }
-    return null;
 }
 
 //Needed to do stable sorts
@@ -140,14 +132,6 @@ function mergesort(array, fncLessEqualThan) {
 //Maintains original sort order for equivalent elements (see https://en.wikipedia.org/wiki/Sorting_algorithm#Stability)
 function sortArrayByPropertyStable(a, prop) {
     mergesort(a, function (one, two) { return one[prop] <= two[prop]; });
-}
-
-function getSortedKeys(array) {
-    var keys = [];
-    for (var key in array)
-        keys.push(key);
-    keys.sort();
-    return keys;
 }
 
 //If given an object it turns a random key from it

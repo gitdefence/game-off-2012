@@ -26,12 +26,23 @@ function PaddingControl(initialControl, rectConstantBuffer, rectPercentBuffer) {
 	    }
 	}
 
+	function removeOurHeight(totalHeight) {
+	    return (totalHeight - rectConstantBuffer.right()) / (1 + rectPercentBuffer.right());
+	}
+
+	function removeOurWidth(totalWidth) {
+	    return (totalWidth - rectConstantBuffer.bottom()) / (1 + rectPercentBuffer.bottom());
+	}
+
 	self.resize = function (rect) {
 	    rect = rect.clone();
 
-	    var childWidth = (rect.w - rectConstantBuffer.right()) / (1 + rectPercentBuffer.right());
-	    var childHeight = (rect.h - rectConstantBuffer.bottom()) / (1 + rectPercentBuffer.bottom());
+	    //We do the opposite of how we implemented optimalWidth and optimalHeight
+        //(Just invert the equation, you can see it works due to algebra).
+	    var childWidth = removeOurHeight(rect.w);
+	    var childHeight = removeOurHeight(rect.h);
 
+        //Now we make our rect normally.
 	    var uiControlRect = new Rect(
            rect.x + childWidth * rectPercentBuffer.x + rectConstantBuffer.x,
            rect.y + childHeight * rectPercentBuffer.y + rectConstantBuffer.y,
@@ -57,8 +68,8 @@ function PaddingControl(initialControl, rectConstantBuffer, rectPercentBuffer) {
 
     function implementOptimalFunctions(uiControl) {
         if (uiControl.optimalWidth) {
-            self.optimalWidth = function (width) {
-                var childWidth = uiControl.optimalWidth(width);
+            self.optimalWidth = function (height) {
+                var childWidth = uiControl.optimalWidth(height);
                 return Math.round(childWidth * (1 + rectPercentBuffer.right()) + rectConstantBuffer.right());
             }
         }
