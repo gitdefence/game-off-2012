@@ -54,7 +54,6 @@ Infobar.AttackObjVisual = function AttackObjVisual(attackObj, delta) {
                                 );
 
             ourLayout.add(new PaddingControl(typeDivider)
-                            .constantBuffer(new Rect(0, 0, 0, 0))
                             .percentBuffer(new Rect(0, 0.4, 0, 0)));
         }
     }
