@@ -12,6 +12,11 @@ function HBox() {
         this.base.addChild(ui);
     }
 
+    this.clear = function () {
+        children = [];
+        this.base.removeAllChildren();
+    }
+    
     function calculateWidths(width) {
         var fixedWidth = 0;
         var numSharing = 0;

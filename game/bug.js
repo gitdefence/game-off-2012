@@ -4,18 +4,14 @@ function Bug(startPath) {
 
     self.attr = {};
     self.setBaseAttrs = function () {
-        //Lol, prevCur...
-        var prevCurHp = self.attr.hp || self.attr.currentHp;
-        if(!prevCurHp)
-            prevCurHp = 0;
         self.attr = {
             // For balancing these are now 0, we get everything from our alleles
             // (except speed, as we have to move, and value).
             // In the future tower will be like self.
             range:          0,
             damage:         0,
-            hp:             0,
-            currentHp:      0,
+            maxHp:             0,
+            hp:      0,
             hpRegen:        0,
             attSpeed:       0,
             speed:          0,
@@ -23,7 +19,8 @@ function Bug(startPath) {
             kills:          0,
             value:          5,
         };
-        self.attr.attackTypes = [];
+        self.attr.attackObjs = {}; //Index is allele group
+        self.attr.targetStrategy = new targetStrategies.Random();
     }
     self.setBaseAttrs();
 
@@ -64,11 +61,18 @@ function Bug(startPath) {
     };
 
     self.regenTick = function() {
+        if (self.attr.hp >= self.attr.maxHp) return;
+
         if (self.attr.hpRegen > 0) {
-            self.attr.currentHp += self.attr.hpRegen;
-        }
-        if (self.attr.currentHp > self.attr.hp) {
-            self.attr.currentHp = self.attr.hp;
+            self.attr.hp += self.attr.hpRegen;
+            if (self.attr.hp > self.attr.maxHp) {
+                self.attr.hp = self.attr.maxHp;
+            }
+
+            var game = getGame(self);
+            if (game && self == game.selection()) {
+                game.infobar.updateAttribute("hp");
+            }
         }
     }
 
@@ -100,12 +104,12 @@ function Bug(startPath) {
 
         // We only invalidate when our HP changes, since that covers most
         // cases, and other things don't really change much for bugs.'
-        if (self.attr.currentHp === previousHp) return;
+        if (self.attr.hp === previousHp) return;
 
         canvasDirty = true;
         self.color = getInnerColorFromAttrs(self.attr);
         self.borderColor = getOuterColorFromAttrs(self.attr);
-        previousHp = self.attr.hp;
+        previousHp = self.attr.maxHp;
     };
 
     self.destroyAtBase = function() {
@@ -148,7 +152,7 @@ function Bug(startPath) {
         var pos = self.tpos;
         var cen = pos.center();
 
-        var hpPercent = self.attr.currentHp / self.attr.hp;
+        var hpPercent = self.attr.hp / self.attr.maxHp;
         var hue = hpPercent * 135;
 
         DRAW.arc(pen, cen, self.radius + self.lineWidth,

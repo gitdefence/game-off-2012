@@ -1,71 +1,88 @@
 function Genes() {
-    this.base = new BaseObj(this);
-    this.tpos = new Rect(0, 0, 0, 0);
+    var self = this;
+    self.base = new BaseObj(self);
+    self.tpos = new Rect(0, 0, 0, 0);
 
-    this.alleles = {};
+    self.alleles = {};
+
 
     var addingAlleles = false;
-    this.startAlleleAdd = function() {
+    self.startAlleleAdd = function() {
         addingAlleles = true;
     }
-    this.endAlleleAdd = function() {
+    self.endAlleleAdd = function() {
         addingAlleles = false;
-        this.recalculateAttributes();
+        self.recalculateAttributes();
     }
 
-    this.addAllele = function (allele) {
-        if (!assertDefined(allele))
+    //If we are selected, causes the infobar to be updated.
+    function updateInfoBarAttributes () {
+        var game = getGame(self);
+
+        var parent = self.base.parent;
+
+        if (!parent || !game) return;
+
+        //If our parent is selected, we are probably
+        //being displayed
+        if (game.selection() == parent) {
+            game.infobar.updateAllAttributes();
+        }
+    }
+
+    self.addAllele = function (allele) {
+        if (!assertValid(allele))
             return;
 
-        var holder = this.base.parent;
+        var holder = self.base.parent;
 
-        if (!assertDefined(holder))
+        if (!assertValid(holder))
             return;
 
-        if (!assertDefined(allele.delta, allele.group))
+        if (!assertValid(allele.delta, allele.group))
             return;
 
         var group = allele.group;
 
-        this.alleles[group] = allele;
+        self.alleles[group] = allele;
         if(!addingAlleles)
-            this.recalculateAttributes();
+            self.recalculateAttributes();
     };
 
-    this.removeAlleleGroup = function (group) {
-        if(this.alleles[group.group])
-            delete this.alleles[group.group];
-    }
-
-    this.recalculateAttributes = function() {
-        var holder = this.base.parent;
+    //This function is required, in case (which we really should for attack types) we
+    //want to have alleles which apply a percentage change. If we do this, we also need
+    //to make the alleles always applied in the same order.
+    self.recalculateAttributes = function () {
+        var holder = self.base.parent;
         holder.setBaseAttrs();
 
-        for(var key in this.alleles) {
-            this.alleles[key].apply(holder);
+        for (var key in self.alleles) {
+            self.alleles[key].apply(holder);
         }
-        holder.attr.currentHp = holder.attr.hp;
+        holder.attr.hp = holder.attr.maxHp;
 
         //I mean, this could happen, its not an error, you just have crap alleles
         //(However letting the range be 0 may cause errors. Also, no point in not drawing
         //it, might as well give them a little bit of range so a circle is at least drawn).
         if (holder.attr.range < 1) {
-            holder.attr.range = 1;
+            holder.attr.range = 1; 
         }
+
+        updateInfoBarAttributes();
     }
 
     //Should only be called if you are fully replacing the targeting strategy and attack types
-    this.replaceAlleles = function (newAlleles) {
-        var holder = this.base.parent;
+    self.replaceAlleles = function (newAlleles) {
+        var holder = self.base.parent;
         holder.attr.targetStrategy = null;
-        holder.attr.attackTypes = [];
+        holder.attr.attackObjs = {};
 
-        this.startAlleleAdd();
+        self.startAlleleAdd();
 
         for (var group in newAlleles) {
-            this.addAllele(newAlleles[group]);
+            self.addAllele(newAlleles[group]);
         }
 
-        this.endAlleleAdd();
+        self.endAlleleAdd();
     };
 }

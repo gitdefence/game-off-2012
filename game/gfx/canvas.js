@@ -5,6 +5,11 @@ function Canvas() {
 
     this.resize = function (rect) {
         pos = rect.origin();
+        if (rect.w <= 0 || rect.h <= 0) {
+            fail("Attempting to make a canvas with invalid area, this is probably a bug. Did you forget to resize a container?");
+            rect.w = 1;
+            rect.h = 1;
+        }
         element.width = rect.w;
         element.height = rect.h;
         return this;
@@ -16,18 +21,19 @@ function Canvas() {
     }
 
     this.drawTo = function (otherCanvas) {
-    // Without this, integer values end up doing sub-pixel
-    // rendering. Who knows what the W3C was thinking?
-    // See http://diveintohtml5.info/canvas.html#paths
+        // Without this, integer values end up doing sub-pixel
+        // rendering. Who knows what the W3C was thinking?
+        // See http://diveintohtml5.info/canvas.html#paths
 
-    // I can't seem to get this translate code to work, so
-    // I'm just manually translating for now. Good luck if
-    // you can get it to work!
-//     c.translate(0.5, 0.5);
-//     c.setTransform(1, 0, 0, 1, 0.5, 0.5);
+        // I can't seem to get this translate code to work, so
+        // I'm just manually translating for now. Good luck if
+        // you can get it to work!
+        //     c.translate(0.5, 0.5);
+        //     c.setTransform(1, 0, 0, 1, 0.5, 0.5);
 
-        if (pos.w == 0 || pos.h == 0) {
-            throw "Attempting to draw a canvas with area zero, this is probably a bug. Did you forget to resize it first?";
+        if (element.w == 0 || element.h == 0) {
+            fail("Attempting to draw a canvas with area zero, this is probably a bug. Did you forget to resize it first?");
+            return;
         }
         otherCanvas.drawImage(element, pos.x, pos.y);
     }

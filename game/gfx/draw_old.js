@@ -55,4 +55,12 @@ DRAW = {
         pen.fill();
         pen.stroke();
     },
+    line: function(pen, startVector, endVector, lineColor, lineWidth) {
+        setStrokeAndColor(pen, lineWidth, lineColor);
+                
+        pen.beginPath();
+        pen.moveTo(startVector.x, startVector.y);
+        pen.lineTo(endVector.x, endVector.y);
+        pen.stroke();
+    },
 };

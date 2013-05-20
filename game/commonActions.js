@@ -7,12 +7,12 @@ function AttackCycle() {
     this.chargePercent = 0;
 
     this.update = function (dt) {
-        if(!this.base.parent.attr.attSpeed)
+        if (!this.base.parent.attr.attSpeed)
             return;
 
         var objDelay = 0;
         objDelay = 1 / this.base.parent.attr.attSpeed;
-        if(objDelay < 0)
+        if (objDelay < 0)
             objDelay = 1 / 0;
 
         this.maxCounter = objDelay;
@@ -25,10 +25,11 @@ function AttackCycle() {
             this.attackCounter = 0;
 
             var attacker = this.base.parent;
-            var attackTypes = attacker.attr.attackTypes || attacker.attr.bug_attackTypes;
+            var attackObjs = attacker.attr.attackObjs;
 
-            if (attackTypes && attackTypes.length > 0) {
-                startAttack(new AttackTemplate(attackTypes[0], attacker, null, attacker.attr.damage, attacker, 0));
+            var attackKeys = Object.keys(attackObjs).sort();
+            if (attackKeys.length > 0) {
+                startAttack(new AttackTemplate(attackObjs[attackKeys[0]], attacker, null, attacker.attr.damage, attacker, attackKeys[0]));
             }
         }
     };
@@ -160,6 +161,11 @@ function SlowEffect(magnitude) {
 //and then calls callback
 function MotionDelay(start, end, time, callback) {
     this.base = new BaseObj(this);
+
+    if (!assertVector(start) || !assertVector(end)) {
+        //Stop right away, so never set the tpos
+        time = -1;
+    }
 
     this.start = start;
     this.end = end;

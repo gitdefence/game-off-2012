@@ -14,7 +14,11 @@ function generatePath(eng, game) {
 
     var TILE_SIZE = game.tileSize;
 
-    var meanderFactor = 40;
+    var meanderFactor = 20;
+
+    if (DFlag.lateGameSpeedTest) {
+        meanderFactor = 500;
+    }
     var curMeander = 0;
     var vels = [{ x: 1, y: 0 }, { x: 0, y: 1 }, { x: -1, y: 0 }, { x: 0, y: -1}];
 

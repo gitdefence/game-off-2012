@@ -1,6 +1,6 @@
 var Rect = (function () {
     function Rect(x, y, w, h) {
-        if (!assertDefined("Rect", x, y, w, h)) {
+        if (!assertValid("Rect", x, y, w, h)) {
             x = 0;
             y = 0;
             w = 1;
@@ -118,6 +118,46 @@ var Rect = (function () {
 
     p.str = function () {
         return "Rectangle at (" + this.x + ", " + this.y + ")" + "with size (" + this.w + ", " + this.h + ")";
+    }
+
+    //Functions to allow our rectangle to exist in the left, top, right, bottom
+    //paradigm. Very useful for UI code.
+    p.left = function (newLeft) {
+        if(newLeft === undefined) {
+            return this.x;
+        }
+        this.x = newLeft;
+        return this;
+    }
+    p.top = function (newTop) {
+        if(newTop === undefined) {
+            return this.y;
+        }
+        this.y = newTop;
+        return this;
+    }
+    p.right = function (newRight) {
+        if(newRight === undefined) {
+            return this.x + this.w;
+        }
+        this.x = newRight - this.w;
+        return this;
+    }
+    p.bottom = function (newBottom) {
+        if(newBottom === undefined) {
+            return this.y + this.h;
+        }
+        this.y = newBottom - this.top;
+        return this;
+    }
+    
+    p.round = function() {
+        this.x = Math.round(this.x);
+        this.y = Math.round(this.y);
+        this.w = Math.round(this.w);
+        this.h = Math.round(this.h);
+
+        return this;
     }
 
     return Rect;

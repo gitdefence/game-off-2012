@@ -7,7 +7,11 @@
 //  - point in x, y format
 
 function assertRectangle(rect) {
-    return assertDefined("assertRectangle", rect, rect.x, rect.y, rect.w, rect.h);
+    return rect instanceof Rect && assertValid("assertRectangle", rect, rect.x, rect.y, rect.w, rect.h);
+}
+
+function assertVector(vect) {
+    return vect instanceof Vector && assertValid("assertVector", vect, vect.x, vect.y);
 }
 
 //Gets the Vector from the a rect to a point.    
@@ -15,7 +19,7 @@ function assertRectangle(rect) {
 //If point is in rect then it returns Vector(0, 0).
 //If vector is given, then it will fill in vector and return that)
 function vecToRect(point, rect, vector) {
-    if (!assertDefined("vecToRect", rect, point) || !assertRectangle(rect))
+    if (!assertValid("vecToRect", rect, point) || !assertRectangle(rect))
         return new Vector(0, 0);
     
     if(!vector)
@@ -41,7 +45,7 @@ function vecToRect(point, rect, vector) {
 //Gets the minimum distance from the point to the bounds of the rect
 //(so if the point is inside it returns the vector to the closest side)
 function minVecToOuterRect(point, rect, vector) {
-    if (!assertDefined("vecToRect", rect, point) || !assertRectangle(rect))
+    if (!assertValid("vecToRect", rect, point) || !assertRectangle(rect))
         return new Vector(0, 0);
     
     if(!vector)
@@ -79,7 +83,7 @@ function minVecBetweenRects(rectOne, rectTwo) {
 //Gets the minimum vector from rectOne to rectTwo to make them touch.
 //Basically just the minimum vec between the vertices of one and two.
 function minVecBetweenRectsOneWay(rectOne, rectTwo) {
-    if (!assertDefined("minVecBetweenRects", rectOne, rectTwo) ||
+    if (!assertValid("minVecBetweenRects", rectOne, rectTwo) ||
         !assertRectangle(rectOne) || !assertRectangle(rectTwo))
         return new Vector(0, 0);
     
@@ -104,7 +108,7 @@ function minVecBetweenRectsOneWay(rectOne, rectTwo) {
 
 //Gives the delta for one to be distance away from two
 function minVecForDistanceRects(rectOne, rectTwo, distance) {
-    if (!assertDefined("minVecForDistanceRects", rectOne, rectTwo, distance) ||
+    if (!assertValid("minVecForDistanceRects", rectOne, rectTwo, distance) ||
         !assertRectangle(rectOne) || !assertRectangle(rectTwo))
         return new Vector(0, 0);
     
@@ -140,7 +144,7 @@ function minVecForDistanceRects(rectOne, rectTwo, distance) {
 //Gets the minimum vector for rectOne to be fully overlapped by rectTwo, or two by one
 //Its behaviour is undefined if fully overlap is impossible (rectangles with one wide and one tall)
 function minVecFullOverlapRects(rectOne, rectTwo) {
-    if (!assertDefined("minVecFullOverlapRects", rectOne, rectTwo) ||
+    if (!assertValid("minVecFullOverlapRects", rectOne, rectTwo) ||
         !assertRectangle(rectOne) || !assertRectangle(rectTwo))
         return new Vector(0, 0);
     

@@ -50,6 +50,27 @@ function Text() {
         return self;
     }
 
+    // We cannot neccessarily set the fontSize, but we can set the maximum font
+    // size which may be decreased in size to fit the bounding rectangle.
+    self.maxFontSize = function (newFontSize) {
+        if (newFontSize === undefined) {
+            return newFontSize;
+        }
+        fontSize = newFontSize;
+        dirty = true;
+        return self;
+    }
+
+    var color = "green";
+    self.color = function (newColor) {
+        if (newColor === undefined) {
+            return color;
+        }
+        color = newColor;
+        dirty = true;
+        return self;
+    }
+
     // The amount of space allocated for each line, as a function
     // of the font size. As lines are positioned in the center of
     // the space allocted for them, the space is evenly distributed
@@ -99,8 +120,8 @@ function Text() {
             dirty = false;
         }
         pen.font = font();
-        pen.fillStyle = "green";
-        pen.strokeStyle = "green";
+        pen.fillStyle = color;
+        pen.strokeStyle = color;
         pen.textAlign = align;
         pen.textBaseline = "middle";
 
@@ -130,6 +151,8 @@ function Text() {
     var rect;
     var usedHeight = 0;
     self.resize = function (newRect) {
+        if (!assertRectangle(newRect)) return;
+
         rect = newRect;
         curFontSize = fontSize;
 
@@ -145,14 +168,32 @@ function Text() {
         }
     }
 
-    // Currently, self messes up the internal state, so make sure you
-    // always call resize() after calling self to clean it up again. (It's
+    // Currently, this messes up the internal state, so make sure you
+    // always call resize() after calling this to clean it up again. (It's
     // not a huge deal since that's the usual use-case anyway)
     self.optimalHeight = function (width) {
         var rect = new Rect(0, 0, width, 0);
         curFontSize = fontSize;
         rect = fitText(rect);
         return rect.h;
+    }
+
+    //Todo: Handle Wrap set/not set. If wrap is set, it should figure out how many lines it can display without shrinking the text, and return that.
+    //                               If not, shrink the single line if needed, and then return the width.
+    self.optimalWidth = function (height) {
+        if (!shrink) {
+            c.font = font(fontSize);
+            measuredRect = c.measureText(text);
+            return measuredRect.w;
+        }
+
+        var measuredRect = null;
+        var fontSize = fontSize + 1;
+        do {
+            c.font = font(--fontSize);
+            measuredRect = c.measureText(text);
+        } while (measuredRect.height > height);
+        return measuredRect.width + 1;
     }
 
     function fitText (rect) {
@@ -169,8 +210,8 @@ function Text() {
 
     }
 
-    function font () {
-        return curFontSize + "px courier";
+    function font (reqFontSize) {
+        return (reqFontSize || curFontSize) + "px courier";
     }
 
     function lineHeight () {

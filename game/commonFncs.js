@@ -34,7 +34,6 @@ function mergeToArray(value, array) {
     return array;
 }
 
-
 //Gets an element from object, or returns null if there are no objects
 function getAnElement(object) {
     for (var key in object)
@@ -63,16 +62,27 @@ function hasAtleastXElements(object, x) {
     return false;
 }
 
+//Standardization of the compare function, really simplify things...
+function compare(a, b) {
+    if (a < b) {
+        return -1;
+    } else if (a > b) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 function sortArrayByProperty(a, prop) {
     a.sort(cmp)
     function cmp(a, b) {
-        // Avoid multiple object dereferences in
-        // tight inner loop.
-        var ap = a[prop];
-        var bp = b[prop];
-        if (ap < bp) {
+        //Don't change this. Calling a function here can drawing orders of magnitude
+        //slower on slow computers.
+        var aVal = a[prop];
+        var bVal = b[prop];
+        if (aVal < bVal) {
             return -1;
-        } else if (ap > bp) {
+        } else if (aVal > bVal) {
             return 1;
         } else {
             return 0;
@@ -80,9 +90,61 @@ function sortArrayByProperty(a, prop) {
     }
 }
 
+//Needed to do stable sorts
+function mergesort(array, fncLessEqualThan) {
+    var array2 = new Array();
+
+    var curArr = array;
+    var dstArray = array2;
+
+    var chunkSize = 2;
+    while (chunkSize / 2 < array.length) {
+        for (var ix = 0; ix < array.length; ix += chunkSize) {
+            var iOne = ix;
+            var middle = Math.min(ix + chunkSize / 2, array.length);
+            var iTwo = middle;
+            var end = Math.min(ix + chunkSize, array.length);
+
+            var iDest = iOne;
+
+            while (iOne < middle && iTwo < end) {
+                if (fncLessEqualThan(curArr[iOne], curArr[iTwo])) {
+                    dstArray[iDest++] = curArr[iOne++];
+                } else {
+                    dstArray[iDest++] = curArr[iTwo++];
+                }
+            }
+
+            while (iTwo < end) {
+                dstArray[iDest++] = curArr[iTwo++];
+            }
+
+            while (iOne < middle) {
+                dstArray[iDest++] = curArr[iOne++];
+            }
+        }
+
+        chunkSize *= 2;
+        var temp = curArr;
+        curArr = dstArray;
+        dstArray = temp;
+    }
+
+    if (curArr == array) return;
+
+    for (var ix = 0; ix < array.length; ix++) {
+        array[ix] = curArr[ix];
+    }
+}
+
+//Maintains original sort order for equivalent elements (see https://en.wikipedia.org/wiki/Sorting_algorithm#Stability)
+function sortArrayByPropertyStable(a, prop) {
+    mergesort(a, function (one, two) { return one[prop] <= two[prop]; });
+}
+
 //If given an object it turns a random key from it
 function pickRandom(array) {
-    if(!assertDefined(array.length))
+    if(!assertValid(array.length))
         return;
 
     return array[Math.floor(Math.random() * array.length)];
@@ -100,7 +162,7 @@ function pickRandomKey(object) {
 //an answer from stack overlow...
 //http://stackoverflow.com/questions/8177964/in-javascript-how-can-i-set-rgba-without-specifying-the-rgb
 function setAlpha(color, newAlpha) {
-    if (!assertDefined(color, newAlpha))
+    if (!assertValid(color, newAlpha))
         return;
     return color.replace(/[^,]+(?=\))/, newAlpha);
 }
@@ -158,84 +220,6 @@ function makeTiled(pen, makeTileFnc, array, boxBox, xNum, yNum, percentBuffer) {
 
         if (makeTileFnc(value, pen, new Rect(xPos, yPos, drawnWidth, drawnHeight)))
             xPos += width;
-    }
-}
-
-//This is reference code for Quentin, don't touch this code.
-//This should really not be in here.
-//Sorts arr by the given property (uses quickSort)
-function sortArrayByPropertyCustom
-(
-    arrObj,
-    property
-) {
-
-    if (arrObj.length <= 1)
-        return;
-
-    sortArrayByPropertyPrivate(arrObj, 0, arrObj.length - 1, property);
-
-    function sortArrayByPropertyPrivate
-    (
-        arrObj,
-        startIndex,
-        endIndex,
-        property
-    ) {
-        var pivotPoint;
-
-        if (startIndex + 1 == endIndex) {
-            if (arrObj[startIndex][property] > arrObj[endIndex][property])
-                swap(arrObj, startIndex, endIndex);
-            return;
-        }
-
-        //Make the pivot point the median of the first middle and last
-        //(also we do a bit of sorting here too)
-        var middleIndex = Math.floor((startIndex + endIndex) / 2);
-        if (arrObj[middleIndex][property] < arrObj[startIndex][property])
-            swap(arrObj, middleIndex, startIndex);
-
-        if (arrObj[endIndex][property] < arrObj[startIndex][property])
-            swap(arrObj, endIndex, startIndex);
-
-        if (arrObj[endIndex][property] < arrObj[middleIndex][property])
-            swap(arrObj, endIndex, middleIndex);
-
-        var pivotPoint = middleIndex;
-        var pivotValue = arrObj[middleIndex][property];
-
-        //Everything <= pivot is swapper to beginning, everything else is swapped to end
-
-        var curPos = startIndex;
-        var lessEnd = startIndex;
-        var greaterStart = endIndex;
-
-        //To prevent infinite recursion
-
-        //< here instead of <= sorts it, but leaves lessEnd and greaterStart possibly wrong
-        while (curPos <= greaterStart) {
-            if (arrObj[curPos][property] < pivotValue) {
-                if (curPos != lessEnd)
-                    swap(arrObj, curPos, lessEnd);
-
-                curPos++;
-                lessEnd++;
-            }
-            else if (arrObj[curPos][property] > pivotValue) {
-                swap(arrObj, curPos, greaterStart--);
-            }
-            else {
-                curPos++;
-            }
-        }
-
-        greaterStart++;
-
-        if (lessEnd - startIndex > 0)
-            sortArrayByPropertyPrivate(arrObj, startIndex, lessEnd - 1, property);
-        if (endIndex - greaterStart > 0)
-            sortArrayByPropertyPrivate(arrObj, greaterStart, endIndex, property);
     }
 }
 
