@@ -75,15 +75,15 @@ function Bug(startPath) {
     var previousHp = -1;
     var canvasDirty = true;
     self.update = function(dt) {
-        //We could also add pathOffsetVector to the path, but there are
-        //multiple paths we have to worry about, so this is simplier.
-        var offsetSelfPos = self.tpos.origin().sub(pathOffsetVector);
-
         var cur = self.curPath;
         if (!cur) {
             self.destroyAtBase();
             return;
         }
+
+        //We could also add pathOffsetVector to the path, but there are
+        //multiple paths we have to worry about, so this is simplier.
+        var offsetSelfPos = self.tpos.origin().sub(pathOffsetVector);
 
         //Move towards the next rectangle.
         var vecToCurrent = cur.tpos.origin().sub(offsetSelfPos);
