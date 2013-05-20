@@ -278,9 +278,9 @@ var BugAlleles =
 {
     rangeBase: function () { return choose(
         {
-            0.5: { range: 250 },
-            0.7: { range: 270 },
-            1: { range: 290 },
+            0.5: { range: 25 },
+            0.7: { range: 27 },
+            1: { range: 29 },
         }); },
     damageBase: function () { return choose(
         {
