@@ -1,13 +1,6 @@
 function Bug(startPath) {
     var self = this;
     var r = 8;
-    var cen = (function() {
-        var p = startPath.tpos;
-        var cen = p.center();
-        cen.x += Math.floor((p.w - 2*r) * (Math.random() - 0.5));
-        cen.y += Math.floor((p.h - 2*r) * (Math.random() - 0.5));
-        return cen;
-    }());
 
     self.attr = {};
     self.setBaseAttrs = function () {
@@ -34,7 +27,7 @@ function Bug(startPath) {
     }
     self.setBaseAttrs();
 
-    self.tpos = new Rect(cen.x - r, cen.y - r, r * 2, r * 2);
+    self.tpos = new Rect(0, 0, r, r);
 
     self.base = new BaseObj(self, 11);
     var velocity = new Vector(1, 0).mag(self.attr.speed);
@@ -46,10 +39,8 @@ function Bug(startPath) {
     self.lineWidth = 1;
     self.radius = r;
 
-
     self.genes = new Genes();
     self.base.addChild(self.genes);
-
 
 
     self.base.addChild(new AttackCycle());
@@ -58,11 +49,15 @@ function Bug(startPath) {
 
     self.curPath = startPath;
 
+    var pathOffsetVector = new Vector(0, 0);
+
     self.added = function() {
         var game = getGame(self);
 
-        self.bugRelPathPos = Math.floor(Math.random() * game.tileSize) +1;
-        self.delay = self.bugRelPathPos + 1;
+        var offset = Math.floor(((Math.random() - 0.5) * 0.5 + 0.5) * game.tileSize);
+        pathOffsetVector = new Vector(offset, offset);
+
+        self.tpos.center(startPath.tpos.origin().add(pathOffsetVector));
 
         self.constantOne = 1;
         self.base.addChild(new UpdateTicker(self, "constantOne", "regenTick"));
@@ -77,48 +72,31 @@ function Bug(startPath) {
         }
     }
 
-    function move(pos, vec, dt) {
-        pos.x += vec.x * dt;
-        pos.y += vec.y * dt;
-    }
-
     var previousHp = -1;
     var canvasDirty = true;
     self.update = function(dt) {
-        move(self.tpos, velocity, dt);
-
         var cur = self.curPath;
-        var next = self.curPath.nextPath;
+        if (!cur) {
+            self.destroyAtBase();
+            return;
+        }
+
+        //We could also add pathOffsetVector to the path, but there are
+        //multiple paths we have to worry about, so this is simplier.
+        var offsetSelfPos = self.tpos.origin().sub(pathOffsetVector);
 
         //Move towards the next rectangle.
-        var vecToCurrent = minVecBetweenRects(self.tpos, cur.tpos);
-        var vecToNext = minVecFullOverlapRects(self.tpos, next.tpos);
+        var vecToCurrent = cur.tpos.origin().sub(offsetSelfPos);
 
-        var overshot = vecToCurrent.magSq() > 0 && vecToNext.magSq() > 0;
+        var speed = self.attr.speed;
+        var distance = dt * speed;
 
-        if (overshot) {
-            move(self.tpos, velocity, -dt);
+        self.tpos.moveOrigin(vecToCurrent.clone().setMag(distance));
+
+        //If we cross the target, then we will be less than the distance we moved from the target.
+        if (vecToCurrent.mag() <= distance) {
+            self.curPath = self.curPath.nextPath;
         }
-
-        if (self.delay > self.bugRelPathPos) {
-            velocity = vecToNext.clone();
-            self.delay = 0;
-        }
-
-        //Once we reach our destination.
-        if (vecToNext.magSq() == 0 || overshot) {
-            self.delay += 50*dt;
-            if (self.delay > self.bugRelPathPos || overshot) {
-                self.curPath = next;
-                self.delay = self.bugRelPathPos + 1;
-            }
-
-            if (next instanceof Path_End) {
-                self.destroyAtBase();
-            }
-        }
-
-        velocity.mag(self.attr.speed);
 
         // We only invalidate when our HP changes, since that covers most
         // cases, and other things don't really change much for bugs.'
@@ -149,8 +127,7 @@ function Bug(startPath) {
             redraw(canvas);
             canvasDirty = false;
         }
-        canvas.moveTo(new Vector(self.tpos.x - self.attr.range + self.tpos.w / 2, 
-                                 self.tpos.y - self.attr.range + self.tpos.h / 2));
+        canvas.moveTo(new Vector(self.tpos.x - self.attr.range, self.tpos.y - self.attr.range));
         canvas.drawTo(pen);
     }
 
