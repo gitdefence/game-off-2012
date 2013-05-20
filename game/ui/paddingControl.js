@@ -57,8 +57,8 @@ function PaddingControl(uiControl) {
     
         //We do the opposite of how we implemented optimalWidth and optimalHeight
         //(Just invert the equation, you can see it works due to algebra).
-        var childWidth = removeOurHeight(rect.w);
-        var childHeight = removeOurWidth(rect.h);
+        var childWidth = removeOurWidth(rect.w);
+        var childHeight = removeOurHeight(rect.h);
     
         //Now we make our rect normally.
         var uiControlRect = new Rect(
