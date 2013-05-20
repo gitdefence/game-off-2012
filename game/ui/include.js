@@ -5,7 +5,7 @@ loadScripts('ui/', [
     'toggleButton',
     'vbox',
     'hbox',
-    'hboxFixed',
+    'hFlowLayout',
     'flowLayout',
     'paddingControl',
     'fakeDrawObject'

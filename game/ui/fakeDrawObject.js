@@ -57,7 +57,7 @@ function FakeDrawObject(drawFnc, cachable, offsetRect, reqWidth, reqHeight) {
                 }
             }
         } else {
-            self.optimalWidth = function (height) { return reqSize.w; }
+            self.optimalWidth = function (height) { return reqWidth; }
         }
     }
     if (reqHeight) {
