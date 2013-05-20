@@ -61,8 +61,8 @@ function PaddingControl(uiControl) {
         var uiControlRect = new Rect(
            rect.x + childWidth * rectPercentBuffer.x + rectConstantBuffer.x,
            rect.y + childHeight * rectPercentBuffer.y + rectConstantBuffer.y,
-           rect.w - (childWidth * rectPercentBuffer.right() + rectConstantBuffer.right()),
-           rect.h - (childHeight * rectPercentBuffer.bottom() + rectConstantBuffer.bottom()));
+           childWidth,
+           childHeight);
     
         uiControlRect.round();
         if (uiControlRect.w < 1) {
