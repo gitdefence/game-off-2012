@@ -51,9 +51,6 @@ function PaddingControl(uiControl) {
     
     self.resize = function (rect) {
         rect = rect.clone();
-        uiControl.resize(rect);
-        this.tpos = rect;
-        return;
     
         //We do the opposite of how we implemented optimalWidth and optimalHeight
         //(Just invert the equation, you can see it works due to algebra).
