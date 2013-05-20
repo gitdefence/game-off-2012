@@ -138,7 +138,7 @@ function getInnerColorFromAttrs(attr) {
     //hue = 0.5;
 
     //I don't even know
-    saturation = (attr.currentHp / attr.hp);
+    saturation = (attr.hp / attr.maxHp);
 
     lightness = Math.atan(attr.attSpeed) * 100;
 
@@ -171,7 +171,7 @@ function getOuterColorFromAttrs(attr) {
     //I don't even know
     saturation = attr.damage;
 
-    lightness = (attr.currentHp / attr.hp) * 100;
+    lightness = (attr.hp / attr.maxHp) * 100;
 
     alpha = 1;
 
@@ -186,7 +186,7 @@ function getOuterColorFromAttrs(attr) {
     */
 
     //Simplified as it had too much information for the user to pick up
-    var hpPercent = attr.currentHp / attr.hp;
+    var hpPercent = attr.hp / attr.maxHp;
     var hue = hpPercent * 135;
 
     return new HSLColor().h(hue).s(50).l(50).a(1).str();

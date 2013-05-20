@@ -1,4 +1,4 @@
-﻿function GitDefence(pos) {
+function GitDefence(pos) {
     var engine = new Engine(pos, this);
     this.engine = engine;
 
@@ -45,11 +45,12 @@
         flowLayout.add(hbox2);
     }
 
+    hbox.resize(pos);
+
     engine.globalResize = function (ev) {
         console.log("gitDefence globalResize", ev);
         hbox.resize(new Rect(0, 0, ev.width, ev.height));
     }
-
 
     this.globalSelectionChanged = {};
 
@@ -75,13 +76,41 @@
     this.draw = function (pen) {
         engine.base.draw(pen);
 
-        if (!selection) return;
+        if (selection) {
+            pen.strokeStyle = selection.color;
+            pen.fillStyle = "transparent";
+            pen.lineWidth = 2;
+            var p = selection.tpos.center();
+            ink.circ(p.x, p.y, selection.attr.range, pen);
+        }
 
-        pen.strokeStyle = selection.color;
-        pen.fillStyle = "transparent";
-        pen.lineWidth = 2;
-        var p = selection.tpos.center();
-        ink.circ(p.x, p.y, selection.attr.range, pen);
+        if (DFlag.quadtree.draw) {
+            var hue = 0;
+            for (var type in engine.base.allChildren) {
+                pen.strokeStyle = hsla(hue, 50, 50, 0.5).str();
+                drawTree(engine, type, pen);
+                hue += 20;
+            }
+        }
+
+        var hue = 0;
+        function shadeBoxesRecursive(boxes, alpha) {
+            for (var childKey in boxes) {
+                var child = boxes[childKey];
+                if (child.tpos) {
+                    DRAW.rect(pen, child.tpos, hsla(hue, 50, 50, alpha).str());
+                    hue += 20;
+                }
+                for (var type in child.base.children) {
+                    shadeBoxesRecursive(child.base.children[type], alpha * 1.2);
+                }
+            }
+        }
+        if (DFlag.quadtree.shadeBoxes) {
+            for (var type in engine.base.children) {
+                shadeBoxesRecursive(engine.base.children[type], 0.05);
+            }
+        }
     }
 
     this.selection = function () {
@@ -91,7 +120,7 @@
     this.select = function (object) {
         if (object && object.attr) {
             selection = object;
-            this.infobar.updateAttr(object);
+            this.infobar.updateDisplayObj(selection);
         } else {
             this.unselect(selection);
         }
@@ -99,8 +128,8 @@
 
     this.unselect = function (object) {
         if (object !== selection) return;
-
         selection = null;
-        this.infobar.clearDisplay();
+
+        this.infobar.updateDisplayObj(selection);
     }
 }

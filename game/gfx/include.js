@@ -5,5 +5,5 @@ loadScripts('gfx/', [
    'draw_old',
    'ink_old',
    'shapes_old',
-   'text',
+   'text'
 ]);

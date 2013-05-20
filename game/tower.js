@@ -47,7 +47,7 @@ function Tower_Connection(t1, t2) {
         delta.sub(t1.tpos.center());
         delta.mult(1/2);
 
-        if (!assertDefined(width, height)) {
+        if (!assertValid(width, height)) {
             width = 1;
             height = 1;
         }
@@ -63,7 +63,7 @@ function Tower_Connection(t1, t2) {
     this.added = function() {
         deleteButton = new Button("-", bind(that, "deleteSelf"), 50);
 
-        this.base.parent.base.parent.base.addChild(deleteButton);
+        this.base.addChild(deleteButton);
         deleteButton.resize(getDeleteButtonPos());
     }
 
@@ -116,7 +116,13 @@ function Tower_Connection(t1, t2) {
         line.start = t1.tpos.center();
         line.end = t2.tpos.center();
 
-        deleteButton.hidden = !this.base.parent.hover;
+        var game = getGame(this);
+
+        if (game && this.base.parent) {
+            var holderSelected = this.base.parent == game.selection();
+
+            deleteButton.hidden = !holderSelected;
+        }
 
         deleteButton.resize(getDeleteButtonPos());
 
@@ -132,8 +138,8 @@ function Tower_Connection(t1, t2) {
 TowerStats = {
         range:          10,
         damage:         1,
-        hp:             10,
-        currentHp:      0,
+        maxHp:          10,
+        hp:      0,
         hpRegen:        1,
         attSpeed:       0.2,
         upload:         5,
@@ -149,24 +155,21 @@ function Tower() {
 
     this.attr = {};
     this.setBaseAttrs = function () {
-        //Lol, prevCur...
-        var prevCurHp = this.attr.hp || this.attr.currentHp;
-        if (!prevCurHp) prevCurHp = 0;
         this.attr = {
-            range:          TowerStats.range,
-            damage:         TowerStats.damage,
-            hp:             TowerStats.hp,
-            currentHp:      TowerStats.currentHp,
-            hpRegen:        TowerStats.hpRegen,
-            attSpeed:       TowerStats.attSpeed,
-            upload:         TowerStats.upload,
-            download:       TowerStats.download,
-            hitCount:       TowerStats.hitCount,
-            kills:          0,
-            value:          TowerStats.value
+            range: TowerStats.range,
+            damage: TowerStats.damage,
+            maxHp: TowerStats.maxHp,
+            hp: TowerStats.hp,
+            hpRegen: TowerStats.hpRegen,
+            attSpeed: TowerStats.attSpeed,
+            upload: TowerStats.upload,
+            download: TowerStats.download,
+            hitCount: TowerStats.hitCount,
+            kills: 0,
+            value: TowerStats.value
         };
         this.attr.targetStrategy = new targetStrategies.Closest();
-        this.attr.attackTypes = [];
+        this.attr.attackObjs = {};
     };
     this.setBaseAttrs();
 
@@ -201,16 +204,34 @@ function Tower() {
     this.generateAllele = function () {
         var genAllGroup = pickRandomKey(AllAlleleGroups);
 
+        if (DFlag.attackObjsDebug) {
+            genAllGroup = choose({
+                0.3: "attack1",
+                0.6: "attack2",
+                1: "attack3"
+            });
+        } else if (DFlag.targetObjsDebug) {
+            genAllGroup = "targetBase";
+        }
+
+
         var alleleGenerated = new Allele(genAllGroup, AllAlleleGroups[genAllGroup]());
         this.allelesGenerated.push(alleleGenerated);
     }
 
     this.regenTick = function () {
+        if (this.attr.hp >= this.attr.maxHp) return;
+
         if (this.attr.hpRegen > 0) {
-            this.attr.currentHp += this.attr.hpRegen;
+            this.attr.hp += this.attr.hpRegen;
         }
-        if (this.attr.currentHp > this.attr.hp) {
-            this.attr.currentHp = this.attr.hp;
+        if (this.attr.hp > this.attr.maxHp) {
+            this.attr.hp = this.attr.maxHp;
+        }
+
+        var game = getGame(this);
+        if (game && this == game.selection()) {
+            game.infobar.updateAttribute("hp");
         }
     }
 
@@ -224,23 +245,25 @@ function Tower() {
         this.borderColor = getOuterColorFromAttrs(this.attr);
 
         //Shows HP
-        var outerWidth = Math.pow(this.attr.hp / 50, 0.5) * 8;
+        var outerWidth = Math.pow(this.attr.maxHp / 50, 0.5) * 8;
         this.outerWidth = outerWidth;
 
         //Show HP regen?
-        var innerWidth = Math.log(Math.abs(this.attr.hp / this.attr.damage / this.attr.attSpeed + 10)) * 6; //Math.pow(this.attr.hpRegen * 10, 0.9);
+        var innerWidth = Math.log(Math.abs(this.attr.maxHp / this.attr.damage / this.attr.attSpeed + 10)) * 6; //Math.pow(this.attr.hpRegen * 10, 0.9);
 
         var center = this.tpos.center();
 
         var totalWidth = outerWidth + innerWidth;
 
-        if(changeSize) {
+        if (changeSize) {
             this.tpos.x = center.x - totalWidth;
             this.tpos.y = center.y - totalWidth;
 
             this.tpos.w = totalWidth * 2;
             this.tpos.h = totalWidth * 2;
         }
+
+        assertValid(this.tpos.x, this.tpos.y, this.tpos.w, this.tpos.h);
 
         this.lineWidth = outerWidth;
     }
@@ -274,12 +297,12 @@ function Tower() {
         //Total of hp in bars one one side equal to hp regenerated in x seconds
         var timePerSide = 10;
 
-        var numberOfBars = this.attr.hp / hpPerBar;
-        var barsFilled = this.attr.currentHp / hpPerBar;
+        var numberOfBars = this.attr.maxHp / hpPerBar;
+        var barsFilled = this.attr.hp / hpPerBar;
         var barsPerSide = Math.max(Math.ceil(timePerSide * this.attr.hpRegen / hpPerBar), 1);
 
         //Shows HP
-        var outerWidth = Math.pow(this.attr.hp / 50, 0.9);
+        var outerWidth = Math.pow(this.attr.maxHp / 50, 0.9);
 
         var layers = Math.ceil(numberOfBars / barsPerSide / 4);
 
@@ -477,7 +500,7 @@ function Tower() {
         this.tryToMove(vector, eng);
     }
 
-    this.mouseup = function(e){
+    this.mouseup = function (e) {
         var eng = this.base.rootNode;
         var game = eng.game;
 
@@ -486,21 +509,28 @@ function Tower() {
         delete getGame(this).input.globalMouseMove[this.base.id];
         delete getGame(this).input.globalMouseUp[this.base.id];
 
-        if(!this.ctrlDrag && this.tempNetworkIndicator) {
+        if (!this.ctrlDrag && this.tempNetworkIndicator) {
             this.base.parent.base.removeChild(this.tempNetworkIndicator);
             this.tempNetworkIndicator = null;
 
             var towerSelected = findClosestToPoint(eng, "Tower", e, 0);
-            if(towerSelected && towerSelected != this)
-            {
+            if (towerSelected && towerSelected != this) {
                 for (var i = 0; i < this.connections.length; i++)
-                    if(this.connections[i].t2 == towerSelected)
+                    if (this.connections[i].t2 == towerSelected)
                         return;
 
                 var conn = new Tower_Connection(this, towerSelected);
-                this.base.addChild(conn);
-                this.connections.push(conn);
-                towerSelected.connections.push(conn);
+
+                var parent = this.base.parent;
+                if (parent) {
+                //Have to add it to our parent, so it can draw above us.
+                    parent.base.addChild(conn);
+                    this.connections.push(conn);
+                    towerSelected.connections.push(conn);
+                } else {
+                    //Probably just means we have been destroyed
+                    fail("Crap, no parent in tower.");
+                }
 
                 game.select(this);
                 getAnElement(this.base.children.Selectable).ignoreNext = true;

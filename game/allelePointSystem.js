@@ -4,6 +4,8 @@ function AllelePointSystem(pos) {
     self.base = new BaseObj(self, 15);
     self.tpos = pos;
 
+    var obj = null;
+
     var vbox;
     var autoTrashButton;
     var pointIndicator;
@@ -33,7 +35,7 @@ function AllelePointSystem(pos) {
         spendHBox.add(new Button("Spend Point", spendPoint));
         spendHBox.add(new Button("Trash Point", trashPoint));
 
-        autoTrashButton = new ToggleButton("Auto Trash Worse");
+        autoTrashButton = new ToggleButton("Auto Trash Worse", doAutoTrash);
         vbox.add(autoTrashButton, 28);
     };
 
@@ -48,40 +50,62 @@ function AllelePointSystem(pos) {
         if (game.money < totalCost) return;
         if (!(selected instanceof Tower)) return;
 
+        var newTopAllele = selected.allelesGenerated.length == 0;
+
         game.money -= totalCost;
         for (var i = 0; i < num; i++) {
             selected.generateAllele();
         }
+
+        if (newTopAllele) {
+            game.infobar.updateDeltaAllele(selected);
+
+            doAutoTrash();
+        }
     }
 
     function spendPoint() {
-        var selected = self.base.game().selection();
+        var game = getGame(self);
+        var selected = game.selection();
 
         if (!(selected instanceof Tower)) return;
 
-        if (selected.allelesGenerated.length > 0) {
-            var allele = selected.allelesGenerated[0];
-            selected.allelesGenerated.splice(0, 1);
-            selected.genes.addAllele(allele);
-        }
+        if (selected.allelesGenerated.length <= 0) return;
+
+        var allele = selected.allelesGenerated[0];
+        selected.allelesGenerated.splice(0, 1);
+        selected.genes.addAllele(allele);
+
+        game.infobar.updateDeltaAllele(selected);
+
+        doAutoTrash();
     }
 
     function trashPoint() {
-        var selected = self.base.game().selection();
+        var game = getGame(self);
+        var selected = game.selection();
 
         if (!selected instanceof Tower) return;
 
-        if (selected.allelesGenerated.length > 0) {
-            selected.allelesGenerated.splice(0, 1);
-        }
+        if (selected.allelesGenerated.length <= 0) return;
+
+        selected.allelesGenerated.splice(0, 1);
+
+        game.infobar.updateDeltaAllele(selected);
+
+        doAutoTrash();
     }
 
     function doAutoTrash() {
-        var selected = self.base.game().selection();
+        if (!autoTrashButton.toggled()) return;
+
+        var game = getGame(self);
+        var selected = game.selection();
 
         if (!(selected instanceof Tower)) return;
 
         var anyPositive = false;
+        var numTrashed = 0;
 
         while (!anyPositive && selected.allelesGenerated.length > 0) {
             self.addDeltaDisplay();
@@ -98,7 +122,30 @@ function AllelePointSystem(pos) {
             }
             if (!anyPositive) {
                 selected.allelesGenerated.splice(0, 1);
+                numTrashed++;
             }
+        }
+
+        if (numTrashed > 0) {
+            game.infobar.updateDeltaAllele(selected);
+        }
+    }
+
+    var hover = false;
+    self.mouseenter = function () {
+        hover = true;
+        updateDeltaAlleleDisplay(obj);
+    }
+    self.mouseout = function () {
+        hover = false;
+        updateDeltaAlleleDisplay(obj);
+    }
+
+    self.updateDeltaAlleleDisplay = function (obj) {
+        obj = obj;
+
+        if (getGame(this)) {
+            getGame(this).infobar.updateDeltaAllele(obj);
         }
     }
 
@@ -134,26 +181,49 @@ function AllelePointSystem(pos) {
             }
         }
 
+        //If we had it added, indicate that it is being replaced
         if (selected.genes.alleles[allele.group])
             addToExtraInfo(selected.genes.alleles[allele.group], -1);
 
+        //Indicate we are adding the allele
         addToExtraInfo(allele, 1);
     }
 
-    self.update = function () {
-        if (autoTrashButton.toggled()) {
-            doAutoTrash();
-        }
+    var testFreePoints = DFlag.lateGameSpeedTest ? 1000 : 0;
 
+    //Kind of hackish, but there is no selection changed system right now.
+    var towerSelected = true;
+    self.update = function () {
         var selected = self.base.game().selection();
 
-        if (!(selected instanceof Tower)) {
-            self.base.setAttributeRecursive("hidden", true);
+        if (!selected || !selected.allelesGenerated) {
+            if (towerSelected) {
+                self.base.removeChild(vbox);
+            }
+            towerSelected = false;
             return;
         }
 
-        self.base.setAttributeRecursive("hidden", false);
+        if (!towerSelected) {
+            self.base.addChild(vbox);
+            towerSelected = true;
+        }
+
+        if (DFlag.lateGameSpeedTest) {
+            if (testFreePoints > 0) {
+                buyPoints(testFreePoints, 0);
+                testFreePoints = 0;
+            }
+
+            if (selected.allelesGenerated.length > 0) {
+                doAutoTrash();
+                spendPoint();
+            }
+        }
+
         pointIndicator.text("Allele Points: " + selected.allelesGenerated.length);
+
+        //This call needs to be removed.
         self.addDeltaDisplay();
     }
 }

@@ -65,10 +65,10 @@ var AllAlleleGroups = {
 
     hpBase: function () { return choose(
         {
-            0.5: { hp: 30 },
-            0.7: { hp: 50 },
-            0.9: { hp: 70 },
-            1: { hp: 150 },
+            0.5: { maxHp: 30 },
+            0.7: { maxHp: 50 },
+            0.9: { maxHp: 70 },
+            1: { maxHp: 150 },
         }); },
 
     hpRegenBase: function () { return choose(
@@ -87,7 +87,8 @@ var AllAlleleGroups = {
             1: { attSpeed: 0.5 },
         }); },
 
-    attack1: function () { return choose(
+    attack1: function () { if(DFlag.lateGameSpeedTest) return {attack: allAttackTypes.DOT};
+        return choose(
         {
             0.166: { attack: allAttackTypes.Laser },
             0.333: { attack: allAttackTypes.Bullet },
@@ -97,7 +98,8 @@ var AllAlleleGroups = {
             1.0: { attack: allAttackTypes.Slow },
         }); },
 
-    targetBase: function () { return choose(
+    targetBase: function () { if(DFlag.lateGameSpeedTest) {target: targetStrategies.Random};
+        return choose(
         {
             0.333: { target: targetStrategies.Closest },
             0.666: { target: targetStrategies.Random },
@@ -107,9 +109,10 @@ var AllAlleleGroups = {
 
 //BONUS ATTACKS
 //Bonus attack or damage bonus
-    attack2: function () { return choose(
+    attack2: function () { if(DFlag.lateGameSpeedTest) return {attack: allAttackTypes.DOT};
+        return choose(
         {
-            0.760: { damage: 10 },
+            //0.760: { damage: 10 },
             0.800: { attack: allAttackTypes.Laser },
             0.840: { attack: allAttackTypes.Bullet },
             0.880: { attack: allAttackTypes.Chain },
@@ -118,9 +121,10 @@ var AllAlleleGroups = {
             1.000: { attack: allAttackTypes.Slow },
         }); },
 //Bonus attack or attack speed bonus
-    attack3: function () { return choose(
+    attack3: function () { if(DFlag.lateGameSpeedTest) return {attack: allAttackTypes.DOT};
+        return choose(
         {
-            0.800: { attSpeed: 2 },
+            //0.800: { attSpeed: 2 },
             0.840: { attack: allAttackTypes.Bullet },
             0.880: { attack: allAttackTypes.Chain },
             0.920: { attack: allAttackTypes.Pulse },
@@ -134,7 +138,7 @@ var AllAlleleGroups = {
     specization1: function () { return choose(
         {
             //Hard to kill
-            0.25: { hpRegen: 50, hp: 200, damage: -13, attSpeed: -1 },
+            0.25: { hpRegen: 50, maxHp: 200, damage: -13, attSpeed: -1 },
             //Gene spreader
             0.50: { upload: 50, download: -4, range: -80 },
             //Pew pew pew
@@ -147,13 +151,13 @@ var AllAlleleGroups = {
             //Nothing
             0.80: { range: 1 },
             //Germ
-            0.85: { hpRegen: 50, hp: -100},
+            0.85: { hpRegen: 50, maxHp: -100},
             //Why!?
             0.90: { attSpeed: -1, damage: -13, range: 200 },
             //Fatty
-            0.95: { hpRegen: -50, hp: 1000},
+            0.95: { hpRegen: -50, maxHp: 1000},
             //Super-charge (not sure if this will work?)
-            1.00: { currentHp: 1000},
+            1.00: { hp: 1000},
         }); },
 //ATTRIBUTE SPECIALIZATIONS
 
@@ -177,9 +181,9 @@ var AllAlleleGroups = {
     hpMediumBonus: function () { return choose(
         {
             0.5: { },
-            0.7: { hp: 50 },
-            0.9: { hp: 70 },
-            1: { hp: 150 },
+            0.7: { maxHp: 50 },
+            0.9: { maxHp: 70 },
+            1: { maxHp: 150 },
         }); },
 
     hpRegenMediumBonus: function () { return choose(
@@ -217,7 +221,7 @@ var AllAlleleGroups = {
     hpSuperBonus: function () { return choose(
         {
             0.9: { },
-            1: { hp: 250 },
+            1: { maxHp: 250 },
         }); },
 
     hpRegenSuperBonus: function () { return choose(
@@ -246,9 +250,9 @@ var TowerAlleles =
         }); },
     hpBase: function () { return choose(
         {
-            0.5: { hp: 100 },
-            0.7: { hp: 130 },
-            1: { hp: 150 },
+            0.5: { maxHp: 100 },
+            0.7: { maxHp: 130 },
+            1: { maxHp: 150 },
         }); },
     hpRegenBase: function () { return choose(
         {
@@ -265,8 +269,8 @@ var TowerAlleles =
 
     spec1: function () { return pickRandom(
         [
-            { hp: 100, hpRegen: 1, range: -50 }, //Bruiser part 1
-            { hp: 200, hpRegen: 2, damage: -0.8 }, //Bruiser part 2
+            { maxHp: 100, hpRegen: 1, range: -50 }, //Bruiser part 1
+            { maxHp: 200, hpRegen: 2, damage: -0.8 }, //Bruiser part 2
             { damage: -0.5, attSpeed: 1 }, //Pew pew
             { damage: 10, attSpeed: -0.85 }, //BOOM!
         ]); },
@@ -288,7 +292,7 @@ var BugAlleles =
             0.7: { damage: 0.6 },
             1: { damage: 1.0 },
         }); },
-    hpBase: function () { return {hp: Math.floor(random(8, 15))}; },
+    hpBase: function () { return {maxHp: Math.floor(random(8, 15))}; },
     attSpeedBase: function () { return choose(
         {
             0.5: { attSpeed: 0.5 },

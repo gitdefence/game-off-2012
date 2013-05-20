@@ -50,7 +50,7 @@ function GameInfoBar() {
             FPSIndi.text("FPS: " + round(eng.lastFPS, 2));
             bugIndi.text("Bugs: " + round(eng.base.allLengths.Bug, 2));
             curWaveIndi.text("Current Level: " + round(game.lvMan.curWave, 2));
-            nextLevelTimeIndi.text("Next Level In: " + round(game.lvMan.nwicounter, 0));
+            nextLevelTimeIndi.text("Next Level In: " + round(game.lvMan.nwicounter, 0)).maxFontSize(12);
         }
 
     }

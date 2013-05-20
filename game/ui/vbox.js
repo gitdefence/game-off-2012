@@ -1,4 +1,7 @@
 // Pack a bunch of UI elements vertically.
+// We set our children size using our size.
+// So from our children's perspective our size is fixed, and
+// they dynamically resize.
 function VBox() {
     this.base = new BaseObj(this, 15);
     this.tpos = new Rect(0, 0, 0, 0);
@@ -8,17 +11,34 @@ function VBox() {
     // height is optional, if not given,
     // all children will have same height.
     this.add = function (ui, height) {
-        children.push({ui: ui, height: height});
+        children.push({ui: ui, forcedHeight: height, height: height});
         this.base.addChild(ui);
     }
 
+    this.clear = function () {
+        children = [];
+        this.base.removeAllChildren();
+    }
+
     this.resize = function (rect) {
+        rect = rect.clone();
+
         var h = 0;
         var shared = 0;
         for (var i = 0; i < children.length; i++) {
             var c = children[i];
-            if (c.height) h += c.height;
-            else shared++;
+
+            if (c.forcedHeight) {
+                c.height = c.forcedHeight;
+            } else if (c.getOptimalHeight) {
+                c.height = c.getOptimalHeight();
+            }
+
+            if (c.height) {
+                h += c.height;
+            } else {
+                shared++;
+            }
         }
         if (h > rect.h) {
             // Well... fuck.
@@ -27,7 +47,7 @@ function VBox() {
         }
         this.tpos = rect;
 
-        var sharedHeight = ~~((rect.h - h) / shared);
+        var sharedHeight = ~ ~((rect.h - h) / shared);
         var y = rect.y;
         for (var i = 0; i < children.length; i++) {
             var c = children[i];

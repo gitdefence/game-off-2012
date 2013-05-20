@@ -3,21 +3,21 @@ function Label() {
     self.tpos = new Rect(0, 0, 0, 0);
     self.base = new BaseObj(self);
 
-    var text = new Text();
+    var textObj = new Text();
 
     self.redraw = function (canvas) {
-        canvas.fill(text, "green");
+        canvas.fill(textObj, "green");
     }
 
     self.resize = function (rect) {
         self.tpos = rect;
         self.base.dirty();
-        text.resize(new Rect(0, 0, 0, 0).size(rect.size()));
+        textObj.resize(new Rect(0, 0, 0, 0).size(rect.size()));
         return self;
     }
 
     self.optimalHeight = function (width) {
-        return text.optimalHeight(width);
+        return textObj.optimalHeight(width);
     }
 
     function dirtyMethod(method) {
@@ -27,6 +27,13 @@ function Label() {
             return self;
         }
     }
-    self.text = dirtyMethod(text.text);
-    self.align = dirtyMethod(text.align);
+    self.text = dirtyMethod(textObj.text);
+    self.align = dirtyMethod(textObj.align);
+    self.maxFontSize = dirtyMethod(textObj.maxFontSize);
+    self.color = dirtyMethod(textObj.color);
+    self.lineSpacing = dirtyMethod(textObj.lineSpacing);
+    self.shrink = dirtyMethod(textObj.shrink);
+
+    self.optimalWidth = textObj.optimalWidth;
+    self.optimalHeight = textObj.optimalHeight;
 }
