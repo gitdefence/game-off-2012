@@ -16,6 +16,10 @@ ui.DeltaRect = function DeltaRect(top, right, bottom, left) {
 		left = right;
 	}
 
+	self._top = top;
+	self._right = right;
+	self._bottom = bottom;
+	self._left = left;
 	self.top = function () {
 		return top;
 	}
@@ -36,5 +40,15 @@ ui.DeltaRect = function DeltaRect(top, right, bottom, left) {
 	}
 	self.nonZero = function () {
 		return top !== 0 || right !== 0 || bottom !== 0 || left !== 0;
+	}
+	self.clone = function () {
+		return new ui.DeltaRect(top, right, bottom, left);
+	}
+	self.mult = function (amount) {
+		top *= amount;
+		right *= amount;
+		bottom *= amount;
+		left *= amount;
+		return self;
 	}
 }

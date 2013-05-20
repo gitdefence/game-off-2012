@@ -91,6 +91,12 @@ var Rect = (function () {
         return this;
     }
 
+    p.zeroOrigin = function () {
+        this.x = 0;
+        this.y = 0;
+        return this;
+    }
+
     p.moveOrigin = function (delta) {
         this.x += delta.x;
         this.y += delta.y;

@@ -15,10 +15,10 @@ ui.Box = function Box(child) {
 		padding = newPadding;
 	}
 
-	var borderSize = new ui.DeltaRect(0, 0, 0, 0);
+	var border = new ui.DeltaRect(0, 0, 0, 0);
 	var borderColor = rgba(0, 0, 0, 1);
 	self.border = function (newBorderSize, newBorderColor) {
-		borderSize = newBorderSize;
+		border = newBorderSize;
 		borderColor = newBorderColor;
 	}
 
@@ -58,11 +58,13 @@ ui.Box = function Box(child) {
 	}
 
 	self.redraw = function (canvas) {
-		if (borderSize.nonZero()) {
+		if (border.nonZero()) {
 			var p = new Path();
-			p.rect(self.tpos.clone().sub(margin));
+			var rect = self.tpos.clone().zeroOrigin();
+			rect.sub(margin).sub(border.clone().mult(0.5));
+			p.rect(rect);
 			// TODO: Proper per-side drawing.
-			canvas.stroke(p, borderColor, borderSize.left());
+			canvas.stroke(p, borderColor, border.left());
 		}
 	}
 }

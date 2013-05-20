@@ -6,7 +6,9 @@ Infobar.InfobarClass = function InfobarClass() {
     var selectSomethingPrompt = new ui.Label();
 
     var allelePoints = new AllelePointSystem();
-    var ourLayout = new ui.VBox();
+    var actualLayout = new ui.VBox();
+    var ourLayout = new ui.Box(actualLayout);
+    ourLayout.border(new ui.DeltaRect(50, 50, 50, 50), rgba(255, 255, 255, 1));
     var attributeVBox = new ui.FlowLayout();
 
     var attrInfos = null;
@@ -18,14 +20,14 @@ Infobar.InfobarClass = function InfobarClass() {
 
     //Add our buttons, should really be done just in the constructor with our given pos information
     //Added should be where everything is initialized. Objects must be declared in the class scope though,
-    //and to reduce the chance of crashes they are constructed there also. 
+    //and to reduce the chance of crashes they are constructed there also.
     //However, they should be initialized in added.
     self.added = function () {
         selectSomethingPrompt.maxFontSize(20).lineSpacing(1.5).text(
             "Click on a bug or tower to display its information here.");
 
-        ourLayout.add(attributeVBox);
-        ourLayout.add(allelePoints, 220);
+        actualLayout.add(attributeVBox);
+        actualLayout.add(allelePoints, 220);
 
         updateDisplay();
     };
@@ -124,7 +126,7 @@ Infobar.InfobarClass = function InfobarClass() {
         attrInfos.updateAllAttributes();
 
         //This is unfortunate, it would be nice if we didn't need to relayout attrInfos,
-        //but its size may depend on attackObjsVisual targetStrats 
+        //but its size may depend on attackObjsVisual targetStrats
         self.base.dirtyLayout();
     }
 
@@ -144,7 +146,7 @@ Infobar.InfobarClass = function InfobarClass() {
         targetStrats.updateDeltaAllele(deltaAllele);
 
         //This is unfortunate, it would be nice if we didn't need to relayout attrInfos,
-        //but its size may depend on attackObjsVisual targetStrats 
+        //but its size may depend on attackObjsVisual targetStrats
         self.base.dirtyLayout();
     }
 }

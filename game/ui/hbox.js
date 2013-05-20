@@ -28,7 +28,7 @@ ui.HBox = function HBox() {
         if (fixedWidth > width) {
             // Well... fuck.
             // Eventually we can handle this properly with requestResize, but for now... fuck it.
-            throw "Attempting to make a hbox smaller than it's fixed size children allow!";
+//             throw "Attempting to make a hbox smaller than it's fixed size children allow!";
         }
         var sharedWidth = ~~((width - fixedWidth) / numSharing);
         for (var i = 0; i < children.length; i++) {
