@@ -188,7 +188,7 @@ function Text() {
         }
 
         var measuredRect = null;
-        var fontSize = curFontSize + 1;
+        var fontSize = fontSize + 1;
         do {
             c.font = font(--fontSize);
             measuredRect = c.measureText(text);
