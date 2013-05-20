@@ -49,13 +49,15 @@ function Bug(startPath) {
 
     self.curPath = startPath;
 
+    var pathOffsetVector = new Vector(0, 0);
+
     self.added = function() {
         var game = getGame(self);
 
         var offset = Math.floor(((Math.random() - 0.5) * 0.5 + 0.5) * game.tileSize);
-        self.pathOffsetVector = new Vector(offset, offset);
+        pathOffsetVector = new Vector(offset, offset);
 
-        self.tpos.center(startPath.tpos.origin().add(self.pathOffsetVector));
+        self.tpos.center(startPath.tpos.origin().add(pathOffsetVector));
 
         self.constantOne = 1;
         self.base.addChild(new UpdateTicker(self, "constantOne", "regenTick"));
@@ -73,13 +75,14 @@ function Bug(startPath) {
     var previousHp = -1;
     var canvasDirty = true;
     self.update = function(dt) {
-        //We could also add bugRelPathPos to the path, but there are
+        //We could also add pathOffsetVector to the path, but there are
         //multiple paths we have to worry about, so this is simplier.
-        var offsetSelfPos = self.tpos.origin().sub(self.pathOffsetVector);
+        var offsetSelfPos = self.tpos.origin().sub(pathOffsetVector);
 
         var cur = self.curPath;
-        if (cur instanceof Path_End && minVecBetweenRects(self.tpos, cur.tpos).mag() == 0) {
+        if (!cur) {
             self.destroyAtBase();
+            return;
         }
 
         //Move towards the next rectangle.
