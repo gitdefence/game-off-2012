@@ -21,13 +21,10 @@ function VBox() {
     }
 
     this.resize = function (rect) {
-        rect = rect.clone();
-
         var h = 0;
         var shared = 0;
         for (var i = 0; i < children.length; i++) {
             var c = children[i];
-
             if (c.height) h += c.height;
             else shared++;
         }

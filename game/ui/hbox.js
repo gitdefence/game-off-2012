@@ -22,7 +22,6 @@ function HBox() {
         var numSharing = 0;
         for (var i = 0; i < children.length; i++) {
             var c = children[i];
-
             if (c.width) fixedWidth += c.width;
             else numSharing++;
         }
@@ -39,7 +38,6 @@ function HBox() {
     }
 
     this.resize = function (rect) {
-        rect = rect.clone();
         calculateWidths(rect.w);
         this.tpos = rect;
 
