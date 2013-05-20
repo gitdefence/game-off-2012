@@ -263,12 +263,13 @@ function BaseObj(holder, zindex, dynamicZIndex) {
         //Sort objects by z-index (low to high) and then draw by that order
         var childWithZIndex = [];
 
-        for (var key in self.children) {
-            var child = self.children[key];
-            if (getAnElement(child)) {
+        for (var type in self.children) {
+            var childArray = self.children[type];
+            var child = getAnElement(childArray);
+            if (child) {
                 childWithZIndex.push({
-                    zindex: getAnElement(child).base.zindex,
-                    array: child,
+                    zindex: child.base.zindex,
+                    array: childArray,
                 });
             }
         }

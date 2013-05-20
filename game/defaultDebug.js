@@ -5,7 +5,7 @@
 // this file, which is version controlled.
 
 var DFlag = {};
-DFlag.debug = true;
+DFlag.debug = false;
 
 //DFlag.zindexCheck = true;
 //DFlag.lotsamoney = true;
