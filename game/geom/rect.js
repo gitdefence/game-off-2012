@@ -150,7 +150,7 @@ var Rect = (function () {
         this.y = newBottom - this.top;
         return this;
     }
-    
+
     p.round = function() {
         this.x = Math.round(this.x);
         this.y = Math.round(this.y);
@@ -158,6 +158,19 @@ var Rect = (function () {
         this.h = Math.round(this.h);
 
         return this;
+    }
+
+    p.sub = function (deltaRect) {
+        this.x += deltaRect.left();
+        this.y += deltaRect.top();
+        this.w -= deltaRect.x();
+        this.h -= deltaRect.y();
+
+        return this;
+    }
+
+    p.validSize = function () {
+        return this.w > 0 && this.h > 0;
     }
 
     return Rect;

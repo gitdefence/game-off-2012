@@ -23,7 +23,7 @@ Infobar.AttackObjVisual = function AttackObjVisual(attackObj, delta) {
         self.base.addChild(ourLayout);
 
         var typeTitle = new ui.HBox();
-        typeTitle.add(new FakeDrawObject(attackObj.drawGlyph, true, true), 20);
+        typeTitle.add(new ui.FakeDrawObject(attackObj.drawGlyph, true, true), 20);
 
         typeLabel.maxFontSize(16).text(attackTitle());
 

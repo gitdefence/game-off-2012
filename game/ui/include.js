@@ -9,5 +9,7 @@ loadScripts('ui/', [
     'hFlowLayout',
     'flowLayout',
     'paddingControl',
-    'fakeDrawObject'
+    'fakeDrawObject',
+    'box',
+    'deltaRect',
 ]);
