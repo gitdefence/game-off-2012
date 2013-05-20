@@ -75,7 +75,7 @@ function Bug(startPath) {
     self.update = function(dt) {
         //We could also add bugRelPathPos to the path, but there are
         //multiple paths we have to worry about, so this is simplier.
-        var offsetSelfPos = self.tpos.center().sub(self.pathOffsetVector);
+        var offsetSelfPos = self.tpos.origin().sub(self.pathOffsetVector);
 
         var cur = self.curPath;
         if (cur instanceof Path_End && minVecBetweenRects(self.tpos, cur.tpos).mag() == 0) {
@@ -86,13 +86,12 @@ function Bug(startPath) {
         var vecToCurrent = cur.tpos.origin().sub(offsetSelfPos);
 
         var speed = self.attr.speed;
+        var distance = dt * speed;
 
-        var velocity = vecToCurrent;
-        velocity.setMag(speed);
-        self.tpos.moveOrigin(velocity.clone().mult(dt));
+        self.tpos.moveOrigin(vecToCurrent.clone().setMag(distance));
 
         //If we cross the target, then we will be less than the distance we moved from the target.
-        if (cur.tpos.origin().sub(offsetSelfPos).mag() <= speed * dt) {
+        if (vecToCurrent.mag() <= distance) {
             self.curPath = self.curPath.nextPath;
         }
 
