@@ -11,7 +11,7 @@ function VBox() {
     // height is optional, if not given,
     // all children will have same height.
     this.add = function (ui, height) {
-        children.push({ui: ui, forcedHeight: height, height: height});
+        children.push({ui: ui, height: height});
         this.base.addChild(ui);
     }
 
@@ -28,15 +28,8 @@ function VBox() {
         for (var i = 0; i < children.length; i++) {
             var c = children[i];
 
-            if (c.forcedHeight) {
-                c.height = c.forcedHeight;
-            }
-
-            if (c.height) {
-                h += c.height;
-            } else {
-                shared++;
-            }
+            if (c.height) h += c.height;
+            else shared++;
         }
         if (h > rect.h) {
             // Well... fuck.

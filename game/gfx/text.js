@@ -178,14 +178,15 @@ function Text() {
         return rect.h;
     }
 
-    //If implementing self.optimalWidth, make sure to handle:
-    //Shrink set/not set. If shrink is not set, it should probably just return the measured length at the current font size.
-    //Wrap set/not set. If wrap is set, it should figure out how many lines it can display without shrinking the text, and return that.
-    //                  If not, shrink the single line if needed, and then return the width.
+    //Todo: Handle Wrap set/not set. If wrap is set, it should figure out how many lines it can display without shrinking the text, and return that.
+    //                               If not, shrink the single line if needed, and then return the width.
     self.optimalWidth = function (height) {
         if (!shrink) {
-            
+            c.font = font(fontSize);
+            measuredRect = c.measureText(text);
+            return measuredRect.w;
         }
+
         var measuredRect = null;
         var fontSize = curFontSize + 1;
         do {

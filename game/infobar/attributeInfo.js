@@ -86,13 +86,11 @@ Infobar.AlleleVisual = function AlleleVisual(obj, attrName) {
 
         deltaBars.clear();
 
-        var plusBars = new HBoxFixedChildren();
-        var negBars = new HBoxFixedChildren();
+        var plusBars = new HFlowLayout();
+        var negBars = new HFlowLayout();
 
         var addedPlus = false;
         var addedNeg = false;
-
-        plusBars.add(new Label().text("+ "));
 
         function addAlleleDelta(allele) {
             for (var key in allele.delta) {
@@ -120,46 +118,30 @@ Infobar.AlleleVisual = function AlleleVisual(obj, attrName) {
             addAlleleDelta(alleleToCompare);
         }
 
-        /*
+        //Needed to insure the +/- sign is always the same size.
+        var plusBarWithSymbol = new HBox();
+        var negBarWithSymbol = new HBox();
+
         if (addedPlus) {
-            
-            
-            plusBars.insert(0, new FakeDrawObject(
-            function (pen, rect) {
-                //A plus sign
-                rect = rect.largestSquare().origin(new Vector(0, 0));
-                var vertLine = new Rect(0.5, 0.1, 0, 0.8).project(rect);
-                DRAW.line(pen, vertLine.origin(),
-                               new Vector(vertLine.right(), vertLine.bottom()),
-                               "Blue",
-                               2);
-                var horiLine = new Rect(0.1, 0.5, 0.8, 0).project(rect);
-                DRAW.line(pen, horiLine.origin(),
-                               new Vector(horiLine.right(), horiLine.bottom()),
-                               "Blue",
-                               2);
-            }, true, true, new Rect(0, 0, 20, 20)));
-            
+            plusBarWithSymbol.add(new PaddingControl(new Label().text("+"))
+                                    .constantBuffer(new Rect(0, 0, 0, 0))
+                                    .percentBuffer(new Rect(0.1, 0, 0.5, 0)), 14);
+        } else {
+            plusBarWithSymbol.add(new FakeDrawObject(function () { }, false, false, new Rect(0, 0, 14, 14)));
         }
+        plusBarWithSymbol.add(plusBars);
 
         if (addedNeg) {
-        
-            negBars.insert(0, new FakeDrawObject(
-            function (pen, rect) {
-                //A negative sign
-                rect = rect.largestSquare().origin(new Vector(0, 0));
-                var horiLine = new Rect(0.2, 0.5, 0.6, 0).project(rect);
-                DRAW.line(pen, horiLine.origin(),
-                               new Vector(horiLine.right(), horiLine.bottom()),
-                               "Blue",
-                               2);
-            }, true, true, new Rect(0, 0, 20, 20)));
-
+            negBarWithSymbol.add(new PaddingControl(new Label().text("-"))
+                                    .constantBuffer(new Rect(0, 0, 0, 0))
+                                    .percentBuffer(new Rect(0.1, 0, 0.5, 0)), 14);
+        } else {
+            negBarWithSymbol.add(new FakeDrawObject(function () { }, false, false, new Rect(0, 0, 14, 14)));
         }
-        */
+        negBarWithSymbol.add(negBars);
 
-        deltaBars.add(plusBars);
-        deltaBars.add(negBars);
+        deltaBars.add(plusBarWithSymbol);
+        deltaBars.add(negBarWithSymbol);
 
         self.base.dirtyLayout();
         self.base.dirty();
@@ -183,7 +165,8 @@ Infobar.AttributeInfo = function AttributeInfo(attrHolder, attrName) {
     var self = this;
     self.base = new BaseObj(self, 10);
 
-    var attrNameLabel = new Label();
+    var attrNameLabel = new Label()
+                            .maxFontSize(12);
     var alleleInfo = new Infobar.AlleleVisual(attrHolder, attrName);
     var attrValueLabel = new Label()
                             .align("right")
@@ -191,14 +174,10 @@ Infobar.AttributeInfo = function AttributeInfo(attrHolder, attrName) {
                             .color("white");
 
     var infoParts = new HBox();
-    var ourLayout = new PaddingControl(
-                     infoParts,
-                     new Rect(0, 10, 0, 0),
-                     new Rect(0, 0, 0, 0)
-                  );
+    var ourLayout = new PaddingControl(infoParts).constantBuffer(new Rect(0, 10, 0, 0));
 
     self.added = function () {
-        infoParts.add(attrNameLabel, 50);
+        infoParts.add(attrNameLabel, 70);
         infoParts.add(alleleInfo);
         infoParts.add(attrValueLabel, 40);
 
@@ -232,17 +211,19 @@ Infobar.AttributeInfo = function AttributeInfo(attrHolder, attrName) {
 
         var value = attrHolder.attr[attrName];
 
+        function roundTo3Chars(value) {
+            return Math.abs(value) < 10 ?
+                round(value, 1) + "" :
+                round(value, 0) + "";
+        }
+
         //Don't show a decimal point, unless the |number| is < 10.
-        var numberToDisplay = Math.abs(value) < 10 ?
-                                round(value, 1) + "" :
-                                round(value, 0) + "";
+        var numberToDisplay = roundTo3Chars(value);
 
         var prevAlleleDelta = getAlleleDelta(alleleToCompare);
-        
+
         if (prevAlleleDelta) {
-            var prevAlleleDelta = Math.abs(prevAlleleDelta) < 10 ?
-                                    round(prevAlleleDelta, 1) + "" :
-                                    round(prevAlleleDelta, 0) + "";
+            var prevAlleleDelta = roundTo3Chars(prevAlleleDelta);
 
             numberToDisplay = "(" + prevAlleleDelta + ") " + numberToDisplay;
         }
@@ -276,7 +257,7 @@ Infobar.AttributeInfos = function AttributeInfos(obj) {
     var deltaAllele = null;
 
     var attrBox = new FlowLayout();
-    var attrHeader = new Label().text("Attributes").maxFontSize(20);
+    var attrHeader = new Label().text("Attributes").maxFontSize(25);
 
     var height = 0;
 
@@ -285,11 +266,9 @@ Infobar.AttributeInfos = function AttributeInfos(obj) {
     self.added = function (rect) {
         Infobar.DeltaBar.deltaBarGroups = {};
 
-        attrBox.add(new PaddingControl(
-                    attrHeader,
-                    new Rect(0, 0, 0, 0),
-                    new Rect(0, 0.5, 0, 0)
-                ));
+        attrBox.add(new PaddingControl(attrHeader)
+                        .constantBuffer(new Rect(0, 0, 0, 0))
+                        .percentBuffer(new Rect(0, 0.3, 0, 0)));
 
         var numAttrs = 0;
         for (var attr in obj.attr) {
@@ -314,9 +293,8 @@ Infobar.AttributeInfos = function AttributeInfos(obj) {
     self.updateAttribute = function (attrName) {
         if (attrInfos[attrName]) {
             attrInfos[attrName].updateValue(deltaAllele);
+            self.base.dirty();
         }
-
-        self.base.dirty();
     }
 
     self.updateAllAttributes = function () {
@@ -331,8 +309,6 @@ Infobar.AttributeInfos = function AttributeInfos(obj) {
         for (var attrName in attrInfos) {
             attrInfos[attrName].updateValue(deltaAllele);
         }
-
-        //self.resize(self.tpos);
 
         self.base.dirty();
     }

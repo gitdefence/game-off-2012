@@ -1,18 +1,12 @@
-Infobar.InfobarClass = function InfobarClass(pos) {
+Infobar.InfobarClass = function InfobarClass() {
     var self = this;
     self.base = new BaseObj(self, 14);
-
-    self.tpos = pos;
-
-    var buttonW = 100;
-
-    //For each displayed item gives extra info to be displayed in brackets)
-    self.extraInfo = {};
+    self.tpos = new Rect(0, 0, 1, 1);
 
     var selectSomethingPrompt = new Label();
 
     var allelePoints = new AllelePointSystem();
-    var outerVBox = new VBox();
+    var ourLayout = new VBox();
     var attributeVBox = new FlowLayout();
 
     var attrInfos = null;
@@ -30,8 +24,8 @@ Infobar.InfobarClass = function InfobarClass(pos) {
         selectSomethingPrompt.maxFontSize(20).lineSpacing(1.5).text(
             "Click on a bug or tower to display its information here.");
 
-        outerVBox.add(attributeVBox);
-        outerVBox.add(allelePoints, 220);
+        ourLayout.add(attributeVBox);
+        ourLayout.add(allelePoints, 220);
 
         updateDisplay();
     };
@@ -46,25 +40,16 @@ Infobar.InfobarClass = function InfobarClass(pos) {
         attributeVBox.clear();
 
         attrInfos = new Infobar.AttributeInfos(obj, null);
-        attributeVBox.add(new PaddingControl(
-                                    attrInfos,
-                                    new Rect(0, 0, 0, 10),
-                                    new Rect(0, 0, 0, 0)
-                                ));
+        attributeVBox.add(new PaddingControl(attrInfos)
+                                    .constantBuffer(new Rect(0, 0, 0, 10)));
 
         targetStrats = new Infobar.NestedObjsVisual({ targetBase: obj.attr.targetStrategy }, "Target Strategy", "target");
-        attributeVBox.add(new PaddingControl(
-                                    targetStrats,
-                                    new Rect(0, 10, 0, 10),
-                                    new Rect(0, 0, 0, 0)
-                                ));
+        attributeVBox.add(new PaddingControl(targetStrats)
+                                    .constantBuffer(new Rect(0, 10, 0, 10)));
 
         attackObjsVisual = new Infobar.NestedObjsVisual(obj.attr.attackObjs, "Attack Types", "attack");
-        attributeVBox.add(new PaddingControl(
-                                    attackObjsVisual,
-                                    new Rect(0, 10, 0, 10),
-                                    new Rect(0, 0, 0, 0)
-                                ));
+        attributeVBox.add(new PaddingControl(attackObjsVisual)
+                                    .constantBuffer(new Rect(0, 10, 0, 10)));
 
         self.updateDeltaAllele(obj);
 
@@ -72,7 +57,7 @@ Infobar.InfobarClass = function InfobarClass(pos) {
     }
 
     self.resize = function (rect) {
-        outerVBox.resize(rect);
+        ourLayout.resize(rect);
         selectSomethingPrompt.resize(rect);
         self.tpos = rect;
     }
@@ -82,12 +67,11 @@ Infobar.InfobarClass = function InfobarClass(pos) {
         self.base.removeAllChildren();
 
         if (selectedObject) {
-            self.base.addChild(outerVBox);
+            self.base.addChild(ourLayout);
         } else {
             self.base.addChild(selectSomethingPrompt);
         }
 
-        //Causes the underlying layout to be redone.
         self.base.dirtyLayout();
     }
 

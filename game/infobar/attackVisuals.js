@@ -29,11 +29,9 @@ Infobar.AttackObjVisual = function AttackObjVisual(attackObj, delta) {
 
         typeTitle.add(typeLabel);
 
-        ourLayout.add(new PaddingControl(
-                    typeTitle,
-                    new Rect(0, 8, 0, 2),
-                    new Rect(0, 0.15, 0, 0.05)
-                ));
+        ourLayout.add(new PaddingControl(typeTitle)
+                        .constantBuffer(new Rect(0, 8, 0, 2))
+                        .percentBuffer(new Rect(0, 0.15, 0, 0.05)));
 
         //In the long term this will probably become just a bunch of AlleleVisuals
         for (var type in attackObj) {
@@ -55,11 +53,9 @@ Infobar.AttackObjVisual = function AttackObjVisual(attackObj, delta) {
                                     .color("white")
                                 );
 
-            ourLayout.add(new PaddingControl(
-                        typeDivider,
-                        new Rect(0, 0, 0, 0),
-                        new Rect(0, 0.4, 0, 0)
-                    ));
+            ourLayout.add(new PaddingControl(typeDivider)
+                            .constantBuffer(new Rect(0, 0, 0, 0))
+                            .percentBuffer(new Rect(0, 0.4, 0, 0)));
         }
     }
 

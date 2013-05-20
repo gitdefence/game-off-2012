@@ -264,7 +264,9 @@ function Tower() {
             this.tpos.h = totalWidth * 2;
         }
 
-        assertValid(this.tpos.x, this.tpos.y, this.tpos.w, this.tpos.h);
+        if (!assertRectangle(this.tpos)) {
+            this.tpos = new Rect(0, 0, 1, 1);
+        }
 
         this.lineWidth = outerWidth;
     }
