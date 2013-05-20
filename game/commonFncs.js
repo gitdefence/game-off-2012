@@ -64,13 +64,7 @@ function hasAtleastXElements(object, x) {
 
 //Standardization of the compare function, really simplify things...
 function compare(a, b) {
-    if (a < b) {
-        return -1;
-    } else if (a > b) {
-        return 1;
-    } else {
-        return 0;
-    }
+    
 }
 
 function sortArrayByProperty(a, prop) {
@@ -78,7 +72,15 @@ function sortArrayByProperty(a, prop) {
     function cmp(a, b) {
         //This probably makes it slower... ah well, the main place it impacts is
         //sorting the zorder sort for drawing, which could be made faster in other ways.
-        return compare(a[prop], b[prop]);
+        var aVal = a[prop];
+        var bVal = b[prop];
+        if (aVal < bVal) {
+            return -1;
+        } else if (aVal > bVal) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }
 
