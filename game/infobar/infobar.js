@@ -8,7 +8,8 @@ Infobar.InfobarClass = function InfobarClass() {
     var allelePoints = new AllelePointSystem();
     var actualLayout = new ui.VBox();
     var ourLayout = new ui.Box(actualLayout);
-    ourLayout.border(new ui.DeltaRect(5, 5, 5, 5), rgba(255, 255, 255, 1));
+    ourLayout.border(new ui.DeltaRect(1), rgba(255, 255, 255, 1));
+    ourLayout.background(rgba(0, 0, 100, 1));
     var attributeVBox = new ui.FlowLayout();
 
     var attrInfos = null;

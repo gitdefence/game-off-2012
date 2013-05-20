@@ -22,6 +22,11 @@ ui.Box = function Box(child) {
 		borderColor = newBorderColor;
 	}
 
+	var background = rgba(0, 0, 0, 1);
+	self.background = function (newBackground) {
+		background = newBackground;
+	}
+
 	self.added = function () {
 		self.base.addChild(child);
 		if (child.optimalWidth) {
@@ -58,11 +63,13 @@ ui.Box = function Box(child) {
 	}
 
 	self.redraw = function (canvas) {
+		var rect = self.tpos.clone().zeroOrigin();
+		var p = new Path();
+		p.rect(rect);
+		canvas.fill(p, background);
 		if (border.nonZero()) {
-			var p = new Path();
-			var rect = self.tpos.clone().zeroOrigin();
 			rect.sub(margin).sub(border.clone().mult(0.5));
-			p.rect(rect);
+			p.clear().rect(rect);
 			// TODO: Proper per-side drawing.
 			canvas.stroke(p, borderColor, border.left());
 		}
