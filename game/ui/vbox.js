@@ -1,7 +1,4 @@
 // Pack a bunch of UI elements vertically.
-// We set our children size using our size.
-// So from our children's perspective our size is fixed, and
-// they dynamically resize.
 ui.VBox = function VBox() {
     this.base = new BaseObj(this, 15);
     this.tpos = new Rect(0, 0, 0, 0);
@@ -20,30 +17,58 @@ ui.VBox = function VBox() {
         this.base.removeAllChildren();
     }
 
-    this.resize = function (rect) {
-        var h = 0;
-        var shared = 0;
+    function calculateHeights(height) {
+        var fixedHeight = 0;
+        var numSharing = 0;
         for (var i = 0; i < children.length; i++) {
             var c = children[i];
-            if (c.height) h += c.height;
-            else shared++;
+            if (c.height) fixedHeight += c.height;
+            else numSharing++;
         }
-        if (h > rect.h) {
-            // Well... fuck.
-            // Eventually we can handle this properly with requestResize, but for now... fuck it.
-            throw "Attempting to make a vbox smaller than it's fixed size children allow!";
+
+        var ratio = 1;
+        if (fixedHeight > height) {
+            ratio = height / fixedHeight;
         }
+
+        var sharedHeight = ~~((height - fixedHeight) / numSharing);
+        for (var i = 0; i < children.length; i++) {
+            var c = children[i];
+            c.calculatedHeight = (c.height || sharedHeight)*ratio;
+        }
+    }
+
+    this.resize = function (rect) {
+        calculateHeights(rect.h);
         this.tpos = rect;
 
-        var sharedHeight = ~~((rect.h - h) / shared);
         var y = rect.y;
         for (var i = 0; i < children.length; i++) {
             var c = children[i];
             var r = rect.clone();
-            r.h = c.height || sharedHeight;
+            r.h = c.calculatedHeight;
             r.y = y;
             y += r.h;
-            c.ui.resize(r);
+            if (r.h <= 0) {
+                // Otherwise things will crash...
+                r.h = 1;
+            }
+             c.ui.resize(r);
         }
+    }
+
+    // Currently, this messes up the internal state, so make sure you
+    // always call resize() after calling this to clean it up again. (It's
+    // not a huge deal since that's the usual use-case anyway)
+    this.optimalWidth = function (height) {
+        calculateHeights(height);
+        var max = 0;
+        for (var i = 0; i < children.length; i++) {
+            var c = children[i];
+            if (!c.ui.optimalWidth) continue;
+            var width = c.ui.optimalWidth(height);
+            if (width > max) max = width;
+        }
+        return max;
     }
 }

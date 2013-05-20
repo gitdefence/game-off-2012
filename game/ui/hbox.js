@@ -1,4 +1,4 @@
-// Pack a bunch of UI elements vertically.
+// Pack a bunch of UI elements horizontally.
 ui.HBox = function HBox() {
     this.base = new BaseObj(this, 15);
     this.tpos = new Rect(0, 0, 0, 0);
@@ -25,15 +25,16 @@ ui.HBox = function HBox() {
             if (c.width) fixedWidth += c.width;
             else numSharing++;
         }
+
+        var ratio = 1;
         if (fixedWidth > width) {
-            // Well... fuck.
-            // Eventually we can handle this properly with requestResize, but for now... fuck it.
-//             throw "Attempting to make a hbox smaller than it's fixed size children allow!";
+            ratio = width / fixedWidth;
         }
+
         var sharedWidth = ~~((width - fixedWidth) / numSharing);
         for (var i = 0; i < children.length; i++) {
             var c = children[i];
-            c.calculatedWidth = c.width || sharedWidth;
+            c.calculatedWidth = (c.width || sharedWidth)*ratio;
         }
     }
 
@@ -48,6 +49,9 @@ ui.HBox = function HBox() {
             r.w = c.calculatedWidth;
             r.x = x;
             x += r.w;
+            if (r.w <= 0) {
+                r.w = 1;
+            }
             c.ui.resize(r);
         }
     }

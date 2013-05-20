@@ -164,7 +164,10 @@ function Text() {
                 usedHeight = fittedRect.h;
                 return;
             }
-            if (curFontSize-- < 0) throw "WTF";
+            if (curFontSize-- < 0) {
+                curFontSize = 0;
+                return;
+            }
         }
     }
 
