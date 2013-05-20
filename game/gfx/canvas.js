@@ -6,13 +6,11 @@ function Canvas() {
     this.resize = function (rect) {
         pos = rect.origin();
 
-        //Changing canvas width and height appear to be hotspots, hence these optimizations.
-        if (element.width != rect.w) {
-            element.width = rect.w;
-        }
-        if (element.height != rect.h) {
-            element.height = rect.h;
-        }
+        //Changing canvas width and height appear to be hotspots, this is because
+        //resizing clears the canvas? Maybe we should do this ourself?
+
+        element.width = rect.w;
+        element.height = rect.h;
         return this;
     }
 
