@@ -2,12 +2,20 @@
 //drawFnc should take a pen, a rect.
 //cachable defines if the drawFnc can be cached (we exposed redraw instead of draw)
 //If offsetRect is true, we offset the rect given to the drawFnc so its origin is (0, 0).
-//If reqSize is defined then we implement optimalWidth and height with reqSize
-function FakeDrawObject(drawFnc, cachable, offsetRect, reqSize) {
+//If reqWidth/reqHeight are defined and non-zero then we implement optimalWidth/optimalHeight with each respectively
+function FakeDrawObject(drawFnc, cachable, offsetRect, reqWidth, reqHeight) {
     var self = this;
 
     if (!assertValid(drawFnc)) {
         drawFnc = function () { };
+    }
+    if (defined(reqWidth) && typeof reqWidth != "number") {
+        fail("Set reqWidth to a number or nothing!");
+        reqWidth = 0;
+    }
+    if (defined(reqHeight) && typeof reqHeight != "number") {
+        fail("Set reqWidth to a number or nothing!");
+        reqHeight = 0;
     }
 
     self.base = new BaseObj(self, 11);
@@ -37,8 +45,34 @@ function FakeDrawObject(drawFnc, cachable, offsetRect, reqSize) {
         }
     }
 
-    if (reqSize) {
-        self.optimalWidth = function () { return reqSize.w; }
-        self.optimalHeight = function () { return reqSize.h; }
+    if (reqWidth) {
+        if (reqHeight) {
+            //Implement scaling
+            self.optimalWidth = function (height) {
+                //We need to scale
+                if (height < reqHeight) {
+                    return reqWidth * (height / reqHeight);
+                } else {
+                    return reqWidth;
+                }
+            }
+        } else {
+            self.optimalWidth = function (height) { return reqSize.w; }
+        }
+    }
+    if (reqHeight) {
+        if (reqWidth) {
+            //Implement scaling
+            self.optimalHeight = function (width) {
+                //We need to scale
+                if (width < reqWidth) {
+                    return reqHeight * (width / reqWidth);
+                } else {
+                    return reqHeight;
+                }
+            }
+        } else {
+            self.optimalHeight = function (width) { return reqHeight; }
+        }
     }
 }

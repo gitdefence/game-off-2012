@@ -127,7 +127,7 @@ Infobar.AlleleVisual = function AlleleVisual(obj, attrName) {
                                     .constantBuffer(new Rect(0, 0, 0, 0))
                                     .percentBuffer(new Rect(0.1, 0, 0.5, 0)), 14);
         } else {
-            plusBarWithSymbol.add(new FakeDrawObject(function () { }, false, false, new Rect(0, 0, 14, 14)));
+            plusBarWithSymbol.add(new FakeDrawObject(function () { }, false, false, 14, 14));
         }
         plusBarWithSymbol.add(plusBars);
 
@@ -136,7 +136,7 @@ Infobar.AlleleVisual = function AlleleVisual(obj, attrName) {
                                     .constantBuffer(new Rect(0, 0, 0, 0))
                                     .percentBuffer(new Rect(0.1, 0, 0.5, 0)), 14);
         } else {
-            negBarWithSymbol.add(new FakeDrawObject(function () { }, false, false, new Rect(0, 0, 14, 14)));
+            negBarWithSymbol.add(new FakeDrawObject(function () { }, false, false, 14, 14));
         }
         negBarWithSymbol.add(negBars);
 
