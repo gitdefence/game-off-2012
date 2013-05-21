@@ -9,6 +9,6 @@ echo "Branch: $safe_branch";
 exec("echo 'Update to $safe_branch from $addr, pulling master.' >> gitdefence.log");
 $safe_branch = "master";
 
-exec("git checkout $safe_branch >> ../gitdefence.log 2>&1");
-exec("git checkout . >> ../gitdefence.log 2>&1");
-exec("git pull origin $safe_branch >> ../gitdefence.log 2>&1");
+exec("git checkout $safe_branch >> gitdefence.log 2>&1");
+exec("git checkout . >> gitdefence.log 2>&1");
+exec("git pull origin $safe_branch >> gitdefence.log 2>&1");
