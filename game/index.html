@@ -18,6 +18,19 @@ canvas {
 #scripts {
     display: none;
 }
+#loaderBox {
+    font-size:72pt;
+    color: #fff;
+    width:100%;
+    text-align:center;
+    margin:auto;
+}
+progress {
+    width: 10em;
+    line-height: 1em;
+    height: 0.5em;
+    border: 1px solid #fff;
+}
 </style>
 </head>
 <body>
@@ -26,60 +39,99 @@ canvas {
     console = window.console || {};
     console.log = console.log || function () { };
     console.warn = console.warn || function () { };
+    function incrementLoadingBar(percent) {
+	    document.getElementById("progressbar").value += percent;
+    }
+    function progressLoadScripts(scripts) {
+	    var len = scripts.length;
+	    for (var i = 0; i < len; i++) {
+		    var s = document.createElement('script')
+		    s.src = scripts[i];
+		    s.onload = function() {
+			    document.getElementById("progressbar").value += (1/len)*100;
+		    }
+
+		    document.getElementById("scripts").appendChild(s);
+
+	    }
+    }
+
+
 </script>
 
+<div id="loaderBox">
+	Loading
+	<br />
+	<progress id="progressbar" max="100" value="0">
+	</progress>
+</div>
 <canvas id="myCanvas"></canvas>
 <div id="scripts">
-<script src="lib/jquery.min.js"></script><!-- //ajax.googleapis.com/ajax/libs/jquery/1.8.2/ -->
+<div>
+<script>
+var scriptslist = [
+"lib/jquery.min.js",
 
-<script src="defaultDebug.js"></script>
-<script src="debug.js"></script>
+"defaultDebug.js",
+"debug.js",
 
-<script src="fail.js"></script>
-<script src="type.js"></script>
 
-<script src="gameOver.js"></script>
+"fail.js",
+"type.js",
 
-<script src="commonFncs.js"></script>
-<script src="commonText.js"></script>
-<script src="commonActions.js"></script>
+"gameOver.js",
 
-<script src="alleles.js"></script>
-<script src="alleleConstruction.js"></script>
-<script src="allelePointSystem.js"></script>
-<script src="geneticSystem.js"></script>
 
-<script src="targetStrategy.js"></script>
-<script src="towerAttackType.js"></script>
+"commonFncs.js",
+"commonText.js",
+"commonActions.js",
 
-<script src="baseObj.js"></script>
 
-<script src="gameInfoBar.js"></script>
-<script src="infobar/include.js"></script>
-<script src="towerBar.js"></script>
-<script src="levelSystem.js"></script>
-<script src="levels.js"></script>
+"alleles.js",
+"alleleConstruction.js",
+"allelePointSystem.js",
+"geneticSystem.js",
 
-<script src="tower.js"></script>
-<script src="path.js"></script>
-<script src="bug.js"></script>
 
-<script src="quadtree.js"></script>
-<script src="quadtreeQueries.js"></script>
+"targetStrategy.js",
+"towerAttackType.js",
 
-<script src="pathGeneration.js"></script>
+"baseObj.js",
 
-<script src="inputHandler.js"></script>
 
-<script src="engine.js"></script>
-<script src="screenSystem.js"></script>
-<script src="gitDefence.js"></script>
+"gameInfoBar.js",
+"infobar/include.js",
+"towerBar.js",
+"levelSystem.js",
+"levels.js",
 
-<script src="gameBoard.js"></script>
 
-<script src="gfx/include.js"></script>
-<script src="ui/include.js"></script>
-<script src="geom/include.js"></script>
+"tower.js",
+"path.js",
+"bug.js",
+
+
+"quadtree.js",
+"quadtreeQueries.js",
+
+"pathGeneration.js",
+
+
+"inputHandler.js",
+
+"engine.js",
+"screenSystem.js",
+"gitDefence.js",
+
+
+"gameBoard.js",
+
+"gfx/include.js",
+"ui/include.js",
+"geom/include.js",
+];
+progressLoadScripts(scriptslist);
+</script>
 
 <script>
     window.onload = function () {
@@ -99,8 +151,9 @@ canvas {
 
         screenSystem.addScreen("MainGame", new GitDefence(screen));
         screenSystem.setActiveScreen("MainGame");
+	document.getElementById("loaderBox").style.visibility="none";
+	document.getElementById("loaderBox").style.height="0px";
     };
 </script>
-</div>
 </body>
 </html>
