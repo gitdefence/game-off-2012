@@ -67,7 +67,7 @@ function GitDefence(pos) {
             pen.fillStyle = "transparent";
             pen.lineWidth = 2;
             var p = selection.tpos.center();
-            ink.circ(p.x, p.y, selection.attr.range, pen);
+            //ink.circ(p.x, p.y, selection.attr.range, pen);
         }
 
         if (DFlag.quadtree.draw) {
