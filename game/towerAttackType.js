@@ -356,7 +356,7 @@ var allAttackTypes = {
     },
     Pulse: function pulse() {
         this.damagePercent = 30;
-        this.effectRange = 50;
+        this.effectRange = 25;
         this.chargeTime = 1;
         this.drawGlyph = function (pen, box) {
             box = adjustBoxForOldGlyphs(box);
@@ -395,7 +395,9 @@ var allAttackTypes = {
             var target = attackTemplate.target;
             var prevTarget = this.attackTemplate.target;
 
-            var effectRange = attackTemplate.attackObj.effectRange;
+            var baseAttacker = attackTemplate.baseAttacker;
+
+            var effectRange = baseAttacker.attr.range * attackTemplate.attackObj.effectRange / 100;
             var chargeTime = attackTemplate.attackObj.chargeTime;
 
             this.color = getRealType(realAttacker) == "Bug" ? "rgba(255,0,0,0)" : "rgba(0,0,255,0)";
