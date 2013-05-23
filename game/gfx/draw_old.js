@@ -1,6 +1,6 @@
 function setStrokeAndColor(pen, borderWidth, borderColor) {
     if(borderWidth) {
-        pen.lineWidth = 0.9;
+        pen.lineWidth = 0.99;
         pen.strokeStyle = borderColor;
     }
     else {

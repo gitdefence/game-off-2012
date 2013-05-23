@@ -223,8 +223,7 @@ var allAttackTypes = {
             var us = this;
             function onImpact()
             {
-                //A hackish way to check if both still exist
-                if(target.base.rootNode == attacker.base.rootNode)
+                if(target.base.rootNode instanceof Engine)
                     applyAttack(attackTemplate);
                 us.base.destroySelf();
             }

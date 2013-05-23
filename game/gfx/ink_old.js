@@ -2,7 +2,7 @@ ink = {
     circ: function (x, y, r, pen) {
         if (!assertValid(x, y, r, pen))
             return;
-
+        pen.lineWidth = 0.9;
         pen.beginPath();
         pen.arc(x, y, r, 0, 2 * Math.PI, false);
         pen.closePath();
