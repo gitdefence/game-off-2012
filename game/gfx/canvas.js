@@ -31,7 +31,7 @@ function Canvas() {
         //     c.translate(0.5, 0.5);
         //     c.setTransform(1, 0, 0, 1, 0.5, 0.5);
 
-        if (element.w == 0 || element.h == 0) {
+        if (element.width <= 0 || element.height <= 0) {
             fail("Attempting to draw a canvas with area zero, this is probably a bug. Did you forget to resize it first?");
             return;
         }
