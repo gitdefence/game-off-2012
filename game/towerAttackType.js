@@ -423,6 +423,7 @@ var allAttackTypes = {
             {
                 attackTemplate = this.attackTemplate;
 
+                var baseAttacker = attackTemplate.baseAttacker;
                 var attacker = attackTemplate.attacker;
                 var realAttacker = attackTemplate.baseAttacker;
                 var target = attackTemplate.target;
@@ -434,7 +435,7 @@ var allAttackTypes = {
 
                 //This is basically just a custom targeting strategy
                 var targetType = prevTarget ? getRealType(prevTarget) : (getRealType(attacker) == "Bug" ? "Tower" : "Bug");
-                var targets = findAllWithin(attacker.base.rootNode, targetType,
+                var targets = findAllWithin(baseAttacker.base.rootNode, targetType,
                         attacker.tpos.center(), effectRange);
 
                 this.targets = targets;
