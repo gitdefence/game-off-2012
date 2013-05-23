@@ -10,8 +10,8 @@ function Bug(startPath) {
             // In the future tower will be like self.
             range:          0,
             damage:         0,
-            maxHp:             0,
-            hp:      0,
+            maxHp:          0,
+            hp:             0,
             hpRegen:        0,
             attSpeed:       0,
             speed:          0,
@@ -24,7 +24,7 @@ function Bug(startPath) {
     }
     self.setBaseAttrs();
 
-    self.tpos = new Rect(0, 0, r, r);
+    self.tpos = new Rect(0, 0, r*2, r*2);
 
     self.base = new BaseObj(self, 11);
     var velocity = new Vector(1, 0).mag(self.attr.speed);
@@ -131,7 +131,7 @@ function Bug(startPath) {
             redraw(canvas);
             canvasDirty = false;
         }
-        canvas.moveTo(new Vector(self.tpos.x - self.attr.range, self.tpos.y - self.attr.range));
+        canvas.moveTo(new Vector(self.tpos.x - self.attr.range + self.tpos.w / 2, self.tpos.y - self.attr.range + self.tpos.w / 2));
         canvas.drawTo(pen);
     }
 
