@@ -168,7 +168,7 @@ function Tower() {
             kills: 0,
             value: TowerStats.value
         };
-        this.attr.targetStrategy = new targetStrategies.Farthest();
+        this.attr.targetStrategy = new targetStrategies.Random();
         this.attr.attackObjs = {};
     };
     this.setBaseAttrs();
@@ -459,7 +459,7 @@ function Tower() {
     this.dragOffset = null;
     this.tempNetworkIndicator = null;
     this.ctrlDrag = false;
-    this.mousedown = function(e) {
+    this.mousedown = function (e) {
         this.startDrag = e;
         this.dragOffset = new Vector(this.tpos);
         this.dragOffset.sub(e);
@@ -469,8 +469,11 @@ function Tower() {
 
         this.ctrlDrag = e.ctrlKey;
 
-        if(!this.ctrlDrag) {
-            this.tempNetworkIndicator = new SLine(this.startDrag, e, "green", 15, {0: 1.0});
+        if (!this.ctrlDrag) {
+            if (this.tempNetworkIndicator) {
+                this.tempNetworkIndicator.destroySelf();
+            }
+            this.tempNetworkIndicator = new SLine(this.startDrag, e, "green", 15, { 0: 1.0 });
             this.base.parent.base.addChild(this.tempNetworkIndicator);
         }
     };

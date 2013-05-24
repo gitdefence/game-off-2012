@@ -107,7 +107,7 @@ var targetStrategies = {
             }
         };
     },
-    Farthest: function Farthest () {
+    FarthestOnPath: function FarthestOnPath () {
         this.run = function (attacker, prevTarget) {
             //Just trust me
             var targetType = prevTarget ? getRealType(prevTarget) : (getRealType(attacker) == "Bug" ? "Tower" : "Bug");
