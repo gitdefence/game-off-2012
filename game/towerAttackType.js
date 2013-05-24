@@ -73,7 +73,7 @@ function startAttack(attackTemplate) {
     var attacker = attackTemplate.attacker;
     var prevTarget = attackTemplate.target;
 
-    if (!assertValid(realAttacker.attr.targetStrategy)) {
+    if (assertValid(realAttacker.attr.targetStrategy)) {
         attackTemplate.target = realAttacker.attr.targetStrategy.run(attacker, prevTarget);
     } else {
         attackTemplate.target = new targetStrategies.Random().run(attacker, prevTarget);

@@ -168,7 +168,7 @@ function Tower() {
             kills: 0,
             value: TowerStats.value
         };
-        this.attr.targetStrategy = new targetStrategies.Closest();
+        this.attr.targetStrategy = new targetStrategies.Farthest();
         this.attr.attackObjs = {};
     };
     this.setBaseAttrs();
