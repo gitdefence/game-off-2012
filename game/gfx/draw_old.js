@@ -1,6 +1,6 @@
 function setStrokeAndColor(pen, borderWidth, borderColor) {
     if(borderWidth) {
-        pen.lineWidth = 0.99;
+        pen.lineWidth = borderWidth;
         pen.strokeStyle = borderColor;
     }
     else {
@@ -29,7 +29,7 @@ DRAW = {
         //}
         
         pen.beginPath();
-        pen.arc(centerPos.x, centerPos.y, r - borderWidth, angleStart, angleEnd, false);
+        pen.arc(centerPos.x, centerPos.y, r - borderWidth * 2, angleStart, angleEnd, false);
         pen.closePath();
         if(insideColor != "transparent") {
             pen.fill();
