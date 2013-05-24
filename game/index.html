@@ -88,8 +88,8 @@ canvas {
             // Fix IE's stupid window.onload behaviour.
             // Note that this will sometimes fail, but it's
             // good enough for development/testing.
-            //setTimeout(window.onload, 100);
-            //return;
+            setTimeout(window.onload, 100);
+            return;
         }
 
         var canvas = document.getElementById("myCanvas");
