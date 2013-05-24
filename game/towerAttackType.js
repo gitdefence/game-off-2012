@@ -188,7 +188,7 @@ var allAttackTypes = {
         this.bulletSpeed = 50;
         this.damagePercent = 300;
         this.drawGlyph = function (pen, box) {
-            DRAW.circle(pen, box.center(), box.w/2, "orange", 2, "white");
+            DRAW.circle(pen, box.center(), Math.min(box.w, box.h)/2, "orange", 2, "white");
         };
         this.AttackNode = function(attackTemplate)
         {
