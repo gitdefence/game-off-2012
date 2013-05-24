@@ -188,16 +188,7 @@ var allAttackTypes = {
         this.bulletSpeed = 50;
         this.damagePercent = 300;
         this.drawGlyph = function (pen, box) {
-            box = adjustBoxForOldGlyphs(box);
-
-            pen.lineWidth = 0;
-	        pen.fillStyle = "#ffffff";        
-            pen.strokeStyle = "transparent";
-	        ink.circ(box.x+(box.w*0.35), box.y-(box.w*0.5), box.w*0.4, pen);
-
-    	    pen.strokeStyle = "transparent";
-            pen.fillStyle = "orange";
-	        ink.circ(box.x+(box.w*0.35), box.y-(box.w*0.5), box.w*0.3, pen);
+            DRAW.circle(pen, box.center(), box.w/2, "orange", 2, "white");
         };
         this.AttackNode = function(attackTemplate)
         {
@@ -359,27 +350,11 @@ var allAttackTypes = {
         this.effectRange = 25;
         this.chargeTime = 1;
         this.drawGlyph = function (pen, box) {
-            box = adjustBoxForOldGlyphs(box);
-            //Draw text
-            pen.fillStyle = "#000000";
-            pen.font = box.h + "px arial";
-            pen.textAlign = 'left';
-
-	        pen.fillStyle = setAlpha(globalColorPalette.pulse, 0.5);
-	        pen.strokeStyle = "transparent";
-	        ink.circ(box.x+(box.w*0.3), box.y-(box.w*0.5), box.w*0.5, pen);
-
-            pen.fillStyle = setAlpha(globalColorPalette.pulse, 0.5);
-	        pen.strokeStyle = "transparent";
-	        ink.circ(box.x+(box.w*0.3), box.y-(box.w*0.5), box.w*0.4, pen);
-
-            pen.fillStyle = setAlpha(globalColorPalette.pulse, 0.5);
-	        pen.strokeStyle = "transparent";
-	        ink.circ(box.x+(box.w*0.3), box.y-(box.w*0.5), box.w*0.2, pen);
-
-            pen.fillStyle = setAlpha(globalColorPalette.pulse, 0.5);
-	        pen.strokeStyle = "transparent";
-	        ink.circ(box.x+(box.w*0.3), box.y-(box.w*0.5), box.w*0.1, pen);
+            box.clone().shrink(2);
+            DRAW.circle(pen, box.center(), box.w * 0.5, setAlpha(globalColorPalette.pulse, 0.5));
+            DRAW.circle(pen, box.center(), box.w * 0.4, setAlpha(globalColorPalette.pulse, 0.5));
+            DRAW.circle(pen, box.center(), box.w * 0.2, setAlpha(globalColorPalette.pulse, 0.5));
+            DRAW.circle(pen, box.center(), box.w * 0.1, setAlpha(globalColorPalette.pulse, 0.5));
         };
         this.AttackNode = function(attackTemplate)
         {
