@@ -80,12 +80,19 @@ function generatePath(eng, game) {
 
             var curPath;
 
-            if (!prevPath) {
-                curPath = new Path_Start(curPos.x * TILE_SIZE, curPos.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-            }
-            else {
-                curPath = new Path_Piece(curPos.x * TILE_SIZE, curPos.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            curPath = new Path_Piece((curPos.x + 0.5) * TILE_SIZE, (curPos.y + 0.5) * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            if (prevPath) {
                 prevPath.nextPath = curPath;
+                if (curPath.bugMovementTarget().x == prevPath.bugMovementTarget().x) {
+                    prevPath.tpos.w = 1;
+                }
+                if (curPath.bugMovementTarget().y == prevPath.bugMovementTarget().y) {
+                    prevPath.tpos.h = 1;
+                }
+            } else {
+                var pathStart = new Path_Start(curPos.x * TILE_SIZE, curPos.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                pathStart.nextPath = curPath;
+                eng.base.addChild(pathStart);
             }
 
             prevPath = curPath;

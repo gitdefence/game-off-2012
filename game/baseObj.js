@@ -262,6 +262,10 @@ function BaseObj(holder, zindex, dynamicZIndex) {
     function draw(pen) {
         if (holder.hidden) return;
 
+        if(DFlag.drawAllObjectBoxes && holder.tpos) {
+            DRAW.rect(pen, holder.tpos, "transparent", 1, "grey");
+        }
+
         if (layoutDirty) {
             holder.resize(holder.tpos);
             layoutDirty = false;

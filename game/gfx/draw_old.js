@@ -1,6 +1,6 @@
 function setStrokeAndColor(pen, borderWidth, borderColor) {
     if(borderWidth) {
-        pen.lineWidth = borderWidth;
+        pen.lineWidth = 0.99;
         pen.strokeStyle = borderColor;
     }
     else {
@@ -24,13 +24,19 @@ DRAW = {
     arc: function(pen, centerPos, r, angleStart, angleEnd, insideColor, borderWidth, borderColor) {
         borderWidth = setStrokeAndColor(pen, borderWidth, borderColor);
         
-        pen.fillStyle = insideColor;
+        //if(insideColor != "transparent") {
+            pen.fillStyle = insideColor;
+        //}
         
         pen.beginPath();
         pen.arc(centerPos.x, centerPos.y, r, angleStart, angleEnd, false);
-        //pen.closePath();
-        pen.fill();
-        pen.stroke();
+        pen.closePath();
+        if(insideColor != "transparent") {
+            pen.fill();
+        }
+        if(pen.strokeStyle != "transparent") {
+            pen.stroke();
+        }
     },
     piePiece: function(pen, centerPos, r, angleStart, angleEnd, insideColor, borderWidth, borderColor) {
         borderWidth = setStrokeAndColor(pen, borderWidth, borderColor);

@@ -52,9 +52,10 @@ function Bug(startPath) {
         var game = getGame(self);
 
         var offset = Math.floor(((Math.random() - 0.5) * 0.5 + 0.5) * game.tileSize);
+        offset = 0;
         pathOffsetVector = new Vector(offset, offset);
 
-        self.tpos.center(startPath.tpos.origin().add(pathOffsetVector));
+        self.tpos.center(startPath.bugMovementTarget().add(pathOffsetVector));
 
         self.constantOne = 1;
         self.base.addChild(new UpdateTicker(self, "constantOne", "regenTick"));
@@ -87,10 +88,11 @@ function Bug(startPath) {
 
         //We could also add pathOffsetVector to the path, but there are
         //multiple paths we have to worry about, so this is simplier.
-        var offsetSelfPos = self.tpos.origin().sub(pathOffsetVector);
+        var offsetSelfPos = self.tpos.center().sub(pathOffsetVector);
 
         //Move towards the next rectangle.
-        var vecToCurrent = cur.tpos.origin().sub(offsetSelfPos);
+        var vecToCurrent;
+        vecToCurrent = cur.bugMovementTarget().sub(offsetSelfPos);
 
         var speed = self.attr.speed;
         var distance = dt * speed;

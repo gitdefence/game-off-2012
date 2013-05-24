@@ -3,6 +3,10 @@ function Path_End(x, y, w, h) {
     self.tpos = new Rect(x, y, w, h);
     self.base = new BaseObj(self, 2);
 
+    self.bugMovementTarget = function () {
+        return self.tpos.center();
+    }
+
     self.drawToGameboard = function (pen) {
         var p = self.tpos;
         pen.fillStyle = "grey";
@@ -15,6 +19,10 @@ function Path_Start(x, y, w, h) {
     var self = this;
     self.tpos = new Rect(x, y, w, h);
     self.base = new BaseObj(self, 2);
+
+    self.bugMovementTarget = function () {
+        return self.tpos.center();
+    }
 
     self.drawToGameboard = function (pen) {
         var p = self.tpos;
@@ -29,18 +37,18 @@ function Path_Piece(x, y, w, h) {
     self.tpos = new Rect(x, y, w, h);
     self.base = new BaseObj(self, 3);
 
+    self.bugMovementTarget = function () {
+        return self.tpos.origin();
+    }
+
     self.drawToGameboard = function (pen) {
         if (!self.nextPath) return;
 
-        var t = self.nextPath.tpos.center();
-        var direction = new Vector(t.x, t.y);
-        direction.sub(self.tpos.center());
-
-        var start = self.tpos.center();
-
-        var end = new Vector(start.x, start.y);
-        direction.norm().mult(self.tpos.w);
-        end.add(direction);
+        //Unfortunately we do not reflect our w or h in our drawing...
+        //hopefully they line up with our relation to our next path or
+        //else collision detection with towers will be off.
+        var start = self.bugMovementTarget();
+        var end = self.nextPath.bugMovementTarget();
 
         pen.strokeStyle = "blue";
         pen.lineWidth = 2;

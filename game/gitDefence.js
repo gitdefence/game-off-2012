@@ -90,7 +90,7 @@ function GitDefence(pos) {
         }
         if (DFlag.quadtree.shadeBoxes) {
             for (var type in engine.base.children) {
-                shadeBoxesRecursive(engine.base.children[type], 0.05);
+                shadeBoxesRecursive(engine.base.children[type], 0.1);
             }
         }
     }
