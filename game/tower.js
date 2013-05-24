@@ -556,7 +556,7 @@ function Tower() {
         tower.tpos.x = e.x;
         tower.tpos.y = e.y;
 
-        if(!initialPlacement && !findClosestToPoint(eng, "Tile", tower.tpos.center(), 0)) {
+        if (!initialPlacement && !findClosestToPoint(eng, "Tile", tower.tpos.center(), 0)) {
             //You cannot move to a position where there are no tiles
             tower.tpos.x = originalPos.x;
             tower.tpos.y = originalPos.y;
@@ -565,11 +565,17 @@ function Tower() {
             return;
         }
 
-        var collisions = [];
-        mergeToArray(findAllWithinDistanceToRect(eng, "Tower", tower.tpos, 0), collisions);
-        mergeToArray(findAllWithinDistanceToRect(eng, "Path_Piece", tower.tpos, 0), collisions);
+        function mergeToCollisions(tower, collisions) {
+            mergeToArray(findAllWithinDistanceToRect(eng, "Tower", tower.tpos, 0), collisions);
+            mergeToArray(findAllWithinDistanceToRect(eng, "Path_Piece", tower.tpos, 0), collisions);
+            mergeToArray(findAllWithinDistanceToRect(eng, "Path_Start", tower.tpos, 0), collisions);
+            mergeToArray(findAllWithinDistanceToRect(eng, "Path_End", tower.tpos, 0), collisions);
+        }
 
-        if(collisions.length > 0) {
+        var collisions = [];
+        mergeToCollisions(tower, collisions);
+
+        if (collisions.length > 0) {
             var alignTo = collisions[0];
             var offset = minVecForDistanceRects(tower.tpos, alignTo.tpos, 1);
 
@@ -585,17 +591,15 @@ function Tower() {
         //(this projection code will be created for bullets and lasers anyway).
         tower.tpos.x = e.x;
         var collisions = [];
-        mergeToArray(findAllWithinDistanceToRect(eng, "Tower", tower.tpos, 0), collisions);
-        mergeToArray(findAllWithinDistanceToRect(eng, "Path_Piece", tower.tpos, 0), collisions);
-        if(collisions.length > 0) {
+        mergeToCollisions(tower, collisions);
+        if (collisions.length > 0) {
             tower.tpos.x = originalPos.x;
         }
 
         tower.tpos.y = e.y;
         var collisions = [];
-        mergeToArray(findAllWithinDistanceToRect(eng, "Tower", tower.tpos, 0), collisions);
-        mergeToArray(findAllWithinDistanceToRect(eng, "Path_Piece", tower.tpos, 0), collisions);
-        if(collisions.length > 0) {
+        mergeToCollisions(tower, collisions);
+        if (collisions.length > 0) {
             tower.tpos.y = originalPos.y;
         }
         tower.hidden = false;

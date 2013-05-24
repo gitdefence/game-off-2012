@@ -70,7 +70,7 @@ function generatePath(eng, game) {
     while (true) {
         if (curPos.x == (NUM_TILES_X - 1) || curPos.y == (NUM_TILES_Y - 1)) {
             curPath = new Path_End(curPos.x * TILE_SIZE, curPos.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-            prevPath.nextPath = curPath;
+            prevPath.setNextPath(curPath);
 
             eng.base.addChild(curPath);
             break;
@@ -80,9 +80,9 @@ function generatePath(eng, game) {
 
             var curPath;
 
-            curPath = new Path_Piece((curPos.x + 0.5) * TILE_SIZE, (curPos.y + 0.5) * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            curPath = new Path_Piece((curPos.x + 0.5) * TILE_SIZE, (curPos.y + 0.5) * TILE_SIZE, 0, 0);
             if (prevPath) {
-                prevPath.nextPath = curPath;
+                prevPath.setNextPath(curPath);
                 if (curPath.bugMovementTarget().x == prevPath.bugMovementTarget().x) {
                     prevPath.tpos.w = 1;
                 }
@@ -91,7 +91,7 @@ function generatePath(eng, game) {
                 }
             } else {
                 var pathStart = new Path_Start(curPos.x * TILE_SIZE, curPos.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-                pathStart.nextPath = curPath;
+                pathStart.setNextPath(curPath);
                 eng.base.addChild(pathStart);
             }
 

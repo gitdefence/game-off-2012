@@ -3,6 +3,10 @@ function Path_End(x, y, w, h) {
     self.tpos = new Rect(x, y, w, h);
     self.base = new BaseObj(self, 2);
 
+    self.setNextPath = function (nextPath) {
+        self.nextPath = nextPath;
+    }
+
     self.bugMovementTarget = function () {
         return self.tpos.center();
     }
@@ -20,6 +24,10 @@ function Path_Start(x, y, w, h) {
     self.tpos = new Rect(x, y, w, h);
     self.base = new BaseObj(self, 2);
 
+    self.setNextPath = function (nextPath) {
+        self.nextPath = nextPath;
+    }
+
     self.bugMovementTarget = function () {
         return self.tpos.center();
     }
@@ -36,6 +44,10 @@ function Path_Piece(x, y, w, h) {
     var self = this;
     self.tpos = new Rect(x, y, w, h);
     self.base = new BaseObj(self, 3);
+
+    self.setNextPath = function (nextPath) {
+        self.nextPath = nextPath;
+    }
 
     self.bugMovementTarget = function () {
         return self.tpos.origin();
