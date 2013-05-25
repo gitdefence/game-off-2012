@@ -16,7 +16,7 @@ var Rect = (function () {
         this.w = w;
         this.h = h;
 
-        this.uninvertRectangle();
+        this.uninvert();
     }
 
     var p = Rect.prototype;
@@ -33,7 +33,7 @@ var Rect = (function () {
     //If we are inverted, flips us so we are not.
     //Meaning, if our w or h are negative, makes them 
     //positive and moves our x or y over
-    p.uninvertRectangle = function() {
+    p.uninvert = function() {
         if (this.w < 0) {
             this.x += this.w;
             this.w = -this.w;

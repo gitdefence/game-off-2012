@@ -5,6 +5,7 @@ function setStrokeAndColor(pen, borderWidth, borderColor) {
         pen.strokeStyle = borderColor;
     }
     else {
+        borderWidth = 0;
         pen.lineWidth = 0;
         pen.strokeStyle = "transparent";
     }
