@@ -351,10 +351,11 @@ var allAttackTypes = {
         this.chargeTime = 1;
         this.drawGlyph = function (pen, box) {
             box.clone().shrink(2);
-            DRAW.circle(pen, box.center(), box.w * 0.5, setAlpha(globalColorPalette.pulse, 0.5));
-            DRAW.circle(pen, box.center(), box.w * 0.4, setAlpha(globalColorPalette.pulse, 0.5));
-            DRAW.circle(pen, box.center(), box.w * 0.2, setAlpha(globalColorPalette.pulse, 0.5));
-            DRAW.circle(pen, box.center(), box.w * 0.1, setAlpha(globalColorPalette.pulse, 0.5));
+            var color = setAlpha(globalColorPalette.pulse, 0.5);
+            DRAW.circle(pen, box.center(), box.w * 0.5, color);
+            DRAW.circle(pen, box.center(), box.w * 0.4, color);
+            DRAW.circle(pen, box.center(), box.w * 0.2, color);
+            DRAW.circle(pen, box.center(), box.w * 0.1, color);
         };
         this.AttackNode = function(attackTemplate)
         {
