@@ -40,7 +40,7 @@ function Bug(startPath) {
     self.base.addChild(self.genes);
 
 
-    //self.base.addChild(new AttackCycle());
+    self.base.addChild(new AttackCycle());
 
     self.base.addChild(new Selectable());
 
