@@ -23,7 +23,7 @@ function FakeDrawObject(drawFnc, cachable, offsetRect, reqWidth, reqHeight) {
 
     self.resize = function (rect) {
         if (defined(reqWidth) && defined(reqHeight) &&
-            rect.w < reqWidth || rect.h < reqHeight) {
+            (rect.w < reqWidth || rect.h < reqHeight)) {
             var widthPercent = reqWidth && rect.w / reqWidth;
             var heightPercent = reqHeight && rect.h / reqHeight;
             var minPercent = Math.min(widthPercent, heightPercent);

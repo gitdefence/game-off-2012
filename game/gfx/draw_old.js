@@ -1,10 +1,10 @@
+//Saves some code with some simple verification. Not really that useful.
 function setStrokeAndColor(pen, borderWidth, borderColor) {
     if(borderWidth) {
         pen.lineWidth = borderWidth;
         pen.strokeStyle = borderColor;
     }
     else {
-        borderWidth = 0;
         pen.lineWidth = 0;
         pen.strokeStyle = "transparent";
     }
@@ -22,24 +22,25 @@ DRAW = {
         DRAW.arc(pen, centerPos, r, 0, Math.PI * 2, insideColor, borderWidth, borderColor);
     },
     arc: function(pen, centerPos, r, angleStart, angleEnd, insideColor, borderWidth, borderColor) {
+        borderWidth = borderWidth || 0;
+
         //Fix for Quentin's chrome. Tried uninstalling, 
         //reinstalling grpahics drivers, etc. This is the only
         //thing I could fix.
-        borderWidth = borderWidth && Math.min(borderWidth, 0.99);
+        borderWidth = Math.min(borderWidth, 0.99);
 
+        //This insures it is defined, and sets some useful stuff.
+        //Not need for us specifically, but every other function in this file
+        //uses it, so we maintain consistency.
         borderWidth = setStrokeAndColor(pen, borderWidth, borderColor);
 
-        if(insideColor != "transparent") {
-            pen.fillStyle = insideColor;
-        }
-        
         pen.beginPath();
         pen.arc(centerPos.x, centerPos.y, Math.abs(r - borderWidth), angleStart, angleEnd, false);
-        pen.closePath();
         if(pen.strokeStyle != "transparent") {
             pen.stroke();
         }
         if(insideColor != "transparent") {
+            pen.fillStyle = insideColor;
             pen.fill();
         }
     },
