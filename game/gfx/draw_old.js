@@ -24,18 +24,23 @@ DRAW = {
     arc: function(pen, centerPos, r, angleStart, angleEnd, insideColor, borderWidth, borderColor) {
         borderWidth = setStrokeAndColor(pen, borderWidth, borderColor);
         
-        //if(insideColor != "transparent") {
+        //Fix for Quentin's chrome. Tried uninstalling, 
+        //reinstalling grpahics drivers, etc. This is the only
+        //thing I could fix.
+        borderWidth = Math.min(borderWidth, 0.99);
+
+        if(insideColor != "transparent") {
             pen.fillStyle = insideColor;
-        //}
+        }
         
         pen.beginPath();
         pen.arc(centerPos.x, centerPos.y, Math.abs(r - borderWidth), angleStart, angleEnd, false);
         pen.closePath();
-        if(insideColor != "transparent") {
-            pen.fill();
-        }
         if(pen.strokeStyle != "transparent") {
             pen.stroke();
+        }
+        if(insideColor != "transparent") {
+            pen.fill();
         }
     },
     piePiece: function(pen, centerPos, r, angleStart, angleEnd, insideColor, borderWidth, borderColor) {

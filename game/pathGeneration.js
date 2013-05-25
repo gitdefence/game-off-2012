@@ -83,12 +83,6 @@ function generatePath(eng, game) {
             curPath = new Path_Piece((curPos.x + 0.5) * TILE_SIZE, (curPos.y + 0.5) * TILE_SIZE, 0, 0);
             if (prevPath) {
                 prevPath.setNextPath(curPath);
-                if (curPath.bugMovementTarget().x == prevPath.bugMovementTarget().x) {
-                    prevPath.tpos.w = 1;
-                }
-                if (curPath.bugMovementTarget().y == prevPath.bugMovementTarget().y) {
-                    prevPath.tpos.h = 1;
-                }
             } else {
                 var pathStart = new Path_Start(curPos.x * TILE_SIZE, curPos.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 pathStart.setNextPath(curPath);
