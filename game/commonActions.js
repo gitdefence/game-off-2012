@@ -146,10 +146,7 @@ function SlowEffect(magnitude) {
 
     this.draw = function (pen) {
         var p = this.base.parent.tpos;
-        pen.fillStyle = "dodgerblue";
-        pen.strokeStyle = "white";
-        pen.lineWidth = 1;
-        ink.circ(p.center().x, p.center().y, p.w / 2, pen);
+        DRAW.circle(pen, p.center(), p.w / 2, "dodgerblue", 1, "white");
     }
 }
 

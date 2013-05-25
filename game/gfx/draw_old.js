@@ -22,12 +22,12 @@ DRAW = {
         DRAW.arc(pen, centerPos, r, 0, Math.PI * 2, insideColor, borderWidth, borderColor);
     },
     arc: function(pen, centerPos, r, angleStart, angleEnd, insideColor, borderWidth, borderColor) {
-        borderWidth = setStrokeAndColor(pen, borderWidth, borderColor);
-        
         //Fix for Quentin's chrome. Tried uninstalling, 
         //reinstalling grpahics drivers, etc. This is the only
         //thing I could fix.
-        borderWidth = Math.min(borderWidth, 0.99);
+        borderWidth = borderWidth && Math.min(borderWidth, 0.99);
+
+        borderWidth = setStrokeAndColor(pen, borderWidth, borderColor);
 
         if(insideColor != "transparent") {
             pen.fillStyle = insideColor;

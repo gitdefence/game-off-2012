@@ -444,11 +444,8 @@ var allAttackTypes = {
 
             for(var i = 0; i < circlePos.length; i += 3)
             {
-                pen.strokeStyle = globalColorPalette.poison;
-                pen.fillStyle = globalColorPalette.poison;
-	            pen.lineWidth = 1;
-                ink.circ(box.x+(box.w*circlePos[i]), box.y-(box.w*circlePos[i + 1]),
-                    box.w * circlePos[i + 2], pen);
+                DRAW.circle(pen, new Vector(box.x + (box.w * circlePos[i]), box.y - (box.w * circlePos[i + 1])),
+                    globalColorPalette.poison, 1, globalColorPalette.poison);
             }
 
 

@@ -33,10 +33,8 @@ var targetStrategies = {
             pen.beginPath();
 
             for (var i = 0; i < circlePos.length; i += 3) {
-                pen.strokeStyle = "black";
-                pen.fillStyle = color;
-	            pen.lineWidth = 1;
-                ink.circ(box.x + (box.w * circlePos[i]), box.y - (box.w * circlePos[i + 1]), box.w * circlePos[i + 2], pen);
+                DRAW.circle(pen, new Vector(box.x + (box.w * circlePos[i]), box.y - (box.w * circlePos[i + 1])),
+                    box.w * circlePos[i + 2], color, 1, "black");
             }
 
 
@@ -90,10 +88,8 @@ var targetStrategies = {
                              0.0, 0.8, 0.1,];
 
             for (var i = 0; i < circlePos.length; i += 3) {
-                pen.strokeStyle = "black";
-                pen.fillStyle = color;
-	            pen.lineWidth = 1;
-                ink.circ(box.x + (box.w * circlePos[i]), box.y - (box.w * circlePos[i + 1]), box.w * circlePos[i + 2], pen);
+                DRAW.circle(pen, new Vector(box.x + (box.w * circlePos[i]), box.y - (box.w * circlePos[i + 1])),
+                    box.w * circlePos[i + 2], color, 1, "black");
             }
 
 
@@ -164,10 +160,8 @@ var targetStrategies = {
             pen.beginPath();
 
             for (var i = 0; i < circlePos.length; i += 3) {
-                pen.strokeStyle = "black";
-                pen.fillStyle = color;
-	            pen.lineWidth = 1;
-                ink.circ(box.x + (box.w * circlePos[i]), box.y - (box.w * circlePos[i + 1]), box.w * circlePos[i + 2], pen);
+                DRAW.circle(pen, new Vector(box.x + (box.w * circlePos[i]), box.y - (box.w * circlePos[i + 1])),
+                    box.w * circlePos[i + 2], color, 1, "black");
             }
 
             var recbox = [-0.3, 0.3, 0.3];
