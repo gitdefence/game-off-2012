@@ -1,3 +1,4 @@
+//Saves some code with some simple verification. Not really that useful.
 function setStrokeAndColor(pen, borderWidth, borderColor) {
     if(borderWidth) {
         pen.lineWidth = borderWidth;
@@ -22,15 +23,27 @@ DRAW = {
         DRAW.arc(pen, centerPos, r, 0, Math.PI * 2, insideColor, borderWidth, borderColor);
     },
     arc: function(pen, centerPos, r, angleStart, angleEnd, insideColor, borderWidth, borderColor) {
+        borderWidth = borderWidth || 0;
+
+        //Fix for Quentin's chrome. Tried uninstalling, 
+        //reinstalling grpahics drivers, etc. This is the only
+        //thing I could fix.
+        borderWidth = Math.min(borderWidth, 0.99);
+
+        //This insures it is defined, and sets some useful stuff.
+        //Not need for us specifically, but every other function in this file
+        //uses it, so we maintain consistency.
         borderWidth = setStrokeAndColor(pen, borderWidth, borderColor);
-        
-        pen.fillStyle = insideColor;
-        
+
         pen.beginPath();
-        pen.arc(centerPos.x, centerPos.y, r, angleStart, angleEnd, false);
-        //pen.closePath();
-        pen.fill();
-        pen.stroke();
+        pen.arc(centerPos.x, centerPos.y, Math.abs(r - borderWidth), angleStart, angleEnd, false);
+        if(pen.strokeStyle != "transparent") {
+            pen.stroke();
+        }
+        if(insideColor != "transparent") {
+            pen.fillStyle = insideColor;
+            pen.fill();
+        }
     },
     piePiece: function(pen, centerPos, r, angleStart, angleEnd, insideColor, borderWidth, borderColor) {
         borderWidth = setStrokeAndColor(pen, borderWidth, borderColor);

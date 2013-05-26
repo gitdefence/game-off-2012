@@ -22,6 +22,14 @@ function FakeDrawObject(drawFnc, cachable, offsetRect, reqWidth, reqHeight) {
     self.tpos = new Rect(0, 0, 0, 0);
 
     self.resize = function (rect) {
+        if (defined(reqWidth) && defined(reqHeight) &&
+            (rect.w < reqWidth || rect.h < reqHeight)) {
+            var widthPercent = reqWidth && rect.w / reqWidth;
+            var heightPercent = reqHeight && rect.h / reqHeight;
+            var minPercent = Math.min(widthPercent, heightPercent);
+            rect.w = Math.floor(rect.w * minPercent);
+            rect.h = Math.floor(rect.w * minPercent);
+        }
         self.tpos = rect;
         self.base.dirty();
     }

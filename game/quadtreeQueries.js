@@ -304,7 +304,7 @@ function drawTree(engine, type, pen) {
     function drawBranch(quadtree, pen) {
         if (!quadtree) return;
 
-        ink.outlineRect(quadtree.bounds.x, quadtree.bounds.y, quadtree.bounds.w, quadtree.bounds.h, pen);
+        DRAW.rect(pen, quadtree.bounds, "transparent", 2, pen.strokeStyle);
 
         drawBranch(quadtree.lessTree, pen);
         drawBranch(quadtree.splitTree, pen);

@@ -10,8 +10,8 @@ function Bug(startPath) {
             // In the future tower will be like self.
             range:          0,
             damage:         0,
-            maxHp:             0,
-            hp:      0,
+            maxHp:          0,
+            hp:             0,
             hpRegen:        0,
             attSpeed:       0,
             speed:          0,
@@ -24,7 +24,7 @@ function Bug(startPath) {
     }
     self.setBaseAttrs();
 
-    self.tpos = new Rect(0, 0, r, r);
+    self.tpos = new Rect(0, 0, r*2, r*2);
 
     self.base = new BaseObj(self, 11);
     var velocity = new Vector(1, 0).mag(self.attr.speed);
@@ -51,10 +51,13 @@ function Bug(startPath) {
     self.added = function() {
         var game = getGame(self);
 
-        var offset = Math.floor(((Math.random() - 0.5) * 0.5 + 0.5) * game.tileSize);
+        var offset = Math.floor(((Math.random() - 0.5) * 0.25) * game.tileSize);
+        //Apparently it looks better with no offset. Going to leave the offset code in,
+        //incase we ever want to change it back.
+        offset = 0;
         pathOffsetVector = new Vector(offset, offset);
 
-        self.tpos.center(startPath.tpos.origin().add(pathOffsetVector));
+        self.tpos.center(startPath.bugMovementTarget().add(pathOffsetVector));
 
         self.constantOne = 1;
         self.base.addChild(new UpdateTicker(self, "constantOne", "regenTick"));
@@ -87,10 +90,11 @@ function Bug(startPath) {
 
         //We could also add pathOffsetVector to the path, but there are
         //multiple paths we have to worry about, so this is simplier.
-        var offsetSelfPos = self.tpos.origin().sub(pathOffsetVector);
+        var offsetSelfPos = self.tpos.center().sub(pathOffsetVector);
 
         //Move towards the next rectangle.
-        var vecToCurrent = cur.tpos.origin().sub(offsetSelfPos);
+        var vecToCurrent;
+        vecToCurrent = cur.bugMovementTarget().sub(offsetSelfPos);
 
         var speed = self.attr.speed;
         var distance = dt * speed;
@@ -131,7 +135,7 @@ function Bug(startPath) {
             redraw(canvas);
             canvasDirty = false;
         }
-        canvas.moveTo(new Vector(self.tpos.x - self.attr.range, self.tpos.y - self.attr.range));
+        canvas.moveTo(new Vector(self.tpos.x - self.attr.range + self.tpos.w / 2, self.tpos.y - self.attr.range + self.tpos.w / 2));
         canvas.drawTo(pen);
     }
 

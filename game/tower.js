@@ -119,7 +119,7 @@ function Tower_Connection(t1, t2) {
         var game = getGame(this);
 
         if (game && this.base.parent) {
-            var holderSelected = this.base.parent == game.selection();
+            var holderSelected = t1 == game.selection();
 
             deleteButton.hidden = !holderSelected;
         }
@@ -168,7 +168,7 @@ function Tower() {
             kills: 0,
             value: TowerStats.value
         };
-        this.attr.targetStrategy = new targetStrategies.Closest();
+        this.attr.targetStrategy = new targetStrategies.Random();
         this.attr.attackObjs = {};
     };
     this.setBaseAttrs();
@@ -459,7 +459,7 @@ function Tower() {
     this.dragOffset = null;
     this.tempNetworkIndicator = null;
     this.ctrlDrag = false;
-    this.mousedown = function(e) {
+    this.mousedown = function (e) {
         this.startDrag = e;
         this.dragOffset = new Vector(this.tpos);
         this.dragOffset.sub(e);
@@ -469,8 +469,11 @@ function Tower() {
 
         this.ctrlDrag = e.ctrlKey;
 
-        if(!this.ctrlDrag) {
-            this.tempNetworkIndicator = new SLine(this.startDrag, e, "green", 15, {0: 1.0});
+        if (!this.ctrlDrag) {
+            if (this.tempNetworkIndicator) {
+                this.tempNetworkIndicator.destroySelf();
+            }
+            this.tempNetworkIndicator = new SLine(this.startDrag, e, "green", 15, { 0: 1.0 });
             this.base.parent.base.addChild(this.tempNetworkIndicator);
         }
     };
@@ -553,7 +556,7 @@ function Tower() {
         tower.tpos.x = e.x;
         tower.tpos.y = e.y;
 
-        if(!initialPlacement && !findClosestToPoint(eng, "Tile", tower.tpos.center(), 0)) {
+        if (!initialPlacement && !findClosestToPoint(eng, "Tile", tower.tpos.center(), 0)) {
             //You cannot move to a position where there are no tiles
             tower.tpos.x = originalPos.x;
             tower.tpos.y = originalPos.y;
@@ -562,11 +565,17 @@ function Tower() {
             return;
         }
 
-        var collisions = [];
-        mergeToArray(findAllWithinDistanceToRect(eng, "Tower", tower.tpos, 0), collisions);
-        mergeToArray(findAllWithinDistanceToRect(eng, "Path_Piece", tower.tpos, 0), collisions);
+        function mergeToCollisions(tower, collisions) {
+            mergeToArray(findAllWithinDistanceToRect(eng, "Tower", tower.tpos, 0), collisions);
+            mergeToArray(findAllWithinDistanceToRect(eng, "Path_Piece", tower.tpos, 0), collisions);
+            mergeToArray(findAllWithinDistanceToRect(eng, "Path_Start", tower.tpos, 0), collisions);
+            mergeToArray(findAllWithinDistanceToRect(eng, "Path_End", tower.tpos, 0), collisions);
+        }
 
-        if(collisions.length > 0) {
+        var collisions = [];
+        mergeToCollisions(tower, collisions);
+
+        if (collisions.length > 0) {
             var alignTo = collisions[0];
             var offset = minVecForDistanceRects(tower.tpos, alignTo.tpos, 1);
 
@@ -582,17 +591,15 @@ function Tower() {
         //(this projection code will be created for bullets and lasers anyway).
         tower.tpos.x = e.x;
         var collisions = [];
-        mergeToArray(findAllWithinDistanceToRect(eng, "Tower", tower.tpos, 0), collisions);
-        mergeToArray(findAllWithinDistanceToRect(eng, "Path_Piece", tower.tpos, 0), collisions);
-        if(collisions.length > 0) {
+        mergeToCollisions(tower, collisions);
+        if (collisions.length > 0) {
             tower.tpos.x = originalPos.x;
         }
 
         tower.tpos.y = e.y;
         var collisions = [];
-        mergeToArray(findAllWithinDistanceToRect(eng, "Tower", tower.tpos, 0), collisions);
-        mergeToArray(findAllWithinDistanceToRect(eng, "Path_Piece", tower.tpos, 0), collisions);
-        if(collisions.length > 0) {
+        mergeToCollisions(tower, collisions);
+        if (collisions.length > 0) {
             tower.tpos.y = originalPos.y;
         }
         tower.hidden = false;
