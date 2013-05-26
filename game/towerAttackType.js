@@ -73,7 +73,7 @@ function startAttack(attackTemplate) {
     var attacker = attackTemplate.attacker;
     var prevTarget = attackTemplate.target;
 
-    if (!assertValid(realAttacker.attr.targetStrategy)) {
+    if (assertValid(realAttacker.attr.targetStrategy)) {
         attackTemplate.target = realAttacker.attr.targetStrategy.run(attacker, prevTarget);
     } else {
         attackTemplate.target = new targetStrategies.Random().run(attacker, prevTarget);
@@ -188,16 +188,7 @@ var allAttackTypes = {
         this.bulletSpeed = 50;
         this.damagePercent = 300;
         this.drawGlyph = function (pen, box) {
-            box = adjustBoxForOldGlyphs(box);
-
-            pen.lineWidth = 0;
-	        pen.fillStyle = "#ffffff";        
-            pen.strokeStyle = "transparent";
-	        ink.circ(box.x+(box.w*0.35), box.y-(box.w*0.5), box.w*0.4, pen);
-
-    	    pen.strokeStyle = "transparent";
-            pen.fillStyle = "orange";
-	        ink.circ(box.x+(box.w*0.35), box.y-(box.w*0.5), box.w*0.3, pen);
+            DRAW.circle(pen, box.center(), Math.min(box.w, box.h)/2, "orange", 2, "white");
         };
         this.AttackNode = function(attackTemplate)
         {
@@ -223,8 +214,7 @@ var allAttackTypes = {
             var us = this;
             function onImpact()
             {
-                //A hackish way to check if both still exist
-                if(target.base.rootNode == attacker.base.rootNode)
+                if(target.base.rootNode instanceof Engine)
                     applyAttack(attackTemplate);
                 us.base.destroySelf();
             }
@@ -357,30 +347,15 @@ var allAttackTypes = {
     },
     Pulse: function pulse() {
         this.damagePercent = 30;
-        this.effectRange = 50;
+        this.effectRange = 25;
         this.chargeTime = 1;
         this.drawGlyph = function (pen, box) {
-            box = adjustBoxForOldGlyphs(box);
-            //Draw text
-            pen.fillStyle = "#000000";
-            pen.font = box.h + "px arial";
-            pen.textAlign = 'left';
-
-	        pen.fillStyle = setAlpha(globalColorPalette.pulse, 0.5);
-	        pen.strokeStyle = "transparent";
-	        ink.circ(box.x+(box.w*0.3), box.y-(box.w*0.5), box.w*0.5, pen);
-
-            pen.fillStyle = setAlpha(globalColorPalette.pulse, 0.5);
-	        pen.strokeStyle = "transparent";
-	        ink.circ(box.x+(box.w*0.3), box.y-(box.w*0.5), box.w*0.4, pen);
-
-            pen.fillStyle = setAlpha(globalColorPalette.pulse, 0.5);
-	        pen.strokeStyle = "transparent";
-	        ink.circ(box.x+(box.w*0.3), box.y-(box.w*0.5), box.w*0.2, pen);
-
-            pen.fillStyle = setAlpha(globalColorPalette.pulse, 0.5);
-	        pen.strokeStyle = "transparent";
-	        ink.circ(box.x+(box.w*0.3), box.y-(box.w*0.5), box.w*0.1, pen);
+            box.clone().shrink(2);
+            var color = setAlpha(globalColorPalette.pulse, 0.5);
+            DRAW.circle(pen, box.center(), box.w * 0.5, color);
+            DRAW.circle(pen, box.center(), box.w * 0.4, color);
+            DRAW.circle(pen, box.center(), box.w * 0.2, color);
+            DRAW.circle(pen, box.center(), box.w * 0.1, color);
         };
         this.AttackNode = function(attackTemplate)
         {
@@ -396,7 +371,9 @@ var allAttackTypes = {
             var target = attackTemplate.target;
             var prevTarget = this.attackTemplate.target;
 
-            var effectRange = attackTemplate.attackObj.effectRange;
+            var baseAttacker = attackTemplate.baseAttacker;
+
+            var effectRange = baseAttacker.attr.range * attackTemplate.attackObj.effectRange / 100;
             var chargeTime = attackTemplate.attackObj.chargeTime;
 
             this.color = getRealType(realAttacker) == "Bug" ? "rgba(255,0,0,0)" : "rgba(0,0,255,0)";
@@ -424,6 +401,7 @@ var allAttackTypes = {
             {
                 attackTemplate = this.attackTemplate;
 
+                var baseAttacker = attackTemplate.baseAttacker;
                 var attacker = attackTemplate.attacker;
                 var realAttacker = attackTemplate.baseAttacker;
                 var target = attackTemplate.target;
@@ -435,7 +413,7 @@ var allAttackTypes = {
 
                 //This is basically just a custom targeting strategy
                 var targetType = prevTarget ? getRealType(prevTarget) : (getRealType(attacker) == "Bug" ? "Tower" : "Bug");
-                var targets = findAllWithin(attacker.base.rootNode, targetType,
+                var targets = findAllWithin(baseAttacker.base.rootNode, targetType,
                         attacker.tpos.center(), effectRange);
 
                 this.targets = targets;
@@ -467,11 +445,8 @@ var allAttackTypes = {
 
             for(var i = 0; i < circlePos.length; i += 3)
             {
-                pen.strokeStyle = globalColorPalette.poison;
-                pen.fillStyle = globalColorPalette.poison;
-	            pen.lineWidth = 1;
-                ink.circ(box.x+(box.w*circlePos[i]), box.y-(box.w*circlePos[i + 1]),
-                    box.w * circlePos[i + 2], pen);
+                DRAW.circle(pen, new Vector(box.x + (box.w * circlePos[i]), box.y - (box.w * circlePos[i + 1])),
+                    globalColorPalette.poison, 1, globalColorPalette.poison);
             }
 
 

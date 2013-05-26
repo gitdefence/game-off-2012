@@ -49,18 +49,10 @@ function SCircle(center, radius, color, fillColor, zorder) {
     this.lineWidth = 2;
 
     this.draw = function (pen) {
-        var p = this.tpos;
         var radius = this.radius;
-        var color = this.color;
-        var fillColor = this.fillColor;
-        
-        if (radius < 1) radius = 1;
-        
-        pen.lineWidth = this.lineWidth;
-        pen.fillStyle = fillColor;
-        pen.strokeStyle = color;
-        
-        ink.circ(p.x + radius / 2, p.y + radius / 2, radius, pen);
+
+        DRAW.circle(pen, this.tpos.center(), this.radius,
+            this.fillColor, this.lineWidth, this.color);
     };
 }
 

@@ -7,15 +7,6 @@ var Rect = (function () {
             h = 1;
         }
 
-        if (w < 0) {
-            x += w;
-            w = -w;
-        }
-        if (h < 0) {
-            y += h;
-            h = -h;
-        }
-
         if (DFlag.debug) {
             addDebugWatchers(this);
         }
@@ -24,6 +15,8 @@ var Rect = (function () {
         this.y = y;
         this.w = w;
         this.h = h;
+
+        this.uninvert();
     }
 
     var p = Rect.prototype;
@@ -36,6 +29,20 @@ var Rect = (function () {
         this.y = newCenter.y - this.h / 2;
         return this;
     };
+
+    //If we are inverted, flips us so we are not.
+    //Meaning, if our w or h are negative, makes them 
+    //positive and moves our x or y over
+    p.uninvert = function() {
+        if (this.w < 0) {
+            this.x += this.w;
+            this.w = -this.w;
+        }
+        if (this.h < 0) {
+            this.y += this.h;
+            this.h = -this.h;
+        }
+    }
 
     p.clone = function () {
         return new Rect(this.x, this.y, this.w, this.h);

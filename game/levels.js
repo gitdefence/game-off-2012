@@ -80,30 +80,30 @@ var baseLevel = {
         {
             //The array should really be a object with the names the allele names
             5: baseBugAlleles,
-            waveTime: 20,
+            waveTime: 5,
             spawnDelay: 1,
-            attributeModifier: 1
+            attributeModifier: 1,
         },
         {
             //The array should really be a object with the names the allele names
             10: baseBugAlleles,
-            waveTime: 30,
+            waveTime: 5,
             spawnDelay: 0.5,
-            attributeModifier: 1
+            attributeModifier: 1,
         },
         {
             //The array should really be a object with the names the allele names
             20: baseBugAlleles,
-            waveTime: 30,
+            waveTime: 5,
             spawnDelay: 0.5,
-            attributeModifier: 1
+            attributeModifier: 1,
         },
         {
             //The array should really be a object with the names the allele names
             40: baseBugAlleles,
-            waveTime: 30,
+            waveTime: 5,
             spawnDelay: 0.25,
-            attributeModifier: 1
+            attributeModifier: 1,
         },
     ],
 };
