@@ -52,6 +52,9 @@ function Bug(startPath) {
         var game = getGame(self);
 
         var offset = Math.floor(((Math.random() - 0.5) * 0.25) * game.tileSize);
+        //Apparently it looks better with no offset. Going to leave the offset code in,
+        //incase we ever want to change it back.
+        offset = 0;
         pathOffsetVector = new Vector(offset, offset);
 
         self.tpos.center(startPath.bugMovementTarget().add(pathOffsetVector));
