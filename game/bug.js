@@ -51,7 +51,7 @@ function Bug(startPath) {
     self.added = function() {
         var game = getGame(self);
 
-        var offset = Math.floor(((Math.random() - 0.5) * 0.25 + 0.5) * game.tileSize);
+        var offset = Math.floor(((Math.random() - 0.5) * 0.25) * game.tileSize);
         pathOffsetVector = new Vector(offset, offset);
 
         self.tpos.center(startPath.bugMovementTarget().add(pathOffsetVector));
