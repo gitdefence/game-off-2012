@@ -171,7 +171,7 @@ function AllelePointSystem(pos) {
                         extraInfo[key] = 0;
 
                     extraInfo[key] += change * factor;
-                } else if(change.name) {
+                } else if(change) {
                     if (extraInfo[formatToDisplay(change.name)]) {
                         extraInfo[formatToDisplay(change.name)].added = "+-";
                     } else {
