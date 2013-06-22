@@ -152,8 +152,8 @@ progressLoadScripts(scriptslist);}());
 
         screenSystem.addScreen("MainGame", new GitDefence(screen));
         screenSystem.setActiveScreen("MainGame");
-    document.getElementById("loaderBox").style.visibility="hidden";
-    document.getElementById("loaderBox").style.height="0px";
+        var el = document.getElementById("loaderBox");
+        el.parentNode.removeChild(el);
     };
 </script>
 </body>
