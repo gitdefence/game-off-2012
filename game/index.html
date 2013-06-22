@@ -10,6 +10,8 @@ body {
     background: black;
     margin: 0px;
     padding: 0px;
+    color: #0f0;
+    font-family: monospace;
 }
 canvas {
     display: block;
@@ -20,11 +22,9 @@ canvas {
 }
 #loaderBox {
     font-size:72pt;
-    color: #fff;
-    width:100%;
     text-align:center;
-    margin:auto;
 }
+
 progress {
     width: 10em;
     line-height: 1em;
@@ -40,35 +40,36 @@ progress {
     console.log = console.log || function () { };
     console.warn = console.warn || function () { };
     function incrementLoadingBar(percent) {
-	    document.getElementById("progressbar").value += percent;
+        document.getElementById("progressbar").value += percent;
     }
     function progressLoadScripts(scripts) {
-	    var len = scripts.length;
-	    for (var i = 0; i < len; i++) {
-		    var s = document.createElement('script')
-		    s.src = scripts[i];
-		    s.onload = function() {
-			    document.getElementById("progressbar").value += (1/len)*100;
-		    }
+        var len = scripts.length;
+        for (var i = 0; i < len; i++) {
+            var s = document.createElement('script')
+            s.src = scripts[i];
+            s.onload = function() {
+                document.getElementById("progressbar").value += (1/len)*100;
+            }
 
-		    document.getElementById("scripts").appendChild(s);
+            document.getElementById("scripts").appendChild(s);
 
-	    }
+        }
     }
 
 
 </script>
 
 <div id="loaderBox">
-	Loading
-	<br />
-	<progress id="progressbar" max="100" value="0">
-	</progress>
+    Loading
+    <br />
+    <progress id="progressbar" max="100" value="0">
+    </progress>
 </div>
 <canvas id="myCanvas"></canvas>
 <div id="scripts">
 <div>
 <script>
+(function(){
 var scriptslist = [
 "lib/jquery.min.js",
 
@@ -130,7 +131,7 @@ var scriptslist = [
 "ui/include.js",
 "geom/include.js",
 ];
-progressLoadScripts(scriptslist);
+progressLoadScripts(scriptslist);}());
 </script>
 
 <script>
@@ -151,8 +152,8 @@ progressLoadScripts(scriptslist);
 
         screenSystem.addScreen("MainGame", new GitDefence(screen));
         screenSystem.setActiveScreen("MainGame");
-	document.getElementById("loaderBox").style.visibility="hidden";
-	document.getElementById("loaderBox").style.height="0px";
+    document.getElementById("loaderBox").style.visibility="hidden";
+    document.getElementById("loaderBox").style.height="0px";
     };
 </script>
 </body>
