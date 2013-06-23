@@ -113,15 +113,15 @@ progress {
 
     "gfx/include.js",
     "ui/include.js",
-    "geom/include.js",
+    "geom/include.js"
     ];
 
     var len = scriptslist.length;
     for (var i = 0; i < len; i++) {
-        var s = document.createElement('script')
+        var s = document.createElement('script');
         s.src = scriptslist[i];
         s.onload = function() {
-        document.getElementById("progressbar").value += (1/len)*100;
+            document.getElementById("progressbar").value += (1/len)*100;
         }
         document.getElementById("scripts").appendChild(s);
     }
