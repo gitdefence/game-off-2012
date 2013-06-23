@@ -39,22 +39,6 @@ progress {
     console = window.console || {};
     console.log = console.log || function () { };
     console.warn = console.warn || function () { };
-    function incrementLoadingBar(percent) {
-        document.getElementById("progressbar").value += percent;
-    }
-    function progressLoadScripts(scripts) {
-        var len = scripts.length;
-        for (var i = 0; i < len; i++) {
-            var s = document.createElement('script')
-            s.src = scripts[i];
-            s.onload = function() {
-                document.getElementById("progressbar").value += (1/len)*100;
-            }
-
-            document.getElementById("scripts").appendChild(s);
-
-        }
-    }
 
 
 </script>
@@ -67,71 +51,81 @@ progress {
 </div>
 <canvas id="myCanvas"></canvas>
 <div id="scripts">
-<div>
+</div>
 <script>
 (function(){
-var scriptslist = [
-"lib/jquery.min.js",
+    var scriptslist = [
+    "lib/jquery.min.js",
 
-"defaultDebug.js",
-"debug.js",
-
-
-"fail.js",
-"type.js",
-
-"gameOver.js",
+    "defaultDebug.js",
+    "debug.js",
 
 
-"commonFncs.js",
-"commonText.js",
-"commonActions.js",
+    "fail.js",
+    "type.js",
+
+    "gameOver.js",
 
 
-"alleles.js",
-"alleleConstruction.js",
-"allelePointSystem.js",
-"geneticSystem.js",
+    "commonFncs.js",
+    "commonText.js",
+    "commonActions.js",
 
 
-"targetStrategy.js",
-"towerAttackType.js",
-
-"baseObj.js",
-
-
-"gameInfoBar.js",
-"infobar/include.js",
-"towerBar.js",
-"levelSystem.js",
-"levels.js",
+    "alleles.js",
+    "alleleConstruction.js",
+    "allelePointSystem.js",
+    "geneticSystem.js",
 
 
-"tower.js",
-"path.js",
-"bug.js",
+    "targetStrategy.js",
+    "towerAttackType.js",
+
+    "baseObj.js",
 
 
-"quadtree.js",
-"quadtreeQueries.js",
-
-"pathGeneration.js",
-
-
-"inputHandler.js",
-
-"engine.js",
-"screenSystem.js",
-"gitDefence.js",
+    "gameInfoBar.js",
+    "infobar/include.js",
+    "towerBar.js",
+    "levelSystem.js",
+    "levels.js",
 
 
-"gameBoard.js",
+    "tower.js",
+    "path.js",
+    "bug.js",
 
-"gfx/include.js",
-"ui/include.js",
-"geom/include.js",
-];
-progressLoadScripts(scriptslist);}());
+
+    "quadtree.js",
+    "quadtreeQueries.js",
+
+    "pathGeneration.js",
+
+
+    "inputHandler.js",
+
+    "engine.js",
+    "screenSystem.js",
+    "gitDefence.js",
+
+
+    "gameBoard.js",
+
+    "gfx/include.js",
+    "ui/include.js",
+    "geom/include.js",
+    ];
+
+    var len = scriptslist.length;
+    for (var i = 0; i < len; i++) {
+        var s = document.createElement('script')
+        s.src = scriptslist[i];
+        s.onload = function() {
+        document.getElementById("progressbar").value += (1/len)*100;
+        }
+        document.getElementById("scripts").appendChild(s);
+    }
+}());
 </script>
 
 <script>
