@@ -234,7 +234,7 @@ function bind(thisCtx, name /*, variadic args to curry */) {
 function loadScript(name) {
     var s = document.createElement('script')
     s.src = name + '.js';
-    document.getElementById('scripts').appendChild(s);
+    document.getElementsByTagName('body')[0].appendChild(s);
 }
 
 function loadScripts(prefix, scripts) {

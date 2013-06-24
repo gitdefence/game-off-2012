@@ -34,11 +34,6 @@ progress {
 </head>
 <body>
 
-<script>
-    console = window.console || {};
-    console.log = console.log || function () { };
-    console.warn = console.warn || function () { };
-</script>
 
 <div id="loaderBox">
     Loading
@@ -50,82 +45,84 @@ progress {
 <div id="scripts">
 </div>
 <script>
-(function(){
-    var scriptslist = [
-    "lib/jquery.min.js",
+    console = window.console || {};
+    console.log = console.log || function () { };
+    console.warn = console.warn || function () { };
 
-    "defaultDebug.js",
-    "debug.js",
-
-
-    "fail.js",
-    "type.js",
-
-    "gameOver.js",
-
-
-    "commonFncs.js",
-    "commonText.js",
-    "commonActions.js",
-
-
-    "alleles.js",
-    "alleleConstruction.js",
-    "allelePointSystem.js",
-    "geneticSystem.js",
-
-
-    "targetStrategy.js",
-    "towerAttackType.js",
-
-    "baseObj.js",
-
-
-    "gameInfoBar.js",
-    "infobar/include.js",
-    "towerBar.js",
-    "levelSystem.js",
-    "levels.js",
-
-
-    "tower.js",
-    "path.js",
-    "bug.js",
-
-
-    "quadtree.js",
-    "quadtreeQueries.js",
-
-    "pathGeneration.js",
-
-
-    "inputHandler.js",
-
-    "engine.js",
-    "screenSystem.js",
-    "gitDefence.js",
-
-
-    "gameBoard.js",
-
-    "gfx/include.js",
-    "ui/include.js",
-    "geom/include.js"
-    ];
-
-    var len = scriptslist.length;
-    for (var i = 0; i < len; i++) {
-        var s = document.createElement('script');
-        s.src = scriptslist[i];
-        s.onload = function() {
-            document.getElementById("progressbar").value += (1/len)*100;
+    (function(){
+        var scriptslist = [
+        "lib/jquery.min.js",
+    
+        "defaultDebug.js",
+        "debug.js",
+    
+    
+        "fail.js",
+        "type.js",
+    
+        "gameOver.js",
+    
+    
+        "commonFncs.js",
+        "commonText.js",
+        "commonActions.js",
+    
+    
+        "alleles.js",
+        "alleleConstruction.js",
+        "allelePointSystem.js",
+        "geneticSystem.js",
+    
+    
+        "targetStrategy.js",
+        "towerAttackType.js",
+    
+        "baseObj.js",
+    
+    
+        "gameInfoBar.js",
+        "infobar/include.js",
+        "towerBar.js",
+        "levelSystem.js",
+        "levels.js",
+    
+    
+        "tower.js",
+        "path.js",
+        "bug.js",
+    
+    
+        "quadtree.js",
+        "quadtreeQueries.js",
+    
+        "pathGeneration.js",
+    
+    
+        "inputHandler.js",
+    
+        "engine.js",
+        "screenSystem.js",
+        "gitDefence.js",
+    
+    
+        "gameBoard.js",
+    
+        "gfx/include.js",
+        "ui/include.js",
+        "geom/include.js"
+        ];
+    
+        var len = scriptslist.length;
+        for (var i = 0; i < len; i++) {
+            var s = document.createElement('script');
+            s.src = scriptslist[i];
+            s.onload = function() {
+                document.getElementById("progressbar").value += (1/len)*100;
+            }
+            document.getElementsByTagName("body")[0].appendChild(s);
         }
-        document.getElementById("scripts").appendChild(s);
-    }
-}());
-</script>
+    }());
 
-<script>
     window.onload = function () {
         if (!window.Rect) {
             // Fix IE's stupid window.onload behaviour.
