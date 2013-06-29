@@ -10,6 +10,8 @@ body {
     background: black;
     margin: 0px;
     padding: 0px;
+    color: #0f0;
+    font-family: monospace;
 }
 canvas {
     display: block;
@@ -18,71 +20,98 @@ canvas {
 #scripts {
     display: none;
 }
+#loaderBox {
+    font-size: 72pt;
+    text-align: center;
+}
+progress {
+    width: 10em;
+    line-height: 1em;
+    height: 0.5em;
+    border: 1px solid #fff;
+}
 </style>
 </head>
 <body>
+
+<div id="loaderBox">
+    Loading
+    <br />
+    <progress id="progressbar" max="100" value="0">
+    </progress>
+</div>
+<canvas id="myCanvas"></canvas>
 
 <script>
     console = window.console || {};
     console.log = console.log || function () { };
     console.warn = console.warn || function () { };
-</script>
 
-<canvas id="myCanvas"></canvas>
-<div id="scripts">
-<script src="lib/jquery.min.js"></script><!-- //ajax.googleapis.com/ajax/libs/jquery/1.8.2/ -->
+    (function(){
+        var scriptslist = [
+        "lib/jquery.min.js",
 
-<script src="defaultDebug.js"></script>
-<script src="debug.js"></script>
+        "defaultDebug.js",
+        "debug.js",
 
-<script src="fail.js"></script>
-<script src="type.js"></script>
+        "fail.js",
+        "type.js",
 
-<script src="gameOver.js"></script>
+        "gameOver.js",
 
-<script src="commonFncs.js"></script>
-<script src="commonText.js"></script>
-<script src="commonActions.js"></script>
+        "commonFncs.js",
+        "commonText.js",
+        "commonActions.js",
 
-<script src="alleles.js"></script>
-<script src="alleleConstruction.js"></script>
-<script src="allelePointSystem.js"></script>
-<script src="geneticSystem.js"></script>
+        "alleles.js",
+        "alleleConstruction.js",
+        "allelePointSystem.js",
+        "geneticSystem.js",
 
-<script src="targetStrategy.js"></script>
-<script src="towerAttackType.js"></script>
+        "targetStrategy.js",
+        "towerAttackType.js",
 
-<script src="baseObj.js"></script>
+        "baseObj.js",
 
-<script src="gameInfoBar.js"></script>
-<script src="infobar/include.js"></script>
-<script src="towerBar.js"></script>
-<script src="levelSystem.js"></script>
-<script src="levels.js"></script>
+        "gameInfoBar.js",
+        "infobar/include.js",
+        "towerBar.js",
+        "levelSystem.js",
+        "levels.js",
 
-<script src="tower.js"></script>
-<script src="path.js"></script>
-<script src="bug.js"></script>
+        "tower.js",
+        "path.js",
+        "bug.js",
 
-<script src="quadtree.js"></script>
-<script src="quadtreeQueries.js"></script>
+        "quadtree.js",
+        "quadtreeQueries.js",
 
-<script src="pathGeneration.js"></script>
+        "pathGeneration.js",
 
-<script src="inputHandler.js"></script>
+        "inputHandler.js",
 
-<script src="engine.js"></script>
-<script src="screenSystem.js"></script>
-<script src="gitDefence.js"></script>
+        "engine.js",
+        "screenSystem.js",
+        "gitDefence.js",
 
-<script src="gameBoard.js"></script>
+        "gameBoard.js",
 
-<script src="gfx/include.js"></script>
-<script src="ui/include.js"></script>
+        "gfx/include.js",
+        "ui/include.js",
+        "geom/include.js"
+        ];
 
-<script src="geom/include.js"></script>
+        var len = scriptslist.length;
+        for (var i = 0; i < len; i++) {
+            var s = document.createElement('script');
+            s.src = scriptslist[i];
+            s.onload = function() {
+                document.getElementById("progressbar").value += (1/len)*100;
+            }
+            document.getElementsByTagName("body")[0].appendChild(s);
+        }
+    }());
 
-<script>
     window.onload = function () {
         if (!window.Rect) {
             // Fix IE's stupid window.onload behaviour.
@@ -100,8 +129,9 @@ canvas {
 
         screenSystem.addScreen("MainGame", new GitDefence(screen));
         screenSystem.setActiveScreen("MainGame");
+        var el = document.getElementById("loaderBox");
+        el.parentNode.removeChild(el);
     };
 </script>
-</div>
 </body>
 </html>
