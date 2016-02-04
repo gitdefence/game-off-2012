@@ -12,8 +12,8 @@ function GitDefence(pos) {
     var engine = new Engine(pos, this);
     this.engine = engine;
 
-    this.numTilesX = parseUrlParam("tileWidth") || 16;
-    this.numTilesY = parseUrlParam("tileWidth") || 16;
+    this.numTilesX = parseUrlParam("tileCount") || 16;
+    this.numTilesY = parseUrlParam("tileCount") || 16;
     this.tileSize = parseUrlParam("tileSize") || 32;
 
     this.id = 0; //Shouldn't be needed (ids are in base)
