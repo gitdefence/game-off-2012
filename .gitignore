@@ -4,3 +4,5 @@ debug.js
 *.kate-swp
 *.exclude
 *.lapse
+.DS_STORE
+

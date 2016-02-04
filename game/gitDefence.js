@@ -1,10 +1,20 @@
+function parseUrlParam(name) {
+    var param = location.search.substr(1).split("&").filter(s => s.split("=")[0] === name)[0];
+    if(!param) {
+        return null;
+    }
+    return parseInt(
+        param.substr(name.length + 1)
+    );
+}
+
 function GitDefence(pos) {
     var engine = new Engine(pos, this);
     this.engine = engine;
 
-    this.numTilesX = 16;
-    this.numTilesY = 16;
-    this.tileSize = 32;
+    this.numTilesX = parseUrlParam("tileWidth") || 16;
+    this.numTilesY = parseUrlParam("tileWidth") || 16;
+    this.tileSize = parseUrlParam("tileSize") || 32;
 
     this.id = 0; //Shouldn't be needed (ids are in base)
     this.currentCost = 100;
